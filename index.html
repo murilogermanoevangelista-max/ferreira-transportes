@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A. Ferreira Transportes — CRM Prospecção</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.0.0/dist/tabler-icons.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;}
+:root{
+  --am:#F5C200;--am2:#C49B00;--am-bg:#FFFBEB;
+  --cin:#2B2B2B;--bg:#F2F1EE;--sur:#FFF;--sur2:#F7F6F3;
+  --bor:#E5E3DE;--bor2:#CCCAC4;
+  --tx:#1A1A18;--tx2:#5A5854;--tx3:#9A9894;
+  --gr:#16a34a;--gr-bg:#f0fdf4;
+  --rd:#dc2626;--rd-bg:#fef2f2;
+  --bl:#2563eb;--bl-bg:#eff6ff;
+  --pu:#7c3aed;--pu-bg:#f5f3ff;
+  --r:10px;--rs:6px;
+}
+body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--tx);font-size:14px;}
+.app{display:flex;height:100vh;}
+
+/* SIDEBAR */
+.sidebar{width:230px;background:var(--cin);display:flex;flex-direction:column;flex-shrink:0;overflow:hidden;}
+.logo-wrap{padding:18px 16px 14px;border-bottom:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.logo-wrap img{width:44px;height:44px;object-fit:contain;border-radius:6px;}
+.logo-text .ln{font-size:14px;font-weight:700;color:#FFF;}
+.logo-text .ls{font-size:11px;color:rgba(255,255,255,0.4);}
+.nav{padding:12px 8px;flex:1;overflow-y:auto;}
+.ns{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.3);padding:10px 8px 4px;}
+.ni{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--rs);cursor:pointer;color:rgba(255,255,255,0.6);font-size:13px;font-weight:500;transition:all .15s;margin-bottom:2px;}
+.ni:hover{background:rgba(255,255,255,0.08);color:#fff;}
+.ni.active{background:var(--am);color:var(--cin);}
+.ni i{font-size:16px;flex-shrink:0;}
+.nb{margin-left:auto;background:rgba(255,255,255,0.15);color:rgba(255,255,255,0.7);font-size:11px;font-weight:600;padding:1px 7px;border-radius:20px;}
+.ni.active .nb{background:rgba(0,0,0,0.15);color:var(--cin);}
+.sf{padding:12px 16px;border-top:1px solid rgba(255,255,255,0.1);flex-shrink:0;}
+.sf div{font-size:11px;color:rgba(255,255,255,0.25);text-align:center;}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0;}
+.topbar{padding:13px 22px;background:var(--sur);border-bottom:1px solid var(--bor);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0;}
+.topbar h1{font-size:17px;font-weight:700;}
+.topbar p{font-size:12px;color:var(--tx3);margin-top:1px;}
+.tba{display:flex;gap:8px;align-items:center;}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--rs);border:1px solid var(--bor2);background:var(--sur);color:var(--tx);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;white-space:nowrap;font-family:'Barlow',sans-serif;}
+.btn:hover{background:var(--sur2);}
+.btn-p{background:var(--am);color:var(--cin);border-color:var(--am2);font-weight:700;}
+.btn-p:hover{background:var(--am2);}
+.btn i{font-size:15px;}
+
+/* STATS CARDS — clicáveis */
+.stats-row{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;padding:14px 22px;flex-shrink:0;}
+.sc{background:var(--sur);border:1px solid var(--bor);border-radius:var(--r);padding:12px 14px;position:relative;overflow:hidden;cursor:pointer;transition:all .15s;}
+.sc:hover{border-color:var(--am);transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,0.08);}
+.sc.selected{border-color:var(--am);box-shadow:0 0 0 2px rgba(245,194,0,0.3);}
+.sc::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;}
+.sc.s0::before{background:var(--bor2);}
+.sc.s1::before{background:var(--tx3);}
+.sc.s2::before{background:#A16207;}
+.sc.s3::before{background:var(--gr);}
+.sc.s4::before{background:var(--rd);}
+.sc.s5::before{background:var(--am);}
+.sc-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--tx3);margin-bottom:5px;}
+.sc-val{font-size:24px;font-weight:700;line-height:1;}
+.sc.s0 .sc-val{color:var(--tx);}
+.sc.s1 .sc-val{color:var(--tx2);}
+.sc.s2 .sc-val{color:#A16207;}
+.sc.s3 .sc-val{color:var(--gr);}
+.sc.s4 .sc-val{color:var(--rd);}
+.sc.s5 .sc-val{color:var(--am2);}
+.sc-hint{font-size:10px;color:var(--tx3);margin-top:4px;}
+
+/* FILTERS */
+.filters{padding:0 22px 10px;display:flex;gap:8px;flex-wrap:wrap;flex-shrink:0;}
+.filters input,.filters select{padding:7px 11px;border:1px solid var(--bor2);border-radius:var(--rs);background:var(--sur);color:var(--tx);font-size:13px;outline:none;font-family:'Barlow',sans-serif;}
+.filters input{min-width:220px;}
+.filters input:focus,.filters select:focus{border-color:var(--am);}
+
+/* TABLE */
+#page-emp{display:flex;flex-direction:column;flex:1;overflow:hidden;min-height:0;}
+.tw{flex:1;overflow:auto;padding:0 22px 8px;min-height:0;}
+table{width:100%;border-collapse:collapse;background:var(--sur);border-radius:var(--r);overflow:hidden;border:1px solid var(--bor);}
+thead th{background:var(--sur2);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--tx3);padding:9px 12px;text-align:left;border-bottom:1px solid var(--bor);white-space:nowrap;}
+tbody tr{border-bottom:1px solid var(--bor);transition:background .1s;cursor:pointer;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:var(--am-bg);}
+td{padding:10px 12px;font-size:13px;vertical-align:middle;}
+.te{font-weight:600;color:var(--tx);max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ts{color:var(--tx2);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+/* POTENCIAL BADGE */
+.pot{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;}
+.pot-A{background:var(--gr-bg);color:var(--gr);border:1px solid #BBF7D0;}
+.pot-M{background:var(--am-bg);color:var(--am2);border:1px solid #FDE68A;}
+.pot-MA{background:var(--bl-bg);color:var(--bl);border:1px solid #BFDBFE;}
+.pot-B{background:var(--sur2);color:var(--tx3);border:1px solid var(--bor2);}
+
+/* STATUS BADGE */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap;}
+.b-nc{background:#F5F4F0;color:var(--tx2);border:1px solid var(--bor2);}
+.b-ag{background:#FEFCE8;color:#A16207;border:1px solid #FDE68A;}
+.b-pos{background:var(--gr-bg);color:var(--gr);border:1px solid #BBF7D0;}
+.b-neg{background:var(--rd-bg);color:var(--rd);border:1px solid #FECACA;}
+.b-cl{background:var(--am-bg);color:var(--am2);border:1px solid #FDE68A;}
+.dot{width:6px;height:6px;border-radius:50%;background:currentColor;display:inline-block;}
+/* STATUS INLINE DROPDOWN */
+.sw{position:relative;display:inline-flex;align-items:center;}
+.badge-btn{cursor:pointer;user-select:none;display:inline-flex;align-items:center;gap:4px;}
+.badge-btn:hover{filter:brightness(.93);}
+.sarr{font-size:9px;opacity:0;transition:opacity .15s;margin-left:2px;}
+tbody tr:hover .sarr{opacity:1;}
+.smenu{display:none;position:absolute;top:calc(100% + 5px);left:0;background:var(--sur);border:1px solid var(--bor2);border-radius:var(--rs);box-shadow:0 8px 24px rgba(0,0,0,0.16);z-index:999;min-width:180px;padding:4px;white-space:nowrap;}
+.smenu.open{display:block;}
+.sopt{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:4px;cursor:pointer;font-size:12px;font-weight:600;color:var(--tx2);transition:background .1s;}
+.sopt:hover{background:var(--sur2);}
+.sopt.cur{background:var(--am-bg);}
+.sopt .dot{flex-shrink:0;}
+
+/* ROW ACTIONS */
+.ra{display:flex;gap:3px;opacity:0;transition:opacity .15s;}
+tbody tr:hover .ra{opacity:1;}
+.ib{width:26px;height:26px;display:flex;align-items:center;justify-content:center;border-radius:var(--rs);border:1px solid transparent;background:none;cursor:pointer;color:var(--tx3);font-size:14px;transition:all .15s;}
+.ib:hover{background:var(--sur2);border-color:var(--bor);color:var(--tx);}
+.ib.d:hover{background:var(--rd-bg);color:var(--rd);border-color:#FECACA;}
+
+/* EMPTY */
+.empty{text-align:center;padding:48px;color:var(--tx3);}
+.empty i{font-size:36px;display:block;margin:0 auto 10px;}
+
+/* PAGINATION */
+.pag{display:flex;align-items:center;gap:5px;padding:8px 22px;flex-shrink:0;justify-content:flex-end;}
+.pb{min-width:28px;height:28px;border-radius:var(--rs);border:1px solid var(--bor2);background:var(--sur);color:var(--tx2);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0 6px;}
+.pb.active{background:var(--am);color:var(--cin);border-color:var(--am2);font-weight:700;}
+.pb:hover:not(.active){background:var(--sur2);}
+.pi{font-size:12px;color:var(--tx3);margin-right:6px;}
+
+/* OVERLAY / MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:center;justify-content:center;}
+.overlay.open{display:flex;}
+.modal{background:var(--sur);border-radius:var(--r);border:1px solid var(--bor);width:600px;max-width:95vw;max-height:92vh;overflow-y:auto;box-shadow:0 12px 40px rgba(0,0,0,0.2);}
+.mh{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--bor);background:var(--cin);border-radius:var(--r) var(--r) 0 0;}
+.mh h2{font-size:15px;font-weight:700;color:#fff;}
+.mh .ib{color:rgba(255,255,255,0.6);}
+.mh .ib:hover{background:rgba(255,255,255,0.1);border-color:transparent;color:#fff;}
+.mb{padding:20px;}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.ff{grid-column:1/-1;}
+.fg label{display:block;font-size:11px;font-weight:700;color:var(--tx2);margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px;}
+.fg input,.fg select,.fg textarea{width:100%;padding:8px 11px;border:1px solid var(--bor2);border-radius:var(--rs);background:var(--sur);color:var(--tx);font-size:13px;font-family:'Barlow',sans-serif;outline:none;transition:border-color .15s;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--am);box-shadow:0 0 0 3px rgba(245,194,0,.12);}
+.fg textarea{resize:vertical;min-height:72px;}
+.mf{padding:12px 20px;border-top:1px solid var(--bor);display:flex;justify-content:flex-end;gap:8px;background:var(--sur2);border-radius:0 0 var(--r) var(--r);}
+
+/* DETALHE */
+.dg{display:grid;grid-template-columns:1fr 1fr;gap:12px 18px;}
+.di label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--tx3);display:block;margin-bottom:3px;}
+.di span{font-size:14px;color:var(--tx);font-weight:500;}
+.sep{height:1px;background:var(--bor);margin:16px 0;}
+.dobs{background:var(--sur2);border-radius:var(--rs);border:1px solid var(--bor);padding:11px;font-size:13px;color:var(--tx2);line-height:1.6;min-height:44px;}
+
+/* DASHBOARD */
+#page-dash{flex:1;overflow-y:auto;padding:22px;display:none;}
+.dt{font-size:17px;font-weight:700;margin-bottom:16px;}
+.cc{background:var(--sur);border:1px solid var(--bor);border-radius:var(--r);padding:12px 16px;margin-bottom:9px;cursor:pointer;transition:border-color .15s;}
+.cc:hover{border-color:var(--am);}
+.cbb{height:5px;background:var(--sur2);border-radius:3px;margin-top:9px;}
+.cbf{height:5px;background:var(--am);border-radius:3px;transition:width .5s;}
+.dsg{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;}
+.dsc{background:var(--sur);border:1px solid var(--bor);border-radius:var(--r);padding:14px;cursor:pointer;transition:all .15s;}
+.dsc:hover{border-color:var(--am);box-shadow:0 2px 10px rgba(245,194,0,.15);}
+.dsn{font-size:30px;font-weight:700;line-height:1;margin-bottom:5px;}
+.dsl{font-size:12px;color:var(--tx3);}
+.dsh{font-size:11px;color:var(--am2);margin-top:5px;}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="logo-wrap">
+      <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAFBAgYDASIAAhEBAxEB/8QAHQABAAICAwEBAAAAAAAAAAAAAAYHBQgCAwQJAf/EAFUQAAEDAwEFBAUGBgwNBAMAAAEAAgMEBREGBxIhMUEIE1FhFCIycYEVFiOCkaEzQlJisdEXGCQ1Q1ZzdHWUstIlNDY3OFVjcpWzwcLwU4SStGSD8f/EABsBAQACAwEBAAAAAAAAAAAAAAABAgMEBQYH/8QAOxEBAAICAQEFBQYDBQkAAAAAAAECAxEEBQYSITFRQWFxgZETMqGxwfAHctEUIjOy4RUjJCUmNDWSwv/aAAwDAQACEQMRAD8A3LREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBR7aLq616H0lWajuxcYacAMiZ7c0h4NY3zJ+wZPIKQrS7tb7QvnRrMaat0+9arI9zHFpy2ap5Pdw5hvsjz3vFEw2/wBLXu36k07QX61y97R10LZondQDzafAg5BHQgrJLU/sZ7QvQrnNoC5z4p6xzp7aXfiS4y+PPQOAyPMHq5bYIiRERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBEXGaWOGF800jY442lz3uOA0DiST0CCtu0ZtBboHZ/NLSTNbeLjmmoG54tJHry48GA595aOq0PhZJVVTI97Mkzw3eceZJ5lTrb1r2TaBtAqrnE9/yXTfua3RnpE0+3jxccuPXiB0UKs/77Uf8ALs/tBQtEP2GWrtN0iqaad0NVSytlhljPFr2kOa4H3gFfQTY5rel1/oOhv0RY2qx3NdC3+CnaBvDHQHIcPJwWhl0pjUQB7BmSMcOPNvUf9ft8VYHZd2hHRWvI7fXz7lmvDm09TvO9WGT+Dl+BO6fJxPRIkmG8iIilUREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBUH2wtoQsWlmaNts4Fwu7CaotPGKlzgjy3yC33ByurVN7t+m9O19+ukvdUdDC6aV3UgcmjxJOAB1JC+d2vdT3DWOrrhqO5OPf1kpcGb2REwcGMHk1oA88ZUSmIYJeqz/vtR/wAuz+0F5V6rP++1H/Ls/tBQszo4HIWHu9KIpO/jGI3niAMBrv0YP6/BZhcXtbJG6N4JY4YcAVA297LW0L56aDbbbhPv3mzBsE+8fWlixiOTzOBuk+Lc9QreXz02VavrdnG0KjvTN99M091VxN/h6dx9YDz4Aj85oz1X0Et1ZS3G309woZ2VFLUxNlhlYctexwyHA+BBV4VmHeiIiBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREB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" alt="Logo">
+      <div class="logo-text"><div class="ln">A. Ferreira</div><div class="ls">Transportes</div></div>
+    </div>
+    <nav class="nav">
+      <div class="ns">Principal</div>
+      <div class="ni active" onclick="setPage('emp',this)"><i class="ti ti-building-store"></i> Prospecção <span class="nb" id="nb-t">0</span></div>
+      <div class="ni" onclick="setPage('dash',this)"><i class="ti ti-chart-bar"></i> Dashboard</div>
+      <div class="ns">Filtrar por Status</div>
+      <div class="ni" onclick="qfStatus('')"><i class="ti ti-list"></i> Todas</div>
+      <div class="ni" onclick="qfStatus('Não contatado')"><i class="ti ti-circle-dashed"></i> Não contatado <span class="nb" id="nb-nc">0</span></div>
+      <div class="ni" onclick="qfStatus('Aguardando retorno')"><i class="ti ti-clock"></i> Aguardando <span class="nb" id="nb-ag">0</span></div>
+      <div class="ni" onclick="qfStatus('Retorno positivo')"><i class="ti ti-thumb-up"></i> Positivo <span class="nb" id="nb-ps">0</span></div>
+      <div class="ni" onclick="qfStatus('Retorno negativo')"><i class="ti ti-thumb-down"></i> Negativo <span class="nb" id="nb-ng">0</span></div>
+      <div class="ni" onclick="qfStatus('Virou cliente')"><i class="ti ti-star"></i> Clientes <span class="nb" id="nb-cl">0</span></div>
+      <div class="ns">Filtrar por Potencial</div>
+      <div class="ni" onclick="qfPot('')"><i class="ti ti-list"></i> Todos</div>
+      <div class="ni" onclick="qfPot('ALTO')"><i class="ti ti-flame"></i> Alto potencial</div>
+      <div class="ni" onclick="qfPot('MÉDIO/ALTO')"><i class="ti ti-trending-up"></i> Médio/Alto</div>
+      <div class="ni" onclick="qfPot('MÉDIO')"><i class="ti ti-minus"></i> Médio</div>
+    </nav>
+    <div class="sf"><div>v2.0 — Região de Campinas</div></div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div><h1 id="pg-title">Empresas para Prospecção</h1><p id="pg-sub">Gerencie seus contatos e leads</p></div>
+      <div class="tba">
+        <input type="file" id="csv-input" accept=".csv" style="display:none" onchange="importarCSV(this)">
+        <button class="btn" onclick="document.getElementById('csv-input').click()"><i class="ti ti-upload"></i> Importar CSV</button>
+        <button class="btn" onclick="exportCSV()"><i class="ti ti-download"></i> Exportar CSV</button>
+        <button class="btn btn-p" onclick="abrirNova()"><i class="ti ti-plus"></i> Nova Empresa</button>
+      </div>
+    </div>
+
+    <!-- STATS CARDS CLICÁVEIS -->
+    <div class="stats-row" id="stats-row"></div>
+
+    <!-- PAGE EMPRESAS -->
+    <div id="page-emp">
+      <div class="filters">
+        <input type="text" id="busca" placeholder="🔍  Buscar empresa, cidade, ramo..." oninput="renderTabela()">
+        <select id="f-st" onchange="renderTabela()">
+          <option value="">Todos os status</option>
+          <option>Não contatado</option><option>Aguardando retorno</option>
+          <option>Retorno positivo</option><option>Retorno negativo</option><option>Virou cliente</option>
+        </select>
+        <select id="f-ci" onchange="renderTabela()"><option value="">Todas as cidades</option></select>
+        <select id="f-rm" onchange="renderTabela()"><option value="">Todos os ramos</option></select>
+        <select id="f-pt" onchange="renderTabela()">
+          <option value="">Qualquer potencial</option>
+          <option>ALTO</option><option>MÉDIO/ALTO</option><option>MÉDIO</option><option>BAIXO</option>
+        </select>
+      </div>
+      <div class="tw">
+        <table>
+          <thead><tr>
+            <th style="width:20%">Empresa</th>
+            <th style="width:11%">Cidade</th>
+            <th style="width:14%">Ramo</th>
+            <th style="width:9%">Telefone</th>
+            <th style="width:8%">Potencial</th>
+            <th style="width:12%">Status</th>
+            <th style="width:9%">Contato</th>
+            <th style="width:9%">Próx. contato</th>
+            <th style="width:8%"></th>
+          </tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+      <div class="pag" id="pag"></div>
+    </div>
+
+    <!-- PAGE DASHBOARD -->
+    <div id="page-dash"></div>
+  </div>
+</div>
+
+<!-- MODAL FORM -->
+<div class="overlay" id="m-form">
+  <div class="modal">
+    <div class="mh"><h2 id="m-titulo">Nova Empresa</h2><button class="ib" onclick="cm('m-form')"><i class="ti ti-x"></i></button></div>
+    <div class="mb">
+      <div class="fr"><div class="fg ff"><label>Nome da empresa *</label><input type="text" id="f-nome" placeholder="Ex: Distribuidora Central Ltda"></div></div>
+      <div class="fr">
+        <div class="fg"><label>Cidade *</label><select id="f-cid"></select></div>
+        <div class="fg"><label>Ramo de atividade</label><input type="text" id="f-ramo" placeholder="Ex: Distribuição de alimentos"></div>
+      </div>
+      <div class="fr">
+        <div class="fg"><label>Responsável / Contato</label><input type="text" id="f-resp" placeholder="Nome do responsável"></div>
+        <div class="fg"><label>Telefone / WhatsApp</label><input type="text" id="f-tel" placeholder="(19) 99999-0000"></div>
+      </div>
+      <div class="fr">
+        <div class="fg"><label>E-mail</label><input type="text" id="f-email" placeholder="contato@empresa.com.br"></div>
+        <div class="fg"><label>Site</label><input type="text" id="f-site" placeholder="www.empresa.com.br"></div>
+      </div>
+      <div class="fr">
+        <div class="fg"><label>Potencial</label>
+          <select id="f-pot"><option value="">Não definido</option><option>ALTO</option><option>MÉDIO/ALTO</option><option>MÉDIO</option><option>BAIXO</option></select></div>
+        <div class="fg"><label>Status do contato</label>
+          <select id="f-stat">
+            <option>Não contatado</option><option>Aguardando retorno</option>
+            <option>Retorno positivo</option><option>Retorno negativo</option><option>Virou cliente</option>
+          </select></div>
+      </div>
+      <div class="fr">
+        <div class="fg"><label>Data do contato</label><input type="date" id="f-data"></div>
+        <div class="fg"><label>Próximo contato</label><input type="date" id="f-prox"></div>
+      </div>
+      <div class="fr"><div class="fg ff"><label>Endereço</label><input type="text" id="f-end" placeholder="Ex: Av. Industrial, 1000 - Distrito Industrial"></div></div>
+      <div class="fr"><div class="fg ff"><label>Observações</label><textarea id="f-obs" placeholder="Anotações, necessidades, resultado da conversa..."></textarea></div></div>
+    </div>
+    <div class="mf">
+      <button class="btn" onclick="cm('m-form')">Cancelar</button>
+      <button class="btn btn-p" onclick="salvar()"><i class="ti ti-device-floppy"></i> Salvar empresa</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DETALHE -->
+<div class="overlay" id="m-det">
+  <div class="modal">
+    <div class="mh"><h2 id="d-nome" style="max-width:440px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></h2><button class="ib" onclick="cm('m-det')"><i class="ti ti-x"></i></button></div>
+    <div class="mb">
+      <div class="dg">
+        <div class="di"><label>Cidade</label><span id="d-cid"></span></div>
+        <div class="di"><label>Ramo</label><span id="d-ramo"></span></div>
+        <div class="di"><label>Responsável</label><span id="d-resp"></span></div>
+        <div class="di"><label>Telefone</label><span id="d-tel"></span></div>
+        <div class="di"><label>E-mail</label><span id="d-email"></span></div>
+        <div class="di"><label>Site</label><span id="d-site"></span></div>
+        <div class="di"><label>Potencial</label><span id="d-pot"></span></div>
+        <div class="di"><label>Status</label><span id="d-stat"></span></div>
+        <div class="di"><label>Último contato</label><span id="d-data"></span></div>
+        <div class="di"><label>Próximo contato</label><span id="d-prox"></span></div>
+        <div class="di" style="grid-column:1/-1"><label>Endereço</label><span id="d-end"></span></div>
+      </div>
+      <div class="sep"></div>
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--tx3);margin-bottom:7px;">Observações</div>
+      <div class="dobs" id="d-obs"></div>
+    </div>
+    <div class="mf">
+      <button class="btn" onclick="cm('m-det')">Fechar</button>
+      <button class="btn btn-p" onclick="editDet()"><i class="ti ti-edit"></i> Editar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const CIDADES=["Campinas","Mogi Guaçu","Mogi Mirim","Aguaí","Estiva Gerbi","Jaguariúna","Holambra","Hortolândia","Paulínia","Cosmópolis","Artur Nogueira","Limeira","Santa Bárbara d'Oeste","Piracicaba","Nova Odessa","Sumaré","Indaiatuba","São João da Boa Vista"];
+const SC={"Não contatado":{c:"b-nc",i:"ti-circle-dashed"},"Aguardando retorno":{c:"b-ag",i:"ti-clock"},"Retorno positivo":{c:"b-pos",i:"ti-thumb-up"},"Retorno negativo":{c:"b-neg",i:"ti-thumb-down"},"Virou cliente":{c:"b-cl",i:"ti-star"}};
+
+const BASE=[
+  {nome:"MAHLE",cidade:"Mogi Guaçu",ramo:"Autopeças",telefone:"(19) 3861-9100",email:"compras.corporativo@mahle.com",site:"mahle.com/br",potencial:"ALTO",endereco:"SP-340, S/N, Mombaça"},
+  {nome:"Ingredion",cidade:"Mogi Guaçu",ramo:"Alimentício",telefone:"(19) 3861-9600",email:"contato via portal",site:"ingredion.com.br",potencial:"ALTO",endereco:"Rua Paula Bueno, 2935"},
+  {nome:"Sylvamo",cidade:"Mogi Guaçu",ramo:"Papel e celulose",telefone:"(19) 3861-8121",email:"contato@sylvamo.com",site:"sylvamo.com",potencial:"ALTO",endereco:"SP-340 Km 171"},
+  {nome:"Autoplast Lubflon",cidade:"Mogi Guaçu",ramo:"Plásticos técnicos",telefone:"",email:"comercial@autoplast.com.br",site:"autoplast.com.br",potencial:"MÉDIO",endereco:""},
+  {nome:"Clyde Industries Brasil",cidade:"Mogi Guaçu",ramo:"Industrial",telefone:"(19) 3811-8080",email:"sales@clydeindustries.com",site:"clydeindustries.com",potencial:"MÉDIO/ALTO",endereco:"Distrito Industrial Getúlio Vargas II"},
+  {nome:"SITI Barbieri & Tarozzi",cidade:"Mogi Guaçu",ramo:"Máquinas industriais",telefone:"(19) 3818-9300",email:"comercial@siti.com.br",site:"siti.com.br",potencial:"MÉDIO",endereco:""},
+  {nome:"Packseven",cidade:"Mogi Guaçu",ramo:"Embalagens",telefone:"",email:"comercial@packseven.com.br",site:"packseven.com.br",potencial:"MÉDIO",endereco:""},
+  {nome:"Betel Indústria Comércio",cidade:"Mogi Guaçu",ramo:"Industrial",telefone:"(19) 98923-3929",email:"contato@betel.ind.br",site:"",potencial:"MÉDIO",endereco:"Rua Barão de Mauá, 2420"},
+  {nome:"Baumer",cidade:"Mogi Guaçu",ramo:"Hospitalar",telefone:"(19) 2136-9900",email:"vendas@baumer.com.br",site:"baumer.com.br",potencial:"MÉDIO/ALTO",endereco:""},
+  {nome:"Eaton",cidade:"Mogi Mirim",ramo:"Elétrica / Autopeças",telefone:"(19) 3805-8807",email:"contato@eaton.com",site:"eaton.com",potencial:"ALTO",endereco:"Rodovia SP-340 Km 156"},
+  {nome:"Sabó",cidade:"Mogi Guaçu",ramo:"Borrachas automotivas",telefone:"(19) 3805-9000",email:"contato@sabo.com.br",site:"sabo.com.br",potencial:"ALTO",endereco:"Distrito Industrial"},
+  {nome:"Mars",cidade:"Mogi Mirim",ramo:"Alimentício",telefone:"(19) 2023-0999",email:"faleconosco@mars.com",site:"mars.com",potencial:"ALTO",endereco:"Parque Industrial"},
+  {nome:"Ambev",cidade:"Jaguariúna",ramo:"Bebidas",telefone:"",email:"atendimento@ambev.com.br",site:"ambev.com.br",potencial:"ALTO",endereco:"Distrito Industrial"},
+  {nome:"Super Watts",cidade:"Mogi Guaçu",ramo:"Elétrica",telefone:"",email:"contato@superwatts.com.br",site:"",potencial:"MÉDIO",endereco:""},
+  {nome:"Allevard Molas",cidade:"Mogi Guaçu",ramo:"Autopeças",telefone:"(19) 3805-7000",email:"contato@allevard.com",site:"allevard.com",potencial:"ALTO",endereco:"Distrito Industrial"},
+  {nome:"Forusi",cidade:"Mogi Guaçu",ramo:"Materiais elétricos",telefone:"",email:"comercial@forusi.com.br",site:"forusi.com.br",potencial:"MÉDIO",endereco:""},
+  {nome:"DAB Automotiva",cidade:"Mogi Guaçu",ramo:"Automotivo",telefone:"",email:"contato@dabautomotiva.com.br",site:"",potencial:"MÉDIO",endereco:""},
+  {nome:"Layr Fornos",cidade:"Mogi Guaçu",ramo:"Equipamentos industriais",telefone:"",email:"vendas@layr.com.br",site:"layr.com.br",potencial:"MÉDIO",endereco:""},
+  {nome:"Fermogi",cidade:"Mogi Guaçu",ramo:"Metalúrgica",telefone:"",email:"contato@fermogi.com.br",site:"",potencial:"MÉDIO",endereco:""},
+  {nome:"Eletrofer",cidade:"Mogi Guaçu",ramo:"Elétrica / Industrial",telefone:"",email:"vendas@eletrofer.com.br",site:"",potencial:"MÉDIO",endereco:""},
+  {nome:"Lindsay",cidade:"Mogi Guaçu",ramo:"Irrigação",telefone:"",email:"contato@lindsay.com",site:"lindsay.com",potencial:"MÉDIO",endereco:""},
+  {nome:"Fundição Regali Brasil",cidade:"Mogi Guaçu",ramo:"Fundição",telefone:"",email:"comercial@regali.com.br",site:"regali.com.br",potencial:"MÉDIO",endereco:""},
+  {nome:"Metal 2",cidade:"Mogi Guaçu",ramo:"Metalúrgica",telefone:"(19) 3806-9115",email:"contato@metal2.com.br",site:"",potencial:"MÉDIO",endereco:"Distrito Industrial II"},
+  {nome:"Cortag",cidade:"Mogi Guaçu",ramo:"Ferramentas",telefone:"",email:"cortag@cortag.com.br",site:"cortag.com.br",potencial:"MÉDIO",endereco:""},
+  {nome:"Isotrafo",cidade:"Mogi Guaçu",ramo:"Transformadores",telefone:"",email:"comercial@isotrafo.com.br",site:"isotrafo.com.br",potencial:"MÉDIO",endereco:""},
+  {nome:"Sulamericana",cidade:"Mogi Guaçu",ramo:"Industrial",telefone:"",email:"contato@sulamericana.ind.br",site:"",potencial:"MÉDIO",endereco:""},
+  {nome:"Grupo Morecap",cidade:"Mogi Guaçu",ramo:"Industrial",telefone:"",email:"comercial@morecap.com.br",site:"",potencial:"MÉDIO",endereco:""},
+  {nome:"Moregreen Pisos",cidade:"Mogi Guaçu",ramo:"Pisos ecológicos",telefone:"",email:"contato@moregreen.com.br",site:"",potencial:"MÉDIO",endereco:""},
+  {nome:"Alpargatas",cidade:"Limeira",ramo:"Calçados",telefone:"",email:"relacionamento@alpargatas.com.br",site:"alpargatas.com.br",potencial:"ALTO",endereco:""},
+  {nome:"Barros Auto Peças",cidade:"Mogi Guaçu",ramo:"Autopeças",telefone:"",email:"vendas@barrosautopecas.com.br",site:"",potencial:"MÉDIO",endereco:""},
+  {nome:"Motorola Industrial",cidade:"Hortolândia",ramo:"Tecnologia",telefone:"",email:"business.br@motorola.com",site:"motorola.com",potencial:"ALTO",endereco:"Campus Jaguariúna"},
+  {nome:"Jaguar Plásticos",cidade:"Jaguariúna",ramo:"Plásticos",telefone:"",email:"comercial@jaguarplasticos.com.br",site:"",potencial:"MÉDIO",endereco:""},
+  {nome:"Sky Group",cidade:"Jaguariúna",ramo:"Logística / Industrial",telefone:"",email:"contato@skygroup.com.br",site:"",potencial:"MÉDIO",endereco:""},
+  {nome:"Flextronics International",cidade:"Hortolândia",ramo:"Eletrônica / Manufatura",telefone:"",email:"brazil@flex.com",site:"flex.com",potencial:"ALTO",endereco:""},
+  {nome:"Delphi Technologies",cidade:"Jaguariúna",ramo:"Autopeças eletrônicas",telefone:"",email:"contato@delphi.com",site:"delphi.com",potencial:"ALTO",endereco:""},
+  {nome:"EMS Farmacêutica",cidade:"Hortolândia",ramo:"Farmacêutica",telefone:"",email:"sac@ems.com.br",site:"ems.com.br",potencial:"ALTO",endereco:""},
+  {nome:"Veiling Holambra",cidade:"Holambra",ramo:"Flores / Logística",telefone:"",email:"contato@veiling.com.br",site:"veiling.com.br",potencial:"ALTO",endereco:""},
+  {nome:"Hexagon",cidade:"Mogi Guaçu",ramo:"Hospitalar",telefone:"",email:"comercial@hexagon.ind.br",site:"",potencial:"MÉDIO",endereco:""},
+  {nome:"Cristália Farmacêutica",cidade:"Mogi Guaçu",ramo:"Farmacêutica",telefone:"",email:"cristalia@cristalia.com.br",site:"cristalia.com.br",potencial:"ALTO",endereco:""},
+  {nome:"CPFL Energia S.A.",cidade:"Campinas",ramo:"Energia elétrica",telefone:"",email:"",site:"cpfl.com.br",potencial:"ALTO",endereco:""},
+  {nome:"Robert Bosch Limitada",cidade:"Campinas",ramo:"Autopeças / Mecânica",telefone:"",email:"",site:"bosch.com.br",potencial:"ALTO",endereco:""},
+  {nome:"Pirelli Pneus Ltda.",cidade:"Campinas",ramo:"Fabricação de pneus",telefone:"",email:"",site:"pirelli.com",potencial:"ALTO",endereco:""},
+  {nome:"Baker Hughes Energy Technology",cidade:"Campinas",ramo:"Equipamentos industriais",telefone:"",email:"",site:"bakerhughes.com",potencial:"ALTO",endereco:""},
+  {nome:"Organon Brasil",cidade:"Campinas",ramo:"Farmacêutico",telefone:"",email:"",site:"organon.com",potencial:"MÉDIO/ALTO",endereco:""},
+  {nome:"Biobest do Brasil S.A.",cidade:"Campinas",ramo:"Agroquímico / Biológico",telefone:"",email:"",site:"biobest.com",potencial:"MÉDIO",endereco:""},
+  {nome:"Natura Cosméticos",cidade:"Campinas",ramo:"Cosméticos",telefone:"",email:"",site:"natura.com.br",potencial:"ALTO",endereco:""},
+  {nome:"Kimberley-Clark Brasil",cidade:"Campinas",ramo:"Higiene e limpeza",telefone:"",email:"",site:"kimberly-clark.com",potencial:"ALTO",endereco:""},
+  {nome:"Siemens Healthineers",cidade:"Campinas",ramo:"Equipamentos médicos",telefone:"",email:"",site:"siemens-healthineers.com",potencial:"MÉDIO/ALTO",endereco:""},
+  {nome:"Ericsson Telecomunicações",cidade:"Campinas",ramo:"Telecomunicações",telefone:"",email:"",site:"ericsson.com/br",potencial:"MÉDIO",endereco:""},
+  {nome:"3M do Brasil Ltda.",cidade:"Campinas",ramo:"Ind. diversificada",telefone:"",email:"",site:"3m.com.br",potencial:"ALTO",endereco:"Sumaré"},
+  {nome:"Medtronic Brasil",cidade:"Campinas",ramo:"Dispositivos médicos",telefone:"",email:"",site:"medtronic.com",potencial:"MÉDIO/ALTO",endereco:""},
+  {nome:"Raízen Combustíveis",cidade:"Campinas",ramo:"Combustíveis / Etanol",telefone:"",email:"",site:"raizen.com.br",potencial:"ALTO",endereco:"Paulínia"},
+  {nome:"Votorantim Cimentos",cidade:"Campinas",ramo:"Construção / Cimento",telefone:"",email:"",site:"votorantimcimentos.com",potencial:"ALTO",endereco:""},
+  {nome:"Cargill Agrícola S.A.",cidade:"Campinas",ramo:"Agronegócio / Grãos",telefone:"",email:"",site:"cargill.com.br",potencial:"ALTO",endereco:"Jaguariúna"},
+  {nome:"Assaí Atacadista",cidade:"Campinas",ramo:"Atacado / Varejo",telefone:"",email:"",site:"assai.com.br",potencial:"MÉDIO/ALTO",endereco:""},
+  {nome:"FMC Química do Brasil",cidade:"Campinas",ramo:"Agroquímico",telefone:"",email:"",site:"fmc.com",potencial:"MÉDIO/ALTO",endereco:""},
+  {nome:"Hyundai Motor Brasil Montadora",cidade:"Piracicaba",ramo:"Automobilístico",telefone:"",email:"",site:"hyundai.com.br",potencial:"ALTO",endereco:"Piracicaba"},
+  {nome:"Raízen Energia S.A.",cidade:"Piracicaba",ramo:"Etanol / Energia",telefone:"",email:"",site:"raizen.com.br",potencial:"ALTO",endereco:""},
+  {nome:"Hyundai Mobis Parts Brazil",cidade:"Piracicaba",ramo:"Autopeças",telefone:"",email:"",site:"mobis.com",potencial:"ALTO",endereco:""},
+  {nome:"Dedini Ind. de Base S.A.",cidade:"Piracicaba",ramo:"Ind. sucroalcooleira",telefone:"",email:"",site:"dedini.com.br",potencial:"ALTO",endereco:"Piracicaba"},
+  {nome:"Yazaki do Brasil Ltda.",cidade:"Piracicaba",ramo:"Autopeças / Cabos",telefone:"",email:"",site:"yazaki.com",potencial:"ALTO",endereco:""},
+  {nome:"Usina Sta. Bárbara Açúcar",cidade:"Piracicaba",ramo:"Sucroalcooleiro",telefone:"",email:"",site:"",potencial:"MÉDIO/ALTO",endereco:""},
+  {nome:"Clariant S.A.",cidade:"Limeira",ramo:"Química especialidades",telefone:"",email:"",site:"clariant.com",potencial:"ALTO",endereco:""},
+  {nome:"Votorantim Metais",cidade:"Limeira",ramo:"Metalurgia / Zinco",telefone:"",email:"",site:"votorantim.com",potencial:"ALTO",endereco:""},
+  {nome:"Suzano Papel e Celulose",cidade:"Limeira",ramo:"Papel e celulose",telefone:"",email:"",site:"suzano.com.br",potencial:"ALTO",endereco:""},
+  {nome:"Romi Indústrias S.A.",cidade:"Santa Bárbara d'Oeste",ramo:"Máquinas e tornos CNC",telefone:"",email:"",site:"romi.com",potencial:"ALTO",endereco:""},
+  {nome:"Schneider Electric Brasil",cidade:"Santa Bárbara d'Oeste",ramo:"Automação industrial",telefone:"",email:"",site:"se.com/br",potencial:"ALTO",endereco:""},
+  {nome:"Honda Automóveis do Brasil",cidade:"Sumaré",ramo:"Automobilístico",telefone:"",email:"",site:"honda.com.br",potencial:"ALTO",endereco:"Sumaré"},
+  {nome:"Kraft Heinz Brasil",cidade:"Sumaré",ramo:"Alimentos",telefone:"",email:"",site:"kraftheinz.com",potencial:"ALTO",endereco:""},
+  {nome:"Ajinomoto do Brasil",cidade:"Sumaré",ramo:"Alimentos / Condimentos",telefone:"",email:"",site:"ajinomoto.com.br",potencial:"ALTO",endereco:"Sumaré"},
+  {nome:"Mahle Componentes de Motor",cidade:"Sumaré",ramo:"Autopeças",telefone:"",email:"",site:"mahle.com",potencial:"ALTO",endereco:""},
+  {nome:"Prysmian Cabos e Sistemas",cidade:"Sumaré",ramo:"Cabos elétricos",telefone:"",email:"",site:"prysmian.com",potencial:"ALTO",endereco:""},
+  {nome:"ABB Ltda.",cidade:"Indaiatuba",ramo:"Automação / Energia",telefone:"",email:"",site:"abb.com/br",potencial:"ALTO",endereco:""},
+  {nome:"Scania Latin America Ltda.",cidade:"Indaiatuba",ramo:"Caminhões e ônibus",telefone:"",email:"",site:"scania.com.br",potencial:"ALTO",endereco:""},
+  {nome:"AGCO do Brasil (Massey Ferguson)",cidade:"Indaiatuba",ramo:"Máquinas agrícolas",telefone:"",email:"",site:"agcocorp.com",potencial:"ALTO",endereco:""},
+  {nome:"Bauducco Indústria",cidade:"Indaiatuba",ramo:"Alimentos / Panificação",telefone:"",email:"",site:"bauducco.com.br",potencial:"MÉDIO/ALTO",endereco:""},
+  {nome:"Dell Computadores do Brasil",cidade:"Hortolândia",ramo:"Tecnologia / Servidores",telefone:"",email:"",site:"dell.com/br",potencial:"ALTO",endereco:""},
+  {nome:"Foxconn Industrial do Brasil",cidade:"Hortolândia",ramo:"Eletrônica / Manufatura",telefone:"",email:"",site:"foxconn.com",potencial:"ALTO",endereco:""},
+  {nome:"Jabil Circuit do Brasil",cidade:"Hortolândia",ramo:"Eletrônica / EMS",telefone:"",email:"",site:"jabil.com",potencial:"ALTO",endereco:""},
+  {nome:"LG Electronics do Brasil",cidade:"Hortolândia",ramo:"Eletroeletrônicos",telefone:"",email:"",site:"lg.com/br",potencial:"ALTO",endereco:""},
+  {nome:"Ingram Micro Brasil",cidade:"Hortolândia",ramo:"Distribuição de TI",telefone:"",email:"",site:"ingrammicro.com",potencial:"MÉDIO/ALTO",endereco:""},
+  {nome:"Plastipak Packaging do Brasil",cidade:"Paulínia",ramo:"Embalagens plásticas",telefone:"",email:"",site:"plastipak.com",potencial:"ALTO",endereco:""},
+  {nome:"Fertilizantes Heringer",cidade:"Paulínia",ramo:"Fertilizantes",telefone:"",email:"",site:"heringer.com.br",potencial:"ALTO",endereco:""},
+  {nome:"Petrobras — Refinaria Replan",cidade:"Paulínia",ramo:"Petróleo / Refino",telefone:"",email:"",site:"petrobras.com.br",potencial:"ALTO",endereco:""},
+  {nome:"Dow Brasil",cidade:"Paulínia",ramo:"Química / Petroquímica",telefone:"",email:"",site:"dow.com",potencial:"ALTO",endereco:""},
+  {nome:"Air Liquide Brasil",cidade:"Paulínia",ramo:"Gases industriais",telefone:"",email:"",site:"airliquide.com.br",potencial:"ALTO",endereco:"Paulínia"},
+  {nome:"Braskem S.A.",cidade:"Paulínia",ramo:"Petroquímica / Resinas",telefone:"",email:"",site:"braskem.com.br",potencial:"ALTO",endereco:"Polo Petroquímico de Paulínia"},
+  {nome:"MSD Saúde Animal Brasil",cidade:"Jaguariúna",ramo:"Veterinário / Farmacêutico",telefone:"",email:"",site:"msd.com.br",potencial:"MÉDIO/ALTO",endereco:""},
+  {nome:"Syngenta Proteção de Cultivos",cidade:"Jaguariúna",ramo:"Agroquímico",telefone:"",email:"",site:"syngenta.com.br",potencial:"ALTO",endereco:"Paulínia"},
+  {nome:"Whirlpool Eletrodomésticos",cidade:"Jaguariúna",ramo:"Eletrodomésticos",telefone:"",email:"",site:"whirlpool.com.br",potencial:"ALTO",endereco:""},
+  {nome:"Coty Brasil",cidade:"Jaguariúna",ramo:"Cosméticos / Perfumaria",telefone:"",email:"",site:"coty.com",potencial:"MÉDIO/ALTO",endereco:""},
+  {nome:"Votorantim Cimentos — Mogi Guaçu",cidade:"Mogi Guaçu",ramo:"Cimento / Construção",telefone:"",email:"",site:"votorantimcimentos.com",potencial:"ALTO",endereco:""},
+  {nome:"Bardella S.A. Indústrias Mecânicas",cidade:"Mogi Guaçu",ramo:"Equipamentos pesados",telefone:"",email:"",site:"bardella.com.br",potencial:"MÉDIO/ALTO",endereco:""},
+  {nome:"Mirim Transportes e Locação",cidade:"Mogi Guaçu",ramo:"Transportadora",telefone:"",email:"",site:"",potencial:"MÉDIO",endereco:""},
+  {nome:"Copersucar — Mogi Mirim",cidade:"Mogi Mirim",ramo:"Sucroalcooleiro",telefone:"",email:"",site:"copersucar.com.br",potencial:"ALTO",endereco:""},
+  {nome:"Klinke Puxados Inox",cidade:"Mogi Mirim",ramo:"Metalurgia / Inox",telefone:"",email:"",site:"",potencial:"MÉDIO",endereco:""},
+  {nome:"Adama Brasil S.A.",cidade:"Nova Odessa",ramo:"Agroquímico",telefone:"",email:"",site:"adama.com",potencial:"MÉDIO/ALTO",endereco:""},
+  {nome:"Goodyear — Química Nova Odessa",cidade:"Nova Odessa",ramo:"Química / Borracha",telefone:"",email:"",site:"goodyear.com.br",potencial:"ALTO",endereco:"Nova Odessa"},
+  {nome:"Bayer CropScience Brasil",cidade:"Cosmópolis",ramo:"Agroquímico",telefone:"",email:"",site:"bayer.com.br",potencial:"ALTO",endereco:""},
+  {nome:"Usina São Martinho — Filial",cidade:"Artur Nogueira",ramo:"Sucroalcooleiro",telefone:"",email:"",site:"saomartinho.com.br",potencial:"ALTO",endereco:""},
+  {nome:"Citrovita Agro Industrial",cidade:"Artur Nogueira",ramo:"Suco de laranja",telefone:"",email:"",site:"",potencial:"MÉDIO/ALTO",endereco:""},
+  {nome:"Cooperativa Holambra — Veiling",cidade:"Holambra",ramo:"Flores / Cooperativa",telefone:"",email:"",site:"holambra.com.br",potencial:"MÉDIO/ALTO",endereco:""},
+  {nome:"Usina Ester Açúcar e Álcool",cidade:"Aguaí",ramo:"Sucroalcooleiro",telefone:"",email:"",site:"",potencial:"MÉDIO/ALTO",endereco:""},
+  {nome:"Usina Jacarezinho",cidade:"Estiva Gerbi",ramo:"Sucroalcooleiro",telefone:"",email:"",site:"",potencial:"MÉDIO",endereco:""},
+  {nome:"Castertech Mogi Guaçu",cidade:"Mogi Guaçu",ramo:"Fundição",telefone:"(54) 3239-3600",email:"",site:"",potencial:"",endereco:"Avenida Philip Couri, 50"},
+  {nome:"Embalatec Industrial",cidade:"Mogi Guaçu",ramo:"Embalagens",telefone:"(11) 5534-0003",email:"",site:"",potencial:"",endereco:"Rua Ademar Bombo, 380"},
+  {nome:"Sandvik Materials Technology Indústria Comércio",cidade:"Mogi Guaçu",ramo:"Metalurgia",telefone:"(19) 3861-9834",email:"",site:"",potencial:"",endereco:"Av. Suécia, 3200"},
+  {nome:"Usinel Indústria e Comércio de Máquinas e Equipamentos LTDA",cidade:"Mogi Guaçu",ramo:"Máquinas industriais",telefone:"(19) 3818-0173",email:"",site:"",potencial:"",endereco:"Parque Industrial João Batista Caruso"},
+  {nome:"Depierri Usinagem e Indústria de Peças",cidade:"Mogi Guaçu",ramo:"Usinagem",telefone:"(19) 3841-5377",email:"",site:"",potencial:"",endereco:"Parque Cidade Nova"},
+  {nome:"P R Guaçu Indústria Comércio",cidade:"Mogi Guaçu",ramo:"Química",telefone:"(19) 3841-5137",email:"",site:"",potencial:"",endereco:"Distrito Industrial"},
+  {nome:"Guaçu Industrialização de Metais Ltda",cidade:"Mogi Guaçu",ramo:"Metalurgia",telefone:"(19) 3861-6455",email:"",site:"",potencial:"",endereco:"Vila Paraíso"},
+  {nome:"LiuGong Latin America",cidade:"Mogi Guaçu",ramo:"Máquinas Pesadas",telefone:"(19) 3851-2400",email:"",site:"",potencial:"",endereco:"Parque Industrial"},
+  {nome:"Microfundição Brasil",cidade:"Mogi Guaçu",ramo:"Fundição de Precisão",telefone:"(19) 3818-6900",email:"",site:"",potencial:"",endereco:"Rua Ademar Bombo, 500"},
+  {nome:"Microrio",cidade:"Mogi Guaçu",ramo:"Válvulas Industriais",telefone:"(19) 3199-0144",email:"",site:"",potencial:"",endereco:"Rua Marcio Carlim, 463"},
+  {nome:"P R Guaçu Indústria",cidade:"Mogi Guaçu",ramo:"Química",telefone:"(19) 3841-5137",email:"",site:"",potencial:"",endereco:"Distrito Industrial"},
+  {nome:"Usinel Indústria e Comércio de Máquinas",cidade:"Mogi Guaçu",ramo:"Máquinas Industriais",telefone:"(19) 3818-0173",email:"",site:"",potencial:"",endereco:"Parque Industrial João Batista Caruso"},
+  {nome:"RCO Soluções Industriais",cidade:"Mogi Guaçu",ramo:"Equipamentos Industriais",telefone:"(19) 3891-9700",email:"",site:"",potencial:"",endereco:"Jardim Santa Terezinha"},
+  {nome:"SACMI do Brasil",cidade:"Mogi Mirim",ramo:"Máquinas Industriais",telefone:"(19) 3805-7300",email:"",site:"",potencial:"",endereco:"Jardim Maria Beatriz"},
+  {nome:"Balestro",cidade:"Mogi Mirim",ramo:"Equipamentos Industriais",telefone:"(19) 3814-9000",email:"",site:"",potencial:"",endereco:"Av. Geraldo Potyguara Silveira Franco"},
+  {nome:"Marangoni Maretti",cidade:"Mogi Mirim",ramo:"Materiais Elétricos",telefone:"(19) 3805-9600",email:"",site:"",potencial:"",endereco:"Parque da Empresa"},
+  {nome:"BUICS Industrial",cidade:"Mogi Mirim",ramo:"Usinagem",telefone:"(19) 3105-0671",email:"",site:"",potencial:"",endereco:"Rod. SP-340 Km 157"},
+  {nome:"Tenneco",cidade:"Mogi Mirim",ramo:"Autopeças",telefone:"(19) 3814-8000",email:"",site:"",potencial:"",endereco:"Distrito Industrial"},
+  {nome:"Flex",cidade:"Jaguariúna",ramo:"Eletrônicos",telefone:"",email:"",site:"",potencial:"",endereco:"Distrito Industrial"},
+  {nome:"Skyworks",cidade:"Jaguariúna",ramo:"Semicondutores",telefone:"",email:"",site:"",potencial:"",endereco:"Distrito Industrial"},
+  {nome:"Hitachi Energy",cidade:"Jaguariúna",ramo:"Energia",telefone:"",email:"",site:"",potencial:"",endereco:"Rod. Campinas-Mogi Mirim"},
+  {nome:"Alea Telecom",cidade:"Jaguariúna",ramo:"Telecomunicações",telefone:"",email:"",site:"",potencial:"",endereco:"Jaguariúna"},
+  {nome:"Stefanini",cidade:"Jaguariúna",ramo:"Tecnologia",telefone:"",email:"",site:"",potencial:"",endereco:"Jaguariúna"},
+  {nome:"Danone",cidade:"Jaguariúna",ramo:"Alimentos",telefone:"",email:"",site:"",potencial:"",endereco:"Jaguariúna"},
+  {nome:"Agilent Technologies",cidade:"Jaguariúna",ramo:"Laboratórios",telefone:"",email:"",site:"",potencial:"",endereco:"Jaguariúna"},
+  {nome:"Holamaq",cidade:"Holambra",ramo:"Equipamentos Industriais",telefone:"(19) 3802-7900",email:"",site:"",potencial:"",endereco:"Rua Vlieg, 127"},
+  {nome:"Prolapack",cidade:"Holambra",ramo:"Embalagens",telefone:"(19) 97165-7441",email:"",site:"",potencial:"",endereco:"O Semeador, 171"},
+  {nome:"HBA Equipamentos Agrícolas",cidade:"Holambra",ramo:"Agronegócio",telefone:"(19) 3802-1256",email:"",site:"",potencial:"",endereco:"Av. Nogueiras, 420"},
+  {nome:"Flora Holambra",cidade:"Holambra",ramo:"Flores e Plantas",telefone:"(19) 3802-XXXX",email:"",site:"",potencial:"",endereco:"Holambra"},
+  {nome:"Stoop Flores",cidade:"Holambra",ramo:"Flores",telefone:"(19) 3802-XXXX",email:"",site:"",potencial:"",endereco:"Holambra"},
+  {nome:"Cooperflora",cidade:"Holambra",ramo:"Logística Agrícola",telefone:"(19) 3802-XXXX",email:"",site:"",potencial:"",endereco:"Holambra"},
+  {nome:"Braspell",cidade:"Aguaí",ramo:"Papel e Papelão",telefone:"(19) 99183-9628",email:"",site:"",potencial:"",endereco:"Rod. Aguaí-Pirassununga Km 2,5"},
+  {nome:"Multiway",cidade:"Aguaí",ramo:"Logística Industrial",telefone:"(11) 3437-5600",email:"",site:"",potencial:"",endereco:"Distrito Industrial"},
+  {nome:"ICL América do Sul",cidade:"Aguaí",ramo:"Fertilizantes",telefone:"",email:"",site:"",potencial:"",endereco:"Aguaí"},
+  {nome:"Nutrien",cidade:"Aguaí",ramo:"Fertilizantes",telefone:"",email:"",site:"",potencial:"",endereco:"Aguaí"},
+  {nome:"Agroceres",cidade:"Aguaí",ramo:"Agronegócio",telefone:"",email:"",site:"",potencial:"",endereco:"Aguaí"},
+  {nome:"Nogueira Máquinas",cidade:"São João da Boa Vista",ramo:"Máquinas Agrícolas",telefone:"(19) 2513-5779",email:"",site:"",potencial:"",endereco:"Distrito Industrial"},
+  {nome:"Soufer Industrial",cidade:"São João da Boa Vista",ramo:"Metalurgia",telefone:"(19) 3634-3634",email:"",site:"",potencial:"",endereco:"Distrito Industrial"},
+  {nome:"Delaplastic",cidade:"São João da Boa Vista",ramo:"Embalagens",telefone:"(19) 3634-2200",email:"",site:"",potencial:"",endereco:"São João da Boa Vista"},
+  {nome:"Usian Industrial",cidade:"São João da Boa Vista",ramo:"Usinagem",telefone:"(19) 3624-1216",email:"",site:"",potencial:"",endereco:"Av. dos Trabalhadores, 900"},
+  {nome:"Grings Alimentos",cidade:"São João da Boa Vista",ramo:"Alimentos",telefone:"(19) 3624-1304",email:"",site:"",potencial:"",endereco:"Distrito Industrial"},
+  {nome:"Rey Química",cidade:"São João da Boa Vista",ramo:"Química",telefone:"(19) 99964-1568",email:"",site:"",potencial:"",endereco:"São João da Boa Vista"},
+  {nome:"Cristais São João",cidade:"São João da Boa Vista",ramo:"Cristais",telefone:"(19) 3623-6395",email:"",site:"",potencial:"",endereco:"Rua Agostinho Cenzi, 280"},
+  {nome:"Fábrica de Telas Santa Cruz",cidade:"São João da Boa Vista",ramo:"Metalurgia",telefone:"(19) 99819-6018",email:"",site:"",potencial:"",endereco:"Rua Alfredo Teodoro de Almeida, 110"},
+  {nome:"Yara Brasil",cidade:"Paulínia",ramo:"Fertilizantes",telefone:"",email:"",site:"",potencial:"",endereco:"Distrito Industrial"},
+  {nome:"White Martins",cidade:"Paulínia",ramo:"Gases Industriais",telefone:"",email:"",site:"",potencial:"",endereco:"Paulínia"},
+  {nome:"Oxiteno",cidade:"Paulínia",ramo:"Química",telefone:"",email:"",site:"",potencial:"",endereco:"Paulínia"},
+  {nome:"Brenntag",cidade:"Paulínia",ramo:"Distribuição Química",telefone:"",email:"",site:"",potencial:"",endereco:"Paulínia"},
+  {nome:"Adeste",cidade:"Paulínia",ramo:"Ingredientes Industriais",telefone:"",email:"",site:"",potencial:"",endereco:"Paulínia"},
+  {nome:"Liquigás",cidade:"Paulínia",ramo:"GLP",telefone:"",email:"",site:"",potencial:"",endereco:"Paulínia"},
+  {nome:"Ultragaz",cidade:"Paulínia",ramo:"GLP",telefone:"",email:"",site:"",potencial:"",endereco:"Paulínia"},
+  {nome:"IBL",cidade:"Paulínia",ramo:"Logística",telefone:"",email:"",site:"",potencial:"",endereco:"Paulínia"},
+  {nome:"Transjordano",cidade:"Paulínia",ramo:"Logística",telefone:"",email:"",site:"",potencial:"",endereco:"Paulínia"},
+  {nome:"Sotreq",cidade:"Paulínia",ramo:"Máquinas Pesadas",telefone:"",email:"",site:"",potencial:"",endereco:"Paulínia"},
+  {nome:"Rumo Logística",cidade:"Paulínia",ramo:"Logística Ferroviária",telefone:"",email:"",site:"",potencial:"",endereco:"Paulínia"},
+  {nome:"EMS",cidade:"Hortolândia",ramo:"Farmacêutica",telefone:"",email:"",site:"",potencial:"",endereco:"Parque Industrial"},
+  {nome:"Dell Technologies",cidade:"Hortolândia",ramo:"Tecnologia",telefone:"",email:"",site:"",potencial:"",endereco:"Hortolândia"},
+  {nome:"IBM",cidade:"Hortolândia",ramo:"Tecnologia",telefone:"",email:"",site:"",potencial:"",endereco:"Hortolândia"},
+  {nome:"Wickbold",cidade:"Hortolândia",ramo:"Alimentos",telefone:"",email:"",site:"",potencial:"",endereco:"Hortolândia"},
+  {nome:"Belgo Bekaert",cidade:"Hortolândia",ramo:"Metalurgia",telefone:"",email:"",site:"",potencial:"",endereco:"Hortolândia"},
+  {nome:"Amanco Wavin",cidade:"Hortolândia",ramo:"Tubos e Conexões",telefone:"",email:"",site:"",potencial:"",endereco:"Hortolândia"},
+  {nome:"Magneti Marelli",cidade:"Hortolândia",ramo:"Autopeças",telefone:"",email:"",site:"",potencial:"",endereco:"Hortolândia"},
+  {nome:"Tecsis",cidade:"Hortolândia",ramo:"Energia Eólica",telefone:"",email:"",site:"",potencial:"",endereco:"Hortolândia"},
+  {nome:"CM Hospitalar",cidade:"Hortolândia",ramo:"Distribuição Hospitalar",telefone:"",email:"",site:"",potencial:"",endereco:"Hortolândia"},
+  {nome:"Grupo NC",cidade:"Hortolândia",ramo:"Farmacêutica",telefone:"",email:"",site:"",potencial:"",endereco:"Hortolândia"},
+  {nome:"Superfrio",cidade:"Hortolândia",ramo:"Logística Refrigerada",telefone:"",email:"",site:"",potencial:"",endereco:"Hortolândia"},
+  {nome:"DHL Supply Chain",cidade:"Hortolândia",ramo:"Logística",telefone:"",email:"",site:"",potencial:"",endereco:"Hortolândia"},
+  {nome:"Pepsico",cidade:"Sumaré",ramo:"Alimentos",telefone:"",email:"",site:"",potencial:"",endereco:"Sumaré"},
+  {nome:"Bimbo Brasil",cidade:"Sumaré",ramo:"Alimentos",telefone:"",email:"",site:"",potencial:"",endereco:"Sumaré"},
+  {nome:"Unilever",cidade:"Sumaré",ramo:"Bens de Consumo",telefone:"",email:"",site:"",potencial:"",endereco:"Sumaré"},
+  {nome:"GDM Seeds",cidade:"Sumaré",ramo:"Agronegócio",telefone:"",email:"",site:"",potencial:"",endereco:"Sumaré"},
+  {nome:"Kion Group",cidade:"Sumaré",ramo:"Equipamentos Logísticos",telefone:"",email:"",site:"",potencial:"",endereco:"Sumaré"},
+  {nome:"Movida",cidade:"Sumaré",ramo:"Logística Automotiva",telefone:"",email:"",site:"",potencial:"",endereco:"Sumaré"},
+  {nome:"JSL",cidade:"Sumaré",ramo:"Logística",telefone:"",email:"",site:"",potencial:"",endereco:"Sumaré"},
+  {nome:"Tereos",cidade:"Sumaré",ramo:"Alimentos",telefone:"",email:"",site:"",potencial:"",endereco:"Sumaré"},
+  {nome:"Vibra Energia",cidade:"Sumaré",ramo:"Combustíveis",telefone:"",email:"",site:"",potencial:"",endereco:"Sumaré"},
+  {nome:"BRF",cidade:"Limeira",ramo:"Alimentos",telefone:"",email:"",site:"",potencial:"",endereco:"Limeira"},
+  {nome:"Maxion Wheels",cidade:"Limeira",ramo:"Autopeças",telefone:"",email:"",site:"",potencial:"",endereco:"Limeira"},
+  {nome:"Nemak",cidade:"Limeira",ramo:"Fundição",telefone:"",email:"",site:"",potencial:"",endereco:"Limeira"},
+  {nome:"Tigre",cidade:"Limeira",ramo:"Materiais de Construção",telefone:"",email:"",site:"",potencial:"",endereco:"Limeira"},
+  {nome:"Rexroth Bosch",cidade:"Limeira",ramo:"Automação Industrial",telefone:"",email:"",site:"",potencial:"",endereco:"Limeira"},
+  {nome:"Mercado Livre",cidade:"Limeira",ramo:"Centro de Distribuição",telefone:"",email:"",site:"",potencial:"",endereco:"Limeira"},
+  {nome:"Karsten",cidade:"Limeira",ramo:"Têxtil",telefone:"",email:"",site:"",potencial:"",endereco:"Limeira"},
+  {nome:"Fitesa",cidade:"Limeira",ramo:"Não Tecidos",telefone:"",email:"",site:"",potencial:"",endereco:"Limeira"},
+  {nome:"Caterpillar",cidade:"Piracicaba",ramo:"Máquinas Pesadas",telefone:"",email:"",site:"",potencial:"",endereco:"Piracicaba"},
+  {nome:"Klabin",cidade:"Piracicaba",ramo:"Papel e Celulose",telefone:"",email:"",site:"",potencial:"",endereco:"Piracicaba"},
+  {nome:"ArcelorMittal",cidade:"Piracicaba",ramo:"Siderurgia",telefone:"",email:"",site:"",potencial:"",endereco:"Piracicaba"},
+  {nome:"CJ do Brasil",cidade:"Piracicaba",ramo:"Alimentos",telefone:"",email:"",site:"",potencial:"",endereco:"Piracicaba"},
+  {nome:"ElringKlinger",cidade:"Piracicaba",ramo:"Autopeças",telefone:"",email:"",site:"",potencial:"",endereco:"Piracicaba"},
+  {nome:"PHINIA",cidade:"Piracicaba",ramo:"Autopeças",telefone:"",email:"",site:"",potencial:"",endereco:"Piracicaba"},
+  {nome:"Case IH",cidade:"Piracicaba",ramo:"Máquinas Agrícolas",telefone:"",email:"",site:"",potencial:"",endereco:"Piracicaba"},
+  {nome:"Oji Papéis",cidade:"Piracicaba",ramo:"Papel",telefone:"",email:"",site:"",potencial:"",endereco:"Piracicaba"},
+  {nome:"CP Kelco",cidade:"Piracicaba",ramo:"Química Alimentícia",telefone:"",email:"",site:"",potencial:"",endereco:"Piracicaba"},
+  {nome:"Toyota do Brasil",cidade:"Indaiatuba",ramo:"Automotivo",telefone:"",email:"",site:"",potencial:"",endereco:"Indaiatuba"},
+  {nome:"John Deere",cidade:"Indaiatuba",ramo:"Máquinas Agrícolas",telefone:"",email:"",site:"",potencial:"",endereco:"Indaiatuba"},
+  {nome:"SEW Eurodrive",cidade:"Indaiatuba",ramo:"Automação Industrial",telefone:"",email:"",site:"",potencial:"",endereco:"Indaiatuba"},
+  {nome:"Kion South America",cidade:"Indaiatuba",ramo:"Logística e Empilhadeiras",telefone:"",email:"",site:"",potencial:"",endereco:"Indaiatuba"},
+  {nome:"Plastek",cidade:"Indaiatuba",ramo:"Embalagens",telefone:"",email:"",site:"",potencial:"",endereco:"Indaiatuba"},
+  {nome:"Yanmar",cidade:"Indaiatuba",ramo:"Motores e Máquinas",telefone:"",email:"",site:"",potencial:"",endereco:"Indaiatuba"},
+  {nome:"Celulose Irani",cidade:"Indaiatuba",ramo:"Embalagens",telefone:"",email:"",site:"",potencial:"",endereco:"Indaiatuba"},
+  {nome:"Jungheinrich",cidade:"Indaiatuba",ramo:"Logística",telefone:"",email:"",site:"",potencial:"",endereco:"Indaiatuba"},
+  {nome:"Valeo",cidade:"Indaiatuba",ramo:"Autopeças",telefone:"",email:"",site:"",potencial:"",endereco:"Indaiatuba"},
+  {nome:"Ambipar",cidade:"Nova Odessa",ramo:"Gestão Ambiental",telefone:"",email:"",site:"",potencial:"",endereco:"Nova Odessa"},
+  {nome:"Penso Tecnologia",cidade:"Nova Odessa",ramo:"Tecnologia",telefone:"",email:"",site:"",potencial:"",endereco:"Nova Odessa"},
+  {nome:"Têxtil Canatiba",cidade:"Nova Odessa",ramo:"Têxtil",telefone:"",email:"",site:"",potencial:"",endereco:"Nova Odessa"},
+  {nome:"Jolitex",cidade:"Nova Odessa",ramo:"Têxtil",telefone:"",email:"",site:"",potencial:"",endereco:"Nova Odessa"},
+  {nome:"Asserth",cidade:"Nova Odessa",ramo:"Metalurgia",telefone:"",email:"",site:"",potencial:"",endereco:"Nova Odessa"},
+  {nome:"Burigotto",cidade:"Nova Odessa",ramo:"Produtos Infantis",telefone:"",email:"",site:"",potencial:"",endereco:"Nova Odessa"},
+  {nome:"Box Print",cidade:"Nova Odessa",ramo:"Embalagens",telefone:"",email:"",site:"",potencial:"",endereco:"Nova Odessa"},
+  {nome:"Acro Cabos",cidade:"Nova Odessa",ramo:"Cabos Industriais",telefone:"",email:"",site:"",potencial:"",endereco:"Nova Odessa"},
+  {nome:"Plásticos MB",cidade:"Artur Nogueira",ramo:"Plásticos",telefone:"",email:"",site:"",potencial:"",endereco:"Artur Nogueira"},
+  {nome:"Tecno Pak",cidade:"Artur Nogueira",ramo:"Embalagens",telefone:"",email:"",site:"",potencial:"",endereco:"Artur Nogueira"},
+  {nome:"Madelar",cidade:"Artur Nogueira",ramo:"Madeiras",telefone:"",email:"",site:"",potencial:"",endereco:"Artur Nogueira"},
+  {nome:"Pavan Zanetti",cidade:"Artur Nogueira",ramo:"Máquinas Agrícolas",telefone:"",email:"",site:"",potencial:"",endereco:"Artur Nogueira"},
+  {nome:"Fênix Industrial",cidade:"Artur Nogueira",ramo:"Metalurgia",telefone:"",email:"",site:"",potencial:"",endereco:"Artur Nogueira"},
+  {nome:"Cerâmica Gerbi",cidade:"Estiva Gerbi",ramo:"Cerâmica",telefone:"",email:"",site:"",potencial:"",endereco:"Estiva Gerbi"},
+  {nome:"Mineração Caldense",cidade:"Estiva Gerbi",ramo:"Mineração",telefone:"",email:"",site:"",potencial:"",endereco:"Estiva Gerbi"},
+  {nome:"Construcentro",cidade:"Estiva Gerbi",ramo:"Materiais de Construção",telefone:"",email:"",site:"",potencial:"",endereco:"Estiva Gerbi"}
+];
+
+let dados=JSON.parse(localStorage.getItem("ferreira_v4")||"null");
+if(!dados){
+  dados=BASE.map((e,i)=>({id:"b"+i,...e,responsavel:"",status:"Não contatado",data:"",prox:"",obs:"",endereco:e.endereco||""}));
+  salvarLS();
+}
+function salvarLS(){try{localStorage.setItem("ferreira_v4",JSON.stringify(dados));}catch(e){}}
+function uid(){return"u"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+
+let pag=1,PPN=25,editId=null,detId=null,filtroCardStatus="";
+
+// ===== SELECTS =====
+function popSelects(){
+  const fc=document.getElementById("f-ci"),ff=document.getElementById("f-cid");
+  const fr=document.getElementById("f-rm");
+  CIDADES.forEach(c=>{fc.innerHTML+=`<option>${c}</option>`;ff.innerHTML+=`<option>${c}</option>`;});
+  const ramos=[...new Set(dados.map(d=>d.ramo).filter(Boolean))].sort();
+  ramos.forEach(r=>fr.innerHTML+=`<option>${r}</option>`);
+}
+
+// ===== STATS CARDS CLICÁVEIS =====
+function renderStats(){
+  const t=dados.length;
+  const nc=dados.filter(d=>d.status==="Não contatado").length;
+  const ag=dados.filter(d=>d.status==="Aguardando retorno").length;
+  const ps=dados.filter(d=>d.status==="Retorno positivo").length;
+  const ng=dados.filter(d=>d.status==="Retorno negativo").length;
+  const cl=dados.filter(d=>d.status==="Virou cliente").length;
+  document.getElementById("nb-t").textContent=t;
+  document.getElementById("nb-nc").textContent=nc;
+  document.getElementById("nb-ag").textContent=ag;
+  document.getElementById("nb-ps").textContent=ps;
+  document.getElementById("nb-ng").textContent=ng;
+  document.getElementById("nb-cl").textContent=cl;
+
+  const cards=[
+    {lbl:"Total",val:t,cls:"s0",filter:"",hint:"clique para ver todas"},
+    {lbl:"Não contatado",val:nc,cls:"s1",filter:"Não contatado",hint:"clique para filtrar"},
+    {lbl:"Aguardando retorno",val:ag,cls:"s2",filter:"Aguardando retorno",hint:"clique para filtrar"},
+    {lbl:"Retorno positivo",val:ps,cls:"s3",filter:"Retorno positivo",hint:"clique para filtrar"},
+    {lbl:"Retorno negativo",val:ng,cls:"s4",filter:"Retorno negativo",hint:"clique para filtrar"},
+    {lbl:"Clientes",val:cl,cls:"s5",filter:"Virou cliente",hint:"clique para filtrar"},
+  ];
+  document.getElementById("stats-row").innerHTML=cards.map(c=>`
+    <div class="sc ${c.cls}${filtroCardStatus===c.filter?' selected':''}" onclick="clickCard('${c.filter}')">
+      <div class="sc-lbl">${c.lbl}</div>
+      <div class="sc-val">${c.val}</div>
+      <div class="sc-hint">${c.hint}</div>
+    </div>`).join("");
+}
+
+function clickCard(status){
+  filtroCardStatus=filtroCardStatus===status&&status!==''?'':status;
+  document.getElementById("f-st").value=filtroCardStatus;
+  setPage("emp");
+  renderTabela();
+}
+
+// ===== FILTRO RÁPIDO =====
+function qfStatus(s){
+  filtroCardStatus=s;
+  document.getElementById("f-st").value=s;
+  setPage("emp");
+  renderTabela();
+}
+function qfPot(p){
+  document.getElementById("f-pt").value=p;
+  setPage("emp");
+  renderTabela();
+}
+
+// ===== PÁGINA =====
+function setPage(p,el){
+  document.getElementById("page-emp").style.display=p==="emp"?"flex":"none";
+  document.getElementById("page-dash").style.display=p==="dash"?"block":"none";
+  document.querySelectorAll(".ni").forEach(n=>n.classList.remove("active"));
+  if(el)el.classList.add("active");
+  if(p==="dash")renderDash();
+}
+
+// ===== TABELA =====
+function getFiltrados(){
+  const b=document.getElementById("busca").value.toLowerCase();
+  const fs=document.getElementById("f-st").value;
+  const fc=document.getElementById("f-ci").value;
+  const fr=document.getElementById("f-rm").value;
+  const fp=document.getElementById("f-pt").value;
+  return dados.filter(d=>
+    (!b||[d.nome,d.cidade,d.ramo,d.responsavel,d.telefone,d.email].some(v=>(v||"").toLowerCase().includes(b)))&&
+    (!fs||d.status===fs)&&(!fc||d.cidade===fc)&&(!fr||d.ramo===fr)&&(!fp||d.potencial===fp)
+  );
+}
+
+function potCls(p){
+  if(!p)return"";
+  if(p==="ALTO")return"pot-A";
+  if(p==="MÉDIO/ALTO")return"pot-MA";
+  if(p==="MÉDIO")return"pot-M";
+  return"pot-B";
+}
+
+function renderTabela(){pag=1;renderStats();renderPag();}
+function renderPag(){
+  const lista=getFiltrados(),tot=lista.length,maxP=Math.max(1,Math.ceil(tot/PPN));
+  if(pag>maxP)pag=maxP;
+  const sl=lista.slice((pag-1)*PPN,pag*PPN);
+  const tb=document.getElementById("tbody");
+  if(!sl.length){tb.innerHTML=`<tr><td colspan="9" class="empty"><i class="ti ti-mood-empty"></i>Nenhuma empresa encontrada</td></tr>`;return;}
+  const hoje=new Date().toISOString().split("T")[0];
+  tb.innerHTML=sl.map(d=>{
+    const s=SC[d.status]||SC["Não contatado"];
+    const dt=d.data?new Date(d.data+"T12:00:00").toLocaleDateString("pt-BR"):"—";
+    const px=d.prox?new Date(d.prox+"T12:00:00").toLocaleDateString("pt-BR"):"—";
+    const venc=d.prox&&d.prox<hoje&&d.status!=="Virou cliente";
+    return`<tr onclick="verDet('${d.id}')">
+      <td class="te" title="${d.nome}">${d.nome}</td>
+      <td class="ts">${d.cidade||"—"}</td>
+      <td class="ts" title="${d.ramo||""}">${d.ramo||"—"}</td>
+      <td style="color:var(--tx2);white-space:nowrap">${d.telefone||"—"}</td>
+      <td>${d.potencial?`<span class="pot ${potCls(d.potencial)}">${d.potencial}</span>`:"—"}</td>
+      <td onclick="event.stopPropagation()">
+        <div class="sw" id="sw-${d.id}">
+          <span class="badge ${s.c} badge-btn" onclick="toggleMenu('${d.id}')">
+            <span class="dot"></span>${d.status}<span class="sarr">▾</span>
+          </span>
+          <div class="smenu" id="sm-${d.id}">
+            ${Object.entries(SC).map(([st,cfg])=>`<div class="sopt${d.status===st?' cur':''}" onclick="mudaStatus('${d.id}','${st}')"><span class="dot badge ${cfg.c}" style="width:8px;height:8px;padding:0;border:none;border-radius:50%;"></span>${st}</div>`).join("")}
+          </div>
+        </div>
+      </td>
+      <td style="color:var(--tx3)">${dt}</td>
+      <td style="color:${venc?"var(--rd)":"var(--tx3)"};font-weight:${venc?600:400}">${px}${venc?" ⚠️":""}</td>
+      <td><div class="ra" onclick="event.stopPropagation()">
+        <button class="ib" title="Editar" onclick="editEmp('${d.id}')"><i class="ti ti-edit"></i></button>
+        <button class="ib d" title="Excluir" onclick="excluir('${d.id}')"><i class="ti ti-trash"></i></button>
+      </div></td>
+    </tr>`;
+  }).join("");
+  const pg=document.getElementById("pag");
+  pg.innerHTML=`<span class="pi">Mostrando ${Math.min((pag-1)*PPN+1,tot)}–${Math.min(pag*PPN,tot)} de ${tot}</span>`;
+  for(let i=1;i<=maxP;i++){
+    if(maxP<=8||i===1||i===maxP||Math.abs(i-pag)<=1)
+      pg.innerHTML+=`<button class="pb${i===pag?" active":""}" onclick="irP(${i})">${i}</button>`;
+    else if(Math.abs(i-pag)===2)pg.innerHTML+=`<span style="color:var(--tx3);padding:0 4px">…</span>`;
+  }
+}
+function irP(n){pag=n;renderPag();}
+
+// ===== CRUD =====
+function abrirNova(){editId=null;limpF();document.getElementById("m-titulo").textContent="Nova Empresa";om("m-form");}
+function limpF(){
+  ["f-nome","f-ramo","f-resp","f-tel","f-email","f-site","f-end","f-data","f-prox","f-obs"].forEach(id=>document.getElementById(id).value="");
+  document.getElementById("f-stat").value="Não contatado";
+  document.getElementById("f-cid").value=CIDADES[0];
+  document.getElementById("f-pot").value="";
+}
+function editEmp(id){
+  const d=dados.find(x=>x.id===id);editId=id;
+  document.getElementById("m-titulo").textContent="Editar Empresa";
+  document.getElementById("f-nome").value=d.nome;
+  document.getElementById("f-cid").value=d.cidade;
+  document.getElementById("f-ramo").value=d.ramo||"";
+  document.getElementById("f-resp").value=d.responsavel||"";
+  document.getElementById("f-tel").value=d.telefone||"";
+  document.getElementById("f-email").value=d.email||"";
+  document.getElementById("f-site").value=d.site||"";
+  document.getElementById("f-pot").value=d.potencial||"";
+  document.getElementById("f-stat").value=d.status;
+  document.getElementById("f-data").value=d.data||"";
+  document.getElementById("f-prox").value=d.prox||"";
+  document.getElementById("f-end").value=d.endereco||"";
+  document.getElementById("f-obs").value=d.obs||"";
+  om("m-form");
+}
+function salvar(){
+  const nome=document.getElementById("f-nome").value.trim();
+  if(!nome){alert("Informe o nome da empresa.");return;}
+  const obj={id:editId||uid(),nome,cidade:document.getElementById("f-cid").value,ramo:document.getElementById("f-ramo").value.trim(),responsavel:document.getElementById("f-resp").value.trim(),telefone:document.getElementById("f-tel").value.trim(),email:document.getElementById("f-email").value.trim(),site:document.getElementById("f-site").value.trim(),potencial:document.getElementById("f-pot").value,status:document.getElementById("f-stat").value,data:document.getElementById("f-data").value,prox:document.getElementById("f-prox").value,obs:document.getElementById("f-obs").value.trim(),endereco:document.getElementById("f-end").value.trim()};
+  if(editId){const i=dados.findIndex(x=>x.id===editId);dados[i]=obj;}else dados.push(obj);
+  salvarLS();cm("m-form");renderTabela();
+}
+function excluir(id){if(!confirm("Excluir esta empresa?"))return;dados=dados.filter(x=>x.id!==id);salvarLS();renderTabela();}
+
+// ===== DETALHE =====
+function verDet(id){
+  const d=dados.find(x=>x.id===id);detId=id;
+  const s=SC[d.status]||SC["Não contatado"];
+  document.getElementById("d-nome").textContent=d.nome;
+  document.getElementById("d-cid").textContent=d.cidade||"—";
+  document.getElementById("d-ramo").textContent=d.ramo||"—";
+  document.getElementById("d-resp").textContent=d.responsavel||"—";
+  document.getElementById("d-tel").textContent=d.telefone||"—";
+  document.getElementById("d-email").textContent=d.email||"—";
+  document.getElementById("d-site").textContent=d.site||"—";
+  document.getElementById("d-pot").innerHTML=d.potencial?`<span class="pot ${potCls(d.potencial)}">${d.potencial}</span>`:"—";
+  document.getElementById("d-stat").innerHTML=`<span class="badge ${s.c}"><span class="dot"></span>${d.status}</span>`;
+  document.getElementById("d-data").textContent=d.data?new Date(d.data+"T12:00:00").toLocaleDateString("pt-BR"):"—";
+  document.getElementById("d-prox").textContent=d.prox?new Date(d.prox+"T12:00:00").toLocaleDateString("pt-BR"):"—";
+  document.getElementById("d-end").textContent=d.endereco||"—";
+  document.getElementById("d-obs").textContent=d.obs||"Nenhuma observação registrada.";
+  om("m-det");
+}
+function editDet(){cm("m-det");editEmp(detId);}
+
+// ===== MODAL =====
+function om(id){document.getElementById(id).classList.add("open");}
+function cm(id){document.getElementById(id).classList.remove("open");}
+["m-form","m-det"].forEach(id=>document.getElementById(id).addEventListener("click",e=>{if(e.target===e.currentTarget)cm(id);}));
+
+// ===== EXPORT CSV =====
+function exportCSV(){
+  const lista=getFiltrados();
+  const cols=["Nome","Cidade","Ramo","Telefone","Email","Site","Potencial","Responsável","Status","Último contato","Próximo contato","Observações"];
+  const rows=lista.map(d=>[d.nome,d.cidade,d.ramo,d.telefone,d.email,d.site,d.potencial,d.responsavel,d.status,d.data,d.prox,d.obs].map(v=>`"${(v||"").replace(/"/g,"\"\"")}"`.replace(/\"\"/g,'""')).join(","));
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob(["\uFEFF"+[cols.join(","),...rows].join("\n"),{type:"text/csv;charset=utf-8"}]));
+  a.download="ferreira_prospeccao.csv";a.click();
+}
+
+// ===== DASHBOARD =====
+function renderDash(){
+  const pc={};CIDADES.forEach(c=>pc[c]={t:0,cl:0,pos:0,ag:0});
+  const ps={};Object.keys(SC).forEach(s=>ps[s]=0);
+  dados.forEach(d=>{
+    if(pc[d.cidade]){pc[d.cidade].t++;if(d.status==="Virou cliente")pc[d.cidade].cl++;if(d.status==="Retorno positivo")pc[d.cidade].pos++;if(d.status==="Aguardando retorno")pc[d.cidade].ag++;}
+    if(ps[d.status]!==undefined)ps[d.status]++;
+  });
+  const mx=Math.max(...Object.values(pc).map(v=>v.t),1);
+  let h=`<div class="dt">Desempenho por Cidade</div><div style="margin-bottom:26px;">`;
+  CIDADES.forEach(c=>{
+    const v=pc[c];if(!v.t)return;
+    const p=Math.round(v.t/mx*100);
+    h+=`<div class="cc" onclick="qfStatus('');document.getElementById('f-ci').value='${c}';renderTabela();">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-weight:600">${c}</span>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end">
+          <span class="badge b-nc">${v.t} total</span>
+          ${v.ag?`<span class="badge b-ag">${v.ag} aguardando</span>`:""}
+          ${v.pos?`<span class="badge b-pos">${v.pos} positivo</span>`:""}
+          ${v.cl?`<span class="badge b-cl">${v.cl} cliente</span>`:""}
+        </div>
+      </div>
+      <div class="cbb"><div class="cbf" style="width:${p}%"></div></div>
+    </div>`;
+  });
+  h+=`</div><div class="dt">Resumo por Status</div><div class="dsg">`;
+  Object.entries(SC).forEach(([s])=>{
+    h+=`<div class="dsc" onclick="qfStatus('${s}');setPage('emp')">
+      <div class="dsn">${ps[s]}</div>
+      <div class="dsl">${s}</div>
+      <div class="dsh">↗ Ver empresas</div>
+    </div>`;
+  });
+  h+=`</div>`;
+  document.getElementById("page-dash").innerHTML=h;
+}
+
+popSelects();renderTabela();
+
+// ===== IMPORTAR CSV =====
+function importarCSV(input){
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    const text = e.target.result;
+    const lines = text.split(/\r?\n/).filter(l => l.trim());
+    if(lines.length < 2){ alert("CSV vazio ou inválido."); return; }
+
+    // Detectar separador
+    const sep = lines[0].includes(';') ? ';' : ',';
+
+    // Parsear CSV respeitando aspas
+    function parseRow(line){
+      const cells = [];
+      let cur = '', inQ = false;
+      for(let i=0;i<line.length;i++){
+        const c = line[i];
+        if(c==='"'){ inQ=!inQ; }
+        else if(c===sep && !inQ){ cells.push(cur.trim()); cur=''; }
+        else cur+=c;
+      }
+      cells.push(cur.trim());
+      return cells;
+    }
+
+    const headers = parseRow(lines[0]).map(h=>h.replace(/"/g,'').toLowerCase().trim());
+    // Mapeamento flexível de colunas
+    const col = (names) => {
+      for(const n of names){
+        const i = headers.findIndex(h=>h.includes(n));
+        if(i>=0) return i;
+      }
+      return -1;
+    };
+    const iNome   = col(['nome','empresa','company']);
+    const iCidade = col(['cidade','city']);
+    const iRamo   = col(['ramo','segmento','segment']);
+    const iTel    = col(['telefone','tel','phone','fone']);
+    const iEmail  = col(['email','e-mail']);
+    const iSite   = col(['site','website','url']);
+    const iPot    = col(['potencial','potential']);
+    const iResp   = col(['respons','contato','contact']);
+    const iStat   = col(['status']);
+    const iData   = col(['último contato','data contato','data do contato','last']);
+    const iProx   = col(['próximo','prox','next']);
+    const iObs    = col(['observa','obs','note']);
+    const iEnd    = col(['endere','address']);
+
+    if(iNome < 0){ alert("Coluna 'Nome' não encontrada no CSV.\nColunas encontradas: "+headers.join(', ')); return; }
+
+    let novos=0, atualizados=0, ignorados=0;
+
+    function normNome(s){
+      return s.toLowerCase().replace(/(ltda\.?|s\.a\.?|s\/a|do brasil|brasil)/g,'').replace(/\s+/g,' ').trim();
+    }
+
+    for(let i=1;i<lines.length;i++){
+      const row = parseRow(lines[i]);
+      const get = (idx) => idx>=0 && idx<row.length ? row[idx].replace(/^"|"$/g,'').trim() : '';
+
+      const nome = get(iNome);
+      if(!nome) continue;
+
+      // Verificar se empresa já existe
+      const nNorm = normNome(nome);
+      const idx = dados.findIndex(d => normNome(d.nome) === nNorm ||
+        normNome(d.nome).includes(nNorm) || nNorm.includes(normNome(d.nome)));
+
+      const novosDados = {
+        cidade:   get(iCidade),
+        ramo:     get(iRamo),
+        telefone: get(iTel),
+        email:    get(iEmail),
+        site:     get(iSite),
+        potencial:get(iPot),
+        responsavel: get(iResp),
+        status:   get(iStat),
+        data:     get(iData),
+        prox:     get(iProx),
+        obs:      get(iObs),
+        endereco: get(iEnd),
+      };
+
+      if(idx >= 0){
+        // Atualizar só campos não vazios
+        const d = dados[idx];
+        let changed = false;
+        for(const [k,v] of Object.entries(novosDados)){
+          if(v && !d[k]){
+            d[k] = v;
+            changed = true;
+          } else if(k==='status' && v && v !== d[k] && Object.keys(SC).includes(v)){
+            d[k] = v;
+            changed = true;
+          } else if(k==='obs' && v){
+            d[k] = v; // obs sempre sobrescreve
+            changed = true;
+          }
+        }
+        if(changed) atualizados++;
+        else ignorados++;
+      } else {
+        // Nova empresa
+        const obj = { id: uid(), nome, ...novosDados };
+        if(!obj.status || !Object.keys(SC).includes(obj.status)) obj.status = 'Não contatado';
+        dados.push(obj);
+        novos++;
+      }
+    }
+
+    salvarLS();
+    renderTabela();
+    input.value = ''; // limpar para permitir reimportar o mesmo arquivo
+    alert(`✅ Importação concluída!\n\n• ${novos} empresas novas\n• ${atualizados} empresas atualizadas\n• ${ignorados} já estavam atualizadas`);
+  };
+  reader.readAsText(file, 'UTF-8');
+}
+
+let menuAberto=null;
+function toggleMenu(id){
+  const m=document.getElementById("sm-"+id);
+  if(!m)return;
+  const jaAberto=m.classList.contains("open");
+  closeAllMenus();
+  if(!jaAberto){m.classList.add("open");menuAberto=id;}
+}
+function closeAllMenus(){
+  document.querySelectorAll(".smenu.open").forEach(m=>m.classList.remove("open"));
+  menuAberto=null;
+}
+function mudaStatus(id,novoStatus){
+  const d=dados.find(x=>x.id===id);
+  if(!d)return;
+  d.status=novoStatus;
+  // Se virou cliente ou positivo, registra data de hoje automaticamente
+  if(!d.data&&(novoStatus==="Retorno positivo"||novoStatus==="Aguardando retorno"||novoStatus==="Virou cliente"))
+    d.data=new Date().toISOString().split("T")[0];
+  salvarLS();
+  closeAllMenus();
+  renderTabela();
+}
+// Fecha menu ao clicar fora
+document.addEventListener("click",function(e){
+  if(menuAberto&&!e.target.closest(".sw"))closeAllMenus();
+});
+</script>
+</body>
+</html>
