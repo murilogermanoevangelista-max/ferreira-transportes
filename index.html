@@ -178,22 +178,6 @@ tbody tr:hover .ra{opacity:1;}
 .dsl{font-size:12px;color:var(--tx3);}
 .dsh{font-size:11px;color:var(--am2);margin-top:5px;}
 
-/* ORCAMENTOS PAGE */
-#page-orc{flex:1;overflow-y:auto;padding:0 22px 22px;display:none;flex-direction:column;}
-.orc-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px 0 4px;flex-shrink:0;}
-.orc-card{background:var(--sur);border:1px solid var(--bor);border-radius:var(--r);padding:14px;position:relative;overflow:hidden;}
-.orc-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;}
-.orc-card.oc0::before{background:var(--bl);}
-.orc-card.oc1::before{background:var(--am);}
-.orc-card.oc2::before{background:var(--gr);}
-.orc-card.oc3::before{background:var(--rd);}
-.orc-card-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--tx3);margin-bottom:5px;}
-.orc-card-val{font-size:22px;font-weight:700;}
-.oc0 .orc-card-val{color:var(--bl);}
-.oc1 .orc-card-val{color:var(--am2);}
-.oc2 .orc-card-val{color:var(--gr);}
-.oc3 .orc-card-val{color:var(--rd);}
-.orc-card-sub{font-size:10px;color:var(--tx3);margin-top:4px;}
 /* Orcamento status badges */
 .os-pen{background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe;}
 .os-apr{background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;}
@@ -214,6 +198,41 @@ tbody tr:hover .ra{opacity:1;}
 .total-bar{display:flex;justify-content:flex-end;gap:20px;padding:10px 0 0;font-size:13px;}
 .total-bar b{font-size:15px;color:var(--tx);}
 .section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--tx3);margin:14px 0 6px;}
+
+/* ORCAMENTOS PAGE */
+#page-orc{flex:1;overflow-y:auto;padding:0 22px 22px;display:none;flex-direction:column;}
+.orc-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px 0 4px;flex-shrink:0;}
+.orc-card{background:var(--sur);border:1px solid var(--bor);border-radius:var(--r);padding:14px;position:relative;overflow:hidden;}
+.orc-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;}
+.orc-card.oc0::before{background:var(--bl);}
+.orc-card.oc1::before{background:var(--am);}
+.orc-card.oc2::before{background:var(--gr);}
+.orc-card.oc3::before{background:var(--rd);}
+.orc-card-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--tx3);margin-bottom:5px;}
+.orc-card-val{font-size:22px;font-weight:700;}
+.oc0 .orc-card-val{color:var(--bl);}
+.oc1 .orc-card-val{color:var(--am2);}
+.oc2 .orc-card-val{color:var(--gr);}
+.oc3 .orc-card-val{color:var(--rd);}
+.orc-card-sub{font-size:10px;color:var(--tx3);margin-top:4px;}
+.os-pen{background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe;}
+.os-apr{background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;}
+.os-rec{background:#fef2f2;color:#dc2626;border:1px solid #fecaca;}
+.os-fat{background:#f5f3ff;color:#7c3aed;border:1px solid #ddd6fe;}
+.os-can{background:#f5f4f0;color:#5a5854;border:1px solid #cccac4;}
+.modal-orc{width:820px;max-width:96vw;}
+.itens-table{width:100%;border-collapse:collapse;margin-top:8px;font-size:13px;}
+.itens-table th{background:var(--sur2);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--tx3);padding:7px 10px;text-align:left;border-bottom:1px solid var(--bor);}
+.itens-table td{padding:7px 10px;border-bottom:1px solid var(--bor);vertical-align:middle;}
+.itens-table tr:last-child td{border-bottom:none;}
+.itens-table input,.itens-table select{width:100%;padding:5px 8px;border:1px solid var(--bor2);border-radius:4px;font-size:12px;font-family:'Barlow',sans-serif;background:var(--sur);}
+.itens-table input:focus,.itens-table select:focus{border-color:var(--am);outline:none;}
+.add-item-btn{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:var(--rs);border:1px dashed var(--bor2);background:none;color:var(--tx3);font-size:12px;cursor:pointer;margin-top:8px;font-family:'Barlow',sans-serif;}
+.add-item-btn:hover{border-color:var(--am);color:var(--am2);}
+.total-bar{display:flex;justify-content:flex-end;gap:20px;padding:10px 0 0;font-size:13px;}
+.total-bar b{font-size:15px;color:var(--tx);}
+.section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--tx3);margin:14px 0 6px;padding-bottom:4px;border-bottom:2px solid var(--am);}
+.cond-box{background:var(--sur2);border:1px solid var(--bor);border-radius:var(--rs);padding:10px 12px;font-size:12px;color:var(--tx2);line-height:1.6;}
 </style>
 </head>
 <body>
@@ -1002,174 +1021,6 @@ function mudaStatus(id,novoStatus){
   renderTabela();
 }
 
-// ===================================================
-// MÓDULO ORÇAMENTOS
-// ===================================================
-let orcamentos = JSON.parse(localStorage.getItem('ferreira_orc_v1') || 'null') || [];
-let orcEditId = null;
-let orcDetId = null;
-let orcItens = []; // array de linhas do form atual
-
-function salvarOrcLS(){ try{ localStorage.setItem('ferreira_orc_v1', JSON.stringify(orcamentos)); }catch(e){} }
-
-function gerarNumOrc(){
-  const n = orcamentos.length + 1;
-  const ano = new Date().getFullYear();
-  return `ORC-${ano}-${String(n).padStart(4,'0')}`;
-}
-
-// ===== ABRIR FORM ORÇAMENTO =====
-function abrirNovoOrc(){
-  orcEditId = null;
-  orcItens = [];
-  // preencher select de empresas
-  const sel = document.getElementById('orc-empresa');
-  sel.innerHTML = '<option value="">-- Selecione a empresa --</option>';
-  dados.forEach(d => sel.innerHTML += `<option value="${d.id}">${d.nome} — ${d.cidade}</option>`);
-  // resetar campos
-  document.getElementById('orc-titulo').textContent = 'Novo Orçamento';
-  document.getElementById('orc-num').value = gerarNumOrc();
-  document.getElementById('orc-data').value = new Date().toISOString().split('T')[0];
-  document.getElementById('orc-validade').value = 15;
-  document.getElementById('orc-solicitante').value = '';
-  document.getElementById('orc-tel').value = '';
-  document.getElementById('orc-email').value = '';
-  document.getElementById('orc-origem').value = '';
-  document.getElementById('orc-destino').value = '';
-  document.getElementById('orc-carga').value = '';
-  document.getElementById('orc-veiculo').value = 'Não especificado';
-  document.getElementById('orc-peso').value = '';
-  document.getElementById('orc-volume').value = '';
-  document.getElementById('orc-freq').value = '';
-  document.getElementById('orc-desc').value = 0;
-  document.getElementById('orc-pgto').value = 'A combinar';
-  document.getElementById('orc-status').value = 'Pendente';
-  document.getElementById('orc-obs').value = '';
-  renderItens();
-  addItemOrc();
-  om('m-orc');
-}
-
-// ===== PREENCHER AO SELECIONAR EMPRESA =====
-document.addEventListener('DOMContentLoaded', function(){
-  const empSel = document.getElementById('orc-empresa');
-  if(empSel){
-    empSel.addEventListener('change', function(){
-      const d = dados.find(x => x.id === this.value);
-      if(d){
-        if(!document.getElementById('orc-tel').value) document.getElementById('orc-tel').value = d.telefone || '';
-        if(!document.getElementById('orc-email').value) document.getElementById('orc-email').value = d.email || '';
-        if(!document.getElementById('orc-solicitante').value) document.getElementById('orc-solicitante').value = d.responsavel || '';
-      }
-    });
-  }
-});
-
-// ===== ITENS DO ORÇAMENTO =====
-function addItemOrc(){
-  orcItens.push({ desc:'', qtd:1, unid:'Viagem', unit:0 });
-  renderItens();
-}
-function removeItemOrc(i){
-  orcItens.splice(i,1);
-  renderItens();
-}
-function lerItens(){
-  orcItens = [];
-  document.querySelectorAll('#orc-itens tr').forEach((tr, i) => {
-    orcItens.push({
-      desc: tr.querySelector('.it-desc').value,
-      qtd:  parseFloat(tr.querySelector('.it-qtd').value) || 0,
-      unid: tr.querySelector('.it-unid').value,
-      unit: parseBRL(tr.querySelector('.it-unit').value)
-    });
-  });
-}
-function renderItens(){
-  const tb = document.getElementById('orc-itens');
-  tb.innerHTML = orcItens.map((it, i) => `
-    <tr>
-      <td><input class="it-desc" value="${escHtml(it.desc)}" placeholder="Ex: Frete Mogi Guaçu → São Paulo" oninput="syncItem(${i},'desc',this.value)"></td>
-      <td><input class="it-qtd" type="number" min="1" value="${it.qtd}" style="width:70px" oninput="syncItem(${i},'qtd',this.value);calcTotais()"></td>
-      <td><select class="it-unid" onchange="syncItem(${i},'unid',this.value)">
-        ${['Viagem','Tonelada','m³','Pallet','Carga','Hora','Km','Diária','Un'].map(u=>`<option${it.unid===u?' selected':''}>${u}</option>`).join('')}
-      </select></td>
-      <td><input class="it-unit" value="${fmtBRL(it.unit)}" placeholder="0,00" style="text-align:right" 
-           oninput="syncItem(${i},'unit',parseBRL(this.value));calcTotais()" onblur="this.value=fmtBRL(parseBRL(this.value))"></td>
-      <td style="text-align:right;font-weight:600;color:var(--tx)" id="it-tot-${i}">${fmtBRL(it.qtd*it.unit)}</td>
-      <td><button class="ib d" onclick="removeItemOrc(${i})" title="Remover"><i class="ti ti-trash"></i></button></td>
-    </tr>`).join('');
-  calcTotais();
-}
-function syncItem(i, campo, val){
-  if(campo==='qtd') orcItens[i].qtd = parseFloat(val)||0;
-  else if(campo==='unit') orcItens[i].unit = val;
-  else orcItens[i][campo] = val;
-}
-function calcTotais(){
-  lerItens();
-  const sub = orcItens.reduce((a,it)=>a+(it.qtd*it.unit),0);
-  const desc = (parseFloat(document.getElementById('orc-desc').value)||0)/100;
-  const descVal = sub*desc;
-  const total = sub - descVal;
-  document.getElementById('orc-sub').textContent = formatMoeda(sub);
-  document.getElementById('orc-desc-val').textContent = formatMoeda(descVal);
-  document.getElementById('orc-total').textContent = formatMoeda(total);
-  orcItens.forEach((it,i)=>{
-    const el = document.getElementById('it-tot-'+i);
-    if(el) el.textContent = fmtBRL(it.qtd*it.unit);
-  });
-}
-
-// ===== HELPERS MONETÁRIOS =====
-function fmtBRL(n){ return Number(n||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}); }
-function parseBRL(s){ return parseFloat((s||'0').replace(/\./g,'').replace(',','.').replace(/[^0-9.]/g,''))||0; }
-function formatMoeda(n){ return 'R$ '+fmtBRL(n); }
-function escHtml(s){ return (s||'').replace(/"/g,'&quot;'); }
-
-// ===== SALVAR ORÇAMENTO =====
-function salvarOrc(){
-  const empresaId = document.getElementById('orc-empresa').value;
-  const origem = document.getElementById('orc-origem').value.trim();
-  const destino = document.getElementById('orc-destino').value.trim();
-  if(!empresaId){ alert('Selecione a empresa.'); return; }
-  if(!origem || !destino){ alert('Informe origem e destino.'); return; }
-  lerItens();
-  const sub = orcItens.reduce((a,it)=>a+(it.qtd*it.unit),0);
-  const descPct = parseFloat(document.getElementById('orc-desc').value)||0;
-  const total = sub*(1-descPct/100);
-  const emp = dados.find(x=>x.id===empresaId);
-  const obj = {
-    id: orcEditId || ('orc'+Date.now().toString(36)),
-    num: document.getElementById('orc-num').value,
-    data: document.getElementById('orc-data').value,
-    validade: parseInt(document.getElementById('orc-validade').value)||15,
-    empresaId, empresaNome: emp ? emp.nome : '',
-    solicitante: document.getElementById('orc-solicitante').value.trim(),
-    tel: document.getElementById('orc-tel').value.trim(),
-    email: document.getElementById('orc-email').value.trim(),
-    origem, destino,
-    carga: document.getElementById('orc-carga').value.trim(),
-    veiculo: document.getElementById('orc-veiculo').value,
-    peso: document.getElementById('orc-peso').value,
-    volume: document.getElementById('orc-volume').value,
-    freq: document.getElementById('orc-freq').value,
-    itens: [...orcItens],
-    descPct, subtotal: sub, total,
-    pgto: document.getElementById('orc-pgto').value,
-    status: document.getElementById('orc-status').value,
-    obs: document.getElementById('orc-obs').value.trim(),
-  };
-  if(orcEditId){
-    const i = orcamentos.findIndex(x=>x.id===orcEditId);
-    orcamentos[i] = obj;
-  } else {
-    orcamentos.push(obj);
-  }
-  salvarOrcLS();
-  cm('m-orc');
-  renderOrc();
-  document.getElementById('nb-orc').textContent = orcamentos.length;
 }
 
 // ===== EDITAR ORÇAMENTO =====
@@ -1492,109 +1343,766 @@ setPage = function(p, el){
 // init badge
 document.getElementById('nb-orc').textContent = orcamentos.length;
 
+
+// ===================================================
+// MÓDULO ORÇAMENTOS / PROPOSTAS COMERCIAIS
+// ===================================================
+let orcamentos = JSON.parse(localStorage.getItem('ferreira_orc_v2') || 'null') || [];
+let orcEditId = null;
+let orcDetId  = null;
+let orcItens  = [];
+
+function salvarOrcLS(){ try{ localStorage.setItem('ferreira_orc_v2', JSON.stringify(orcamentos)); }catch(e){} }
+
+function gerarNumOrc(){
+  const n   = (orcamentos.length + 1);
+  const ano = new Date().getFullYear();
+  return String(n).padStart(3,'0') + '/' + ano;
+}
+
+// ── helpers monetários ─────────────────────────────
+function fmtBRL(n){ return Number(n||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function parseBRL(s){ return parseFloat((s||'0').toString().replace(/\./g,'').replace(',','.').replace(/[^0-9.]/g,''))||0; }
+function formatMoeda(n){ return 'R$ '+fmtBRL(n); }
+function escHtml(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function fmtDate(iso){ return iso ? new Date(iso+'T12:00:00').toLocaleDateString('pt-BR') : '—'; }
+function addDias(iso, n){ const d=new Date(iso+'T12:00:00'); d.setDate(d.getDate()+n); return d.toLocaleDateString('pt-BR'); }
+
+// ── ABRIR FORM ─────────────────────────────────────
+function abrirNovoOrc(){
+  orcEditId = null; orcItens = [];
+  const sel = document.getElementById('orc-empresa');
+  sel.innerHTML = '<option value="">-- Selecione a empresa --</option>';
+  dados.forEach(d => sel.innerHTML += `<option value="${d.id}">${d.nome}</option>`);
+  document.getElementById('orc-titulo').textContent = 'Nova Proposta Comercial';
+  document.getElementById('orc-num').value         = gerarNumOrc();
+  document.getElementById('orc-rev').value         = '00';
+  document.getElementById('orc-data').value        = new Date().toISOString().split('T')[0];
+  document.getElementById('orc-validade').value    = 7;
+  document.getElementById('orc-responsavel').value = '';
+  document.getElementById('orc-cnpj').value        = '';
+  document.getElementById('orc-cidade-dest').value = '';
+  document.getElementById('orc-objetivo').value    = '';
+  document.getElementById('orc-pgto').value        = 'Mediante apresentação do CT-e / Nota Fiscal, com vencimento em 30 dias após emissão';
+  document.getElementById('orc-prazo-prog').value  = '02 dias úteis de antecedência';
+  document.getElementById('orc-reajuste').value    = 'INPC';
+  document.getElementById('orc-espera').value      = '';
+  document.getElementById('orc-hora-extra').value  = '';
+  document.getElementById('orc-status').value      = 'Pendente';
+  document.getElementById('orc-obs').value         = 'Nossa equipe está disponível para adequar o escopo de serviço conforme as necessidades específicas de cada operação do contratante.';
+  addItemOrc();
+  om('m-orc');
+}
+
+// preenche dados da empresa ao selecionar
+document.addEventListener('DOMContentLoaded', function(){
+  const s = document.getElementById('orc-empresa');
+  if(s) s.addEventListener('change', function(){
+    const d = dados.find(x => x.id === this.value);
+    if(d){
+      if(!document.getElementById('orc-cnpj').value && d.cnpj) document.getElementById('orc-cnpj').value = d.cnpj;
+      if(!document.getElementById('orc-cidade-dest').value) document.getElementById('orc-cidade-dest').value = d.cidade||'';
+      if(!document.getElementById('orc-responsavel').value) document.getElementById('orc-responsavel').value = d.responsavel||'';
+    }
+  });
+});
+
+// ── ITENS ──────────────────────────────────────────
+function addItemOrc(){
+  orcItens.push({ rota:'', veiculo:'Caminhão 3/4 (Toco)', freq:'Mensal', unit:0, qtd:1 });
+  renderItens();
+}
+function removeItemOrc(i){ orcItens.splice(i,1); renderItens(); }
+
+const VEICULOS = ['Caminhão 3/4 (Toco)','Caminhão Toco','Caminhão Truck','Carreta Simples','Carreta Baú','Carreta Refrigerada','Bitrem','Rodotrem','Van/Sprinter','Outro'];
+const FREQS    = ['Diária','Semanal','Quinzenal','Mensal','Sob demanda','Avulso'];
+
+function renderItens(){
+  const tb = document.getElementById('orc-itens');
+  tb.innerHTML = orcItens.map((it,i) => `
+    <tr>
+      <td><input class="it-rota" value="${escHtml(it.rota)}" placeholder="Ex: Retirada Mogi Guaçu → Entrega São Paulo" oninput="orcItens[${i}].rota=this.value"></td>
+      <td><select class="it-vei" onchange="orcItens[${i}].veiculo=this.value">${VEICULOS.map(v=>`<option${it.veiculo===v?' selected':''}>${v}</option>`).join('')}</select></td>
+      <td><select class="it-frq" onchange="orcItens[${i}].freq=this.value">${FREQS.map(f=>`<option${it.freq===f?' selected':''}>${f}</option>`).join('')}</select></td>
+      <td><input class="it-unit" value="${fmtBRL(it.unit)}" style="text-align:right" placeholder="0,00"
+           oninput="orcItens[${i}].unit=parseBRL(this.value);calcTotais()" onblur="this.value=fmtBRL(parseBRL(this.value))"></td>
+      <td><input class="it-qtd" type="number" min="1" value="${it.qtd}" style="width:50px" oninput="orcItens[${i}].qtd=parseInt(this.value)||1;calcTotais()"></td>
+      <td style="text-align:right;font-weight:600;white-space:nowrap" id="it-tot-${i}">R$ ${fmtBRL(it.unit*it.qtd)}</td>
+      <td><button class="ib d" onclick="removeItemOrc(${i})"><i class="ti ti-trash"></i></button></td>
+    </tr>`).join('');
+  calcTotais();
+}
+
+function calcTotais(){
+  const total = orcItens.reduce((a,it)=>a+(parseBRL(it.unit||0)*( it.qtd||1)),0);
+  document.getElementById('orc-total').textContent = formatMoeda(total);
+  orcItens.forEach((it,i)=>{
+    const el = document.getElementById('it-tot-'+i);
+    if(el) el.textContent = 'R$ '+fmtBRL(parseBRL(it.unit||0)*(it.qtd||1));
+  });
+}
+
+function lerItens(){
+  document.querySelectorAll('#orc-itens tr').forEach((tr,i)=>{
+    if(!orcItens[i]) return;
+    orcItens[i].rota   = tr.querySelector('.it-rota').value;
+    orcItens[i].veiculo= tr.querySelector('.it-vei').value;
+    orcItens[i].freq   = tr.querySelector('.it-frq').value;
+    orcItens[i].unit   = parseBRL(tr.querySelector('.it-unit').value);
+    orcItens[i].qtd    = parseInt(tr.querySelector('.it-qtd').value)||1;
+  });
+}
+
+// ── SALVAR ─────────────────────────────────────────
+function salvarOrc(){
+  lerItens();
+  const empId = document.getElementById('orc-empresa').value;
+  if(!empId){ alert('Selecione a empresa contratante.'); return; }
+  const emp   = dados.find(x=>x.id===empId);
+  const total = orcItens.reduce((a,it)=>a+(it.unit*it.qtd),0);
+  const obj = {
+    id:       orcEditId || ('orc'+Date.now().toString(36)),
+    num:      document.getElementById('orc-num').value,
+    rev:      document.getElementById('orc-rev').value,
+    data:     document.getElementById('orc-data').value,
+    validade: parseInt(document.getElementById('orc-validade').value)||7,
+    empresaId: empId,
+    empresaNome: emp ? emp.nome : '',
+    responsavel: document.getElementById('orc-responsavel').value.trim(),
+    cnpj:     document.getElementById('orc-cnpj').value.trim(),
+    cidadeDest: document.getElementById('orc-cidade-dest').value.trim(),
+    objetivo: document.getElementById('orc-objetivo').value.trim(),
+    itens:    [...orcItens],
+    total,
+    pgto:     document.getElementById('orc-pgto').value.trim(),
+    prazoProg: document.getElementById('orc-prazo-prog').value.trim(),
+    reajuste: document.getElementById('orc-reajuste').value,
+    espera:   document.getElementById('orc-espera').value.trim(),
+    horaExtra:document.getElementById('orc-hora-extra').value.trim(),
+    status:   document.getElementById('orc-status').value,
+    obs:      document.getElementById('orc-obs').value.trim(),
+  };
+  if(orcEditId){ const i=orcamentos.findIndex(x=>x.id===orcEditId); orcamentos[i]=obj; }
+  else orcamentos.push(obj);
+  salvarOrcLS(); cm('m-orc'); renderOrc();
+  document.getElementById('nb-orc').textContent = orcamentos.length;
+}
+
+function salvarOrcEPDF(){ salvarOrc(); gerarPDFById(orcamentos[orcamentos.length-1]?.id || orcEditId); }
+
+// ── EDITAR ─────────────────────────────────────────
+function editOrc(id){
+  const o = orcamentos.find(x=>x.id===id); if(!o) return;
+  orcEditId = id;
+  const sel = document.getElementById('orc-empresa');
+  sel.innerHTML = '<option value="">-- Selecione --</option>';
+  dados.forEach(d => sel.innerHTML += `<option value="${d.id}">${d.nome}</option>`);
+  document.getElementById('orc-titulo').textContent    = 'Editar Proposta '+o.num;
+  document.getElementById('orc-num').value             = o.num;
+  document.getElementById('orc-rev').value             = o.rev||'00';
+  document.getElementById('orc-data').value            = o.data;
+  document.getElementById('orc-validade').value        = o.validade;
+  document.getElementById('orc-empresa').value         = o.empresaId;
+  document.getElementById('orc-responsavel').value     = o.responsavel||'';
+  document.getElementById('orc-cnpj').value            = o.cnpj||'';
+  document.getElementById('orc-cidade-dest').value     = o.cidadeDest||'';
+  document.getElementById('orc-objetivo').value        = o.objetivo||'';
+  document.getElementById('orc-pgto').value            = o.pgto||'';
+  document.getElementById('orc-prazo-prog').value      = o.prazoProg||'';
+  document.getElementById('orc-reajuste').value        = o.reajuste||'INPC';
+  document.getElementById('orc-espera').value          = o.espera||'';
+  document.getElementById('orc-hora-extra').value      = o.horaExtra||'';
+  document.getElementById('orc-status').value          = o.status||'Pendente';
+  document.getElementById('orc-obs').value             = o.obs||'';
+  orcItens = o.itens.map(it=>({...it}));
+  renderItens(); om('m-orc');
+}
+
+function excluirOrc(id){
+  if(!confirm('Excluir esta proposta?')) return;
+  orcamentos = orcamentos.filter(x=>x.id!==id);
+  salvarOrcLS(); renderOrc();
+}
+
+// ── DETALHE ────────────────────────────────────────
+function verOrcDet(id){
+  const o = orcamentos.find(x=>x.id===id); if(!o) return;
+  orcDetId = id;
+  document.getElementById('od-num').textContent = 'Proposta Nº '+o.num+' — '+o.empresaNome;
+  const stCls = {Pendente:'os-pen',Aprovado:'os-apr',Recusado:'os-rec',Faturado:'os-fat',Cancelado:'os-can'};
+  const cls = stCls[o.status]||'os-pen';
+  const totalMensal = o.itens.reduce((a,it)=>a+(it.unit*it.qtd),0);
+  document.getElementById('od-corpo').innerHTML = `
+    <div class="dg" style="margin-bottom:12px">
+      <div class="di"><label>Nº / Revisão</label><span>${o.num} / Rev.${o.rev||'00'}</span></div>
+      <div class="di"><label>Data Emissão</label><span>${fmtDate(o.data)}</span></div>
+      <div class="di"><label>Validade</label><span>${addDias(o.data,o.validade)} (${o.validade} dias)</span></div>
+      <div class="di"><label>Status</label><span><span class="badge ${cls}">${o.status}</span></span></div>
+      <div class="di"><label>Responsável</label><span>${o.responsavel||'—'}</span></div>
+      <div class="di"><label>CNPJ</label><span>${o.cnpj||'—'}</span></div>
+    </div>
+    <div class="sep"></div>
+    <table class="itens-table">
+      <thead><tr><th>Serviço / Rota</th><th>Veículo</th><th>Freq.</th><th style="text-align:right">V.Unit</th><th style="text-align:center">Qtd</th><th style="text-align:right">Total</th></tr></thead>
+      <tbody>${o.itens.map(it=>`<tr>
+        <td>${escHtml(it.rota)||'—'}</td><td>${it.veiculo}</td><td>${it.freq}</td>
+        <td style="text-align:right">R$ ${fmtBRL(it.unit)}</td>
+        <td style="text-align:center">${it.qtd}</td>
+        <td style="text-align:right;font-weight:600">R$ ${fmtBRL(it.unit*it.qtd)}</td>
+      </tr>`).join('')}</tbody>
+    </table>
+    <div class="total-bar"><span style="font-size:15px;font-weight:700;color:var(--am2)">VALOR TOTAL MENSAL: <b>R$ ${fmtBRL(totalMensal)}</b></span></div>
+    <div class="sep"></div>
+    <div class="dg">
+      <div class="di"><label>Pagamento</label><span>${o.pgto||'—'}</span></div>
+      <div class="di"><label>Prog. de Cargas</label><span>${o.prazoProg||'—'}</span></div>
+      <div class="di"><label>Reajuste</label><span>${o.reajuste||'—'}</span></div>
+      <div class="di"><label>Horas espera</label><span>${o.espera||'—'}</span></div>
+    </div>
+    ${o.obs?`<div class="sep"></div><div class="dobs">${escHtml(o.obs)}</div>`:''}
+  `;
+  om('m-orc-det');
+}
+function editOrcDet(){ cm('m-orc-det'); editOrc(orcDetId); }
+
+// ── RENDER PAGE ────────────────────────────────────
+function renderOrc(){
+  const pg = document.getElementById('page-orc');
+  const tot_val  = orcamentos.reduce((a,o)=>a+o.total,0);
+  const aprov    = orcamentos.filter(o=>o.status==='Aprovado');
+  const aprov_v  = aprov.reduce((a,o)=>a+o.total,0);
+  const pend     = orcamentos.filter(o=>o.status==='Pendente').length;
+  const recus    = orcamentos.filter(o=>o.status==='Recusado').length;
+  const stCls    = {Pendente:'os-pen',Aprovado:'os-apr',Recusado:'os-rec',Faturado:'os-fat',Cancelado:'os-can'};
+
+  let rows = orcamentos.length ? [...orcamentos].sort((a,b)=>b.data.localeCompare(a.data)).map(o=>{
+    const cls = stCls[o.status]||'os-pen';
+    return `<tr onclick="verOrcDet('${o.id}')">
+      <td style="font-weight:700;color:var(--bl)">${o.num}</td>
+      <td>${fmtDate(o.data)}</td>
+      <td class="te" title="${escHtml(o.empresaNome)}">${escHtml(o.empresaNome)}</td>
+      <td class="ts">${o.responsavel||'—'}</td>
+      <td style="text-align:right;font-weight:600">R$ ${fmtBRL(o.total)}</td>
+      <td><span class="badge ${cls}">${o.status}</span></td>
+      <td><div class="ra" onclick="event.stopPropagation()">
+        <button class="ib" title="Gerar PDF" onclick="gerarPDFById('${o.id}')"><i class="ti ti-file-download"></i></button>
+        <button class="ib" title="Editar" onclick="editOrc('${o.id}')"><i class="ti ti-edit"></i></button>
+        <button class="ib d" title="Excluir" onclick="excluirOrc('${o.id}')"><i class="ti ti-trash"></i></button>
+      </div></td>
+    </tr>`;
+  }).join('') : `<tr><td colspan="7" class="empty"><i class="ti ti-file-invoice"></i>Nenhuma proposta cadastrada</td></tr>`;
+
+  pg.innerHTML = `
+    <div class="orc-cards">
+      <div class="orc-card oc0"><div class="orc-card-lbl">Total de Propostas</div><div class="orc-card-val">${orcamentos.length}</div><div class="orc-card-sub">R$ ${fmtBRL(tot_val)}/mês</div></div>
+      <div class="orc-card oc2"><div class="orc-card-lbl">Aprovadas</div><div class="orc-card-val">${aprov.length}</div><div class="orc-card-sub">R$ ${fmtBRL(aprov_v)}/mês</div></div>
+      <div class="orc-card oc1"><div class="orc-card-lbl">Pendentes</div><div class="orc-card-val">${pend}</div><div class="orc-card-sub">Aguardando resposta</div></div>
+      <div class="orc-card oc3"><div class="orc-card-lbl">Recusadas</div><div class="orc-card-val">${recus}</div><div class="orc-card-sub">Oportunidade perdida</div></div>
+    </div>
+    <div class="tw" style="padding:0;flex:1">
+      <table>
+        <thead><tr>
+          <th style="width:9%">Nº</th><th style="width:8%">Data</th>
+          <th style="width:24%">Empresa</th><th style="width:18%">Responsável</th>
+          <th style="width:12%;text-align:right">Total/mês</th>
+          <th style="width:10%">Status</th><th style="width:7%"></th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+  document.getElementById('nb-orc').textContent = orcamentos.length;
+}
+
+// ── GERAR PDF — PROPOSTA COMPLETA ──────────────────
+function gerarPDFById(id){
+  const o = orcamentos.find(x=>x.id===id);
+  if(!o){ alert('Proposta não encontrada.'); return; }
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
+  const W=210, M=18, CW=W-M*2;
+
+  // ── cores
+  const C_AM  = [245,194,0];
+  const C_CIN = [43,43,43];
+  const C_TX  = [26,26,24];
+  const C_TX2 = [90,88,84];
+  const C_TX3 = [154,152,148];
+  const C_BOR = [229,227,222];
+  const C_BG  = [242,241,238];
+
+  // ── helpers
+  const setFont=(bold,size,color)=>{
+    doc.setFont('helvetica', bold?'bold':'normal');
+    doc.setFontSize(size);
+    doc.setTextColor(...(color||C_TX));
+  };
+  const hrLine=(y,color,w)=>{
+    doc.setDrawColor(...(color||C_BOR));
+    doc.setLineWidth(w||0.3);
+    doc.line(M,y,M+CW,y);
+  };
+  const rect=(x,y,w,h,fill)=>{ doc.setFillColor(...fill); doc.rect(x,y,w,h,'F'); };
+
+  // ══════════════════════════════════════════════
+  // PÁGINA 1 — CAPA
+  // ══════════════════════════════════════════════
+
+  // Fundo escuro topo
+  rect(0,0,W,60,C_CIN);
+  // Faixa amarela
+  rect(0,0,W,6,C_AM);
+
+  // Nome empresa
+  setFont(true,22,[255,255,255]);
+  doc.text('A. FERREIRA TRANSPORTES', M, 24);
+  setFont(false,9,[180,180,180]);
+  doc.text('Compromisso, Segurança e Eficiência Logística', M, 31);
+
+  // Nº proposta (direita)
+  setFont(true,11,C_AM);
+  doc.text('Nº '+o.num, W-M, 22, {align:'right'});
+  setFont(false,8,[180,180,180]);
+  doc.text('REVISÃO: '+('00'+(o.rev||'00')).slice(-2), W-M, 28, {align:'right'});
+  const dtEmissao = fmtDate(o.data);
+  const dtValidade = o.data ? addDias(o.data, o.validade) : '—';
+  doc.text(dtEmissao, W-M, 34, {align:'right'});
+
+  // Título proposta
+  setFont(true,15,[255,255,255]);
+  doc.text('PROPOSTA TÉCNICA COMERCIAL', M, 48);
+  setFont(false,9,[200,200,200]);
+  doc.text('SERVIÇOS DE TRANSPORTE E LOGÍSTICA', M, 54);
+
+  let y = 70;
+
+  // DADOS DO EMITENTE
+  const boxEmit = (label, value, x, maxW) => {
+    setFont(true, 7.5, C_TX3);
+    doc.text(label, x, y);
+    setFont(false, 9, C_TX);
+    const lines = doc.splitTextToSize(value||'—', maxW||CW/2-5);
+    doc.text(lines, x, y+4.5);
+  };
+
+  setFont(true,9,C_CIN);
+  doc.text('DADOS DO EMITENTE', M, y);
+  hrLine(y+2, C_AM, 0.8);
+  y += 8;
+
+  boxEmit('RAZÃO SOCIAL', 'A. Ferreira da Costa Transportes', M, CW/2-4);
+  boxEmit('CNPJ', '36.370.512/0001-97', M+CW/2+2, CW/2-4);
+  y += 12;
+  boxEmit('ENDEREÇO', 'Rua Paulo da Cunha Bueno, 682 – Jd. Guaçuano – Mogi Guaçu SP  CEP: 13.846-460', M, CW-4);
+  y += 12;
+  boxEmit('TELEFONE', '(19) 9 9659-0174', M, CW/3-4);
+  boxEmit('E-MAIL / PIX', 'contato@aferreiratransportes.com.br', M+CW/3+2, CW/3-4);
+  boxEmit('SITE', 'www.aferreiratransportes.com.br', M+2*CW/3+2, CW/3-4);
+  y += 14;
+
+  // DADOS BANCÁRIOS
+  hrLine(y, C_BOR);
+  y += 5;
+  setFont(true,9,C_CIN);
+  doc.text('DADOS BANCÁRIOS', M, y);
+  hrLine(y+2, C_AM, 0.8);
+  y += 8;
+  boxEmit('BANCO', 'Santander', M, CW/4-4);
+  boxEmit('AGÊNCIA', '0181', M+CW/4+2, CW/4-4);
+  boxEmit('CONTA CORRENTE', '13.006457-0', M+CW/2+2, CW/4-4);
+  boxEmit('CHAVE PIX', 'contato@aferreiratransportes.com.br', M+3*CW/4+2, CW/4-4);
+  y += 14;
+
+  // SUBMETIDO PARA
+  hrLine(y, C_BOR);
+  y += 5;
+  setFont(true,9,C_CIN);
+  doc.text('SUBMETIDO PARA', M, y);
+  hrLine(y+2, C_AM, 0.8);
+  y += 8;
+  boxEmit('RESPONSÁVEL', 'Sr(a). '+(o.responsavel||'—'), M, CW/2-4);
+  boxEmit('EMPRESA', o.empresaNome||'—', M+CW/2+2, CW/2-4);
+  y += 12;
+  if(o.cnpj){ boxEmit('CNPJ', o.cnpj, M, CW/2-4); }
+  if(o.cidadeDest){ boxEmit('CIDADE', o.cidadeDest, M+CW/2+2, CW/2-4); }
+  y += 12;
+
+  // Local e data
+  const mes = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const dObj = o.data ? new Date(o.data+'T12:00:00') : new Date();
+  const localData = `Mogi Guaçu, ${dObj.getDate()} de ${mes[dObj.getMonth()]} de ${dObj.getFullYear()}.`;
+  setFont(false,9,C_TX2);
+  doc.text(localData, M, y);
+  y += 10;
+
+  // ÍNDICE
+  hrLine(y, C_BOR);
+  y += 5;
+  setFont(true,9,C_CIN);
+  doc.text('ÍNDICE DA PROPOSTA', M, y);
+  hrLine(y+2, C_AM, 0.8);
+  y += 9;
+  const indice = [
+    ['01','APRESENTAÇÃO DA EMPRESA'],['02','ESTRUTURA OPERACIONAL'],['03','SERVIÇOS OFERECIDOS'],
+    ['04','OBJETIVO'],['05','ESCOPO DO SERVIÇO'],['06','PREMISSAS'],['07','ORÇAMENTO']
+  ];
+  indice.forEach(([n,t])=>{
+    rect(M, y-3.5, 8, 6, C_AM);
+    setFont(true,8,C_CIN);
+    doc.text(n, M+4, y, {align:'center'});
+    setFont(false,9,C_TX);
+    doc.text(t, M+11, y);
+    y += 7;
+  });
+
+  // ══════════════════════════════════════════════
+  // PÁGINA 2 — CONTEÚDO TÉCNICO
+  // ══════════════════════════════════════════════
+  doc.addPage();
+  y = 15;
+
+  const secTitle = (num, titulo) => {
+    rect(M, y-4, CW, 8, C_CIN);
+    setFont(true, 9, C_AM);
+    doc.text(num, M+3, y);
+    setFont(true, 9, [255,255,255]);
+    doc.text(titulo, M+14, y);
+    y += 10;
+  };
+
+  const paragrafo = (texto, indent) => {
+    setFont(false, 8.5, C_TX);
+    const lines = doc.splitTextToSize(texto, CW-(indent||0));
+    doc.text(lines, M+(indent||0), y);
+    y += lines.length * 4.5 + 3;
+  };
+
+  const subTitulo = (t) => {
+    setFont(true, 9, C_CIN);
+    doc.text(t, M, y); y += 6;
+  };
+
+  const bullet = (t) => {
+    doc.setFillColor(...C_AM);
+    doc.circle(M+2, y-1.5, 1.2, 'F');
+    setFont(false, 8.5, C_TX);
+    const lines = doc.splitTextToSize(t, CW-8);
+    doc.text(lines, M+6, y);
+    y += lines.length * 4.5 + 1;
+  };
+
+  // verifica se precisa nova página
+  const checkPage = (needed) => {
+    if(y + needed > 280){ doc.addPage(); y = 15; }
+  };
+
+  // 01 APRESENTAÇÃO
+  secTitle('01.', 'APRESENTAÇÃO DA EMPRESA');
+  subTitulo('COMPROMISSO, SEGURANÇA E EFICIÊNCIA LOGÍSTICA');
+  paragrafo('A A. Ferreira Transportes, sediada em Mogi Guaçu – SP, atua no segmento de logística e transporte rodoviário de cargas, oferecendo soluções completas e eficientes para empresas que demandam agilidade, segurança e confiabilidade em suas operações.');
+  paragrafo('Nossa estrutura foi desenvolvida para atender com excelência organizações que dependem de um fluxo logístico contínuo, contribuindo diretamente para a estabilidade e desempenho de suas operações.');
+  paragrafo('Valorizamos relações comerciais sólidas e duradouras, pautadas na compreensão das necessidades específicas de cada cliente, com foco na otimização da cadeia logística e na geração de resultados consistentes.');
+  y += 3;
+
+  checkPage(40);
+  // 02 ESTRUTURA
+  secTitle('02.', 'ESTRUTURA OPERACIONAL');
+  paragrafo('A A. Ferreira Transportes dispõe de uma operação versátil e estrategicamente estruturada para atender diferentes perfis de demanda. Nossa frota abrange desde veículos leves, destinados a entregas rápidas e urgentes, até caminhões e carretas para transporte de cargas de maior porte.');
+  paragrafo('Essa diversidade operacional assegura flexibilidade, agilidade e precisão no atendimento, adaptando-se às particularidades de cada operação logística.');
+  subTitulo('ÁREA DE ATUAÇÃO');
+  paragrafo('Atuamos em todo o território nacional, com forte presença nas regiões Sudeste e Sul, principais polos industriais e logísticos do país. Nosso compromisso é oferecer soluções que integrem pontualidade, segurança e excelência operacional.');
+  y += 3;
+
+  checkPage(60);
+  // 03 SERVIÇOS
+  secTitle('03.', 'SERVIÇOS OFERECIDOS');
+  const servicos = [
+    ['Fretes Expressos e Entregas Rápidas','Realizamos fretes de pequeno porte com elevado nível de agilidade, ideais para transporte de documentos, peças, encomendas urgentes e volumes reduzidos.'],
+    ['Transporte de Cargas de Médio e Grande Porte','Atendemos operações que demandam maior capacidade logística, utilizando veículos adequados para o transporte seguro de equipamentos e insumos industriais.'],
+    ['Transporte de Carga Seca','Realizamos o transporte de carga seca por meio de veículos apropriados, atendendo produtos embalados e materiais industriais que não exigem controle de temperatura.'],
+    ['Transporte de Carga Líquida','Executamos operações de transporte de cargas líquidas, seguindo rigorosamente as normas técnicas e de segurança aplicáveis.'],
+    ['Transporte de Produtos Perigosos Classificados','Atuamos no transporte de produtos perigosos classificados, com total observância às exigências legais e normativas.'],
+  ];
+  servicos.forEach(([tit,desc])=>{
+    checkPage(18);
+    setFont(true,9,C_CIN); doc.text('► '+tit, M, y); y+=5;
+    paragrafo(desc, 4);
+  });
+  y += 3;
+
+  checkPage(30);
+  // 04 OBJETIVO
+  secTitle('04.', 'OBJETIVO');
+  subTitulo('SERVIÇOS PROPOSTOS');
+  const obj_txt = o.objetivo ||
+    `O objeto dos serviços ora propostos refere-se à ${o.empresaNome||'CONTRATANTE'}, para EXECUTAR E GERENCIAR as operações logísticas da empresa, no que se refere ao transporte de cargas conforme descritos no detalhe do escopo abaixo, assegurando pontualidade, segurança e eficiência em toda a cadeia logística.`;
+  paragrafo(obj_txt);
+  y += 3;
+
+  checkPage(70);
+  // 05 ESCOPO
+  secTitle('05.', 'ESCOPO DO SERVIÇO');
+  const escopo = [
+    'Planejamento e execução do transporte de cargas conforme rotas e prazos acordados com o contratante;',
+    'Coleta e entrega de mercadorias nos locais e horários definidos em programação prévia;',
+    'Comunicação contínua com o contratante sobre o status das operações em andamento;',
+    'Rastreamento e monitoramento das cargas durante todo o percurso;',
+    'Emissão de documentos fiscais e de transporte exigidos pela legislação vigente (CT-e, MDF-e);',
+    'Cumprimento de todas as normas de segurança no transporte, incluindo legislação de produtos perigosos quando aplicável;',
+    'Relatório de ocorrências e devoluções, com comunicação imediata ao contratante em caso de intercorrências;',
+    'Gestão do agendamento de cargas e descargas junto às plantas e centros de distribuição do contratante.',
+  ];
+  escopo.forEach(e=>{ checkPage(10); bullet(e); });
+  y += 2;
+  rect(M, y, CW, 9, [255,251,235]);
+  doc.setDrawColor(...C_AM); doc.setLineWidth(0.3); doc.rect(M, y, CW, 9, 'S');
+  setFont(true,8,C_CIN);
+  doc.text('OBS: NOSSA EQUIPE ESTÁ DISPONÍVEL PARA ADEQUAR O ESCOPO DE SERVIÇO CONFORME AS NECESSIDADES ESPECÍFICAS DE CADA OPERAÇÃO DO CONTRATANTE.', M+3, y+5.5, {maxWidth:CW-6});
+  y += 13;
+
+  checkPage(60);
+  // 06 PREMISSAS
+  secTitle('06.', 'PREMISSAS E LIMITAÇÕES');
+  subTitulo('CONTRATANTE');
+  const premCont = [
+    'Envio de programação de cargas com antecedência mínima de '+(o.prazoProg||'02 dias úteis')+';',
+    'Disponibilização de locais adequados para carga e descarga, dentro dos horários acordados;',
+    'Envio de documentos, dados e informações solicitadas, em tempo hábil.',
+  ];
+  premCont.forEach(p=>{ checkPage(10); bullet(p); });
+  y += 3;
+  subTitulo('A. FERREIRA TRANSPORTES');
+  const premFer = [
+    'Responsabilizar-se pela execução do transporte dentro dos prazos e condições acordadas;',
+    'Manter frota e documentação regularizada conforme a legislação vigente;',
+    'Comunicar imediatamente qualquer ocorrência que impacte a operação logística do contratante.',
+  ];
+  premFer.forEach(p=>{ checkPage(10); bullet(p); });
+  y += 4;
+
+  // ══════════════════════════════════════════════
+  // PÁGINA 3 — ORÇAMENTO
+  // ══════════════════════════════════════════════
+  doc.addPage();
+  y = 15;
+
+  // 07 ORÇAMENTO
+  secTitle('07.', 'ORÇAMENTO');
+  setFont(false,9,C_TX2);
+  doc.text('O investimento para realização dos serviços de transporte, incluindo os valores por rota/tipo de serviço e demais condições comerciais, segue discriminado abaixo:', M, y, {maxWidth:CW});
+  y += 12;
+
+  // tabela de itens
+  const colW = [CW*0.38, CW*0.20, CW*0.14, CW*0.14, CW*0.14];
+  const colX = [M, M+colW[0], M+colW[0]+colW[1], M+colW[0]+colW[1]+colW[2], M+colW[0]+colW[1]+colW[2]+colW[3]];
+
+  // header tabela
+  rect(M, y, CW, 8, C_CIN);
+  const hTitles = ['SERVIÇO / ROTA','TIPO DE VEÍCULO','FREQUÊNCIA','VALOR UNIT.','TOTAL'];
+  setFont(true, 7.5, [255,255,255]);
+  hTitles.forEach((h,i)=> doc.text(h, colX[i]+2, y+5));
+  y += 8;
+
+  let totalMensal = 0;
+  o.itens.forEach((it,idx)=>{
+    const h = 10;
+    const bg = idx%2===0 ? [255,255,255] : [247,246,243];
+    rect(M, y, CW, h, bg);
+    doc.setDrawColor(...C_BOR); doc.setLineWidth(0.2); doc.line(M, y+h, M+CW, y+h);
+    setFont(false, 8, C_TX);
+    const rLines = doc.splitTextToSize(it.rota||'—', colW[0]-4);
+    doc.text(rLines, colX[0]+2, y+3.5);
+    doc.text(it.veiculo||'—', colX[1]+2, y+3.5, {maxWidth:colW[1]-4});
+    doc.text(it.freq||'—', colX[2]+2, y+3.5);
+    setFont(false,8,C_TX);
+    doc.text('R$ '+fmtBRL(it.unit), colX[3]+colW[3]-2, y+3.5, {align:'right'});
+    const rowTotal = it.unit*it.qtd; totalMensal += rowTotal;
+    setFont(true,8,C_TX);
+    doc.text('R$ '+fmtBRL(rowTotal), colX[4]+colW[4]-2, y+3.5, {align:'right'});
+    y += h;
+  });
+
+  // total
+  y += 2;
+  rect(M, y, CW, 10, C_AM);
+  setFont(true, 10, C_CIN);
+  doc.text('VALOR TOTAL MENSAL', M+4, y+6.5);
+  doc.text('R$ '+fmtBRL(totalMensal), M+CW-4, y+6.5, {align:'right'});
+  y += 15;
+
+  // CONDIÇÕES COMERCIAIS
+  setFont(true,10,C_CIN);
+  doc.text('CONDIÇÕES COMERCIAIS', M, y);
+  hrLine(y+2, C_AM, 0.8);
+  y += 8;
+
+  rect(M, y, CW, 36, [255,251,235]);
+  doc.setDrawColor(...C_AM); doc.rect(M, y, CW, 36, 'S');
+
+  const condLine = (label, val, yy) => {
+    setFont(true, 8, C_CIN);   doc.text(label+': ', M+4, yy);
+    const lw = doc.getTextWidth(label+': ');
+    setFont(false, 8, C_TX2); doc.text(val||'—', M+4+lw, yy, {maxWidth: CW-12-lw});
+  };
+  condLine('Forma de Pagamento', o.pgto, y+6);
+  condLine('Validade da Proposta', o.validade+' dias corridos a partir da data de emissão', y+13);
+  condLine('Reajuste', 'Os valores poderão ser reajustados conforme variação do '+o.reajuste+' ou por acordo entre as partes', y+20);
+  if(o.espera || o.horaExtra){
+    condLine('Horas Extras / Espera', (o.espera||'')+(o.horaExtra?' — '+o.horaExtra:''), y+27);
+  }
+  y += 40;
+
+  // OBSERVAÇÕES
+  if(o.obs){
+    checkPage(20);
+    setFont(true,9,C_CIN); doc.text('OBSERVAÇÕES', M, y);
+    hrLine(y+2, C_AM, 0.8); y+=8;
+    paragrafo(o.obs);
+    y += 4;
+  }
+
+  // ASSINATURA
+  checkPage(35);
+  y = Math.max(y, 220);
+  hrLine(y, C_BOR); y+=8;
+  rect(M, y, CW, 28, C_CIN);
+  setFont(true,10,[255,255,255]);
+  doc.text('Alex Ferreira', M+4, y+8);
+  setFont(false,8,[180,180,180]);
+  doc.text('A. Ferreira Transportes', M+4, y+14);
+  doc.text('(19) 9 9659-0174  |  contato@aferreiratransportes.com.br', M+4, y+19);
+  doc.text('www.aferreiratransportes.com.br', M+4, y+24);
+  setFont(true,9,C_AM);
+  doc.text('"Compromisso, Segurança e Eficiência Logística."', M+CW-4, y+15, {align:'right', maxWidth:80});
+  y += 32;
+
+  // RODAPÉS em todas as páginas
+  const totalPages = doc.getNumberOfPages();
+  for(let p=1;p<=totalPages;p++){
+    doc.setPage(p);
+    rect(0, 289, W, 8, C_CIN);
+    rect(0, 289, W, 1.5, C_AM);
+    setFont(false,7,[140,140,140]);
+    doc.text('A. Ferreira Transportes — Mogi Guaçu SP', M, 294);
+    doc.text('Proposta Nº '+o.num+' | Rev.'+('00'+(o.rev||'00')).slice(-2)+' | Válida até '+dtValidade, W/2, 294, {align:'center'});
+    doc.text('Pág. '+p+'/'+totalPages, W-M, 294, {align:'right'});
+  }
+
+  doc.save('Proposta_'+o.num.replace('/','_')+'_'+(o.empresaNome||'cliente').replace(/[^a-zA-Z0-9]/g,'_')+'.pdf');
+}
+
+// ── setPage override ───────────────────────────────
+const _origSetPage = setPage;
+setPage = function(p, el){
+  document.getElementById('page-orc').style.display = p==='orc' ? 'flex' : 'none';
+  _origSetPage(p==='orc'?'__none__':p, el);
+  if(p==='orc') renderOrc();
+  if(el){ document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active')); el.classList.add('active'); }
+};
+
+document.getElementById('nb-orc').textContent = orcamentos.length;
+
 // Fecha menu ao clicar fora
 document.addEventListener("click",function(e){
   if(menuAberto&&!e.target.closest(".sw"))closeAllMenus();
 });
 </script>
 
-<!-- MODAL ORCAMENTO FORM -->
+    <div class="mb" id="od-corpo"></div>
+    <div class="mf">
+      <button class="btn" onclick="cm('m-orc-det')">Fechar</button>
+      <button class="btn" onclick="editOrcDet()"><i class="ti ti-edit"></i> Editar</button>
+      <button class="btn btn-p" onclick="gerarPDFById(orcDetId)"><i class="ti ti-file-download"></i> Gerar PDF</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- MODAL PROPOSTA FORM -->
 <div class="overlay" id="m-orc">
   <div class="modal modal-orc">
-    <div class="mh"><h2 id="orc-titulo">Novo Orçamento</h2><button class="ib" onclick="cm('m-orc')"><i class="ti ti-x"></i></button></div>
+    <div class="mh"><h2 id="orc-titulo">Nova Proposta Comercial</h2><button class="ib" onclick="cm('m-orc')"><i class="ti ti-x"></i></button></div>
     <div class="mb" style="padding-bottom:8px;">
-      <!-- Cabeçalho -->
-      <div class="section-title">Dados do Orçamento</div>
+
+      <!-- IDENTIFICAÇÃO DA PROPOSTA -->
+      <div class="section-title">Identificação da Proposta</div>
       <div class="fr">
-        <div class="fg"><label>Nº do Orçamento</label><input type="text" id="orc-num" placeholder="Gerado automaticamente" readonly></div>
-        <div class="fg"><label>Data do Orçamento *</label><input type="date" id="orc-data"></div>
-        <div class="fg"><label>Validade (dias)</label><input type="number" id="orc-validade" value="15" min="1"></div>
+        <div class="fg"><label>Nº da Proposta</label><input type="text" id="orc-num" readonly placeholder="Gerado automaticamente"></div>
+        <div class="fg"><label>Revisão</label><input type="text" id="orc-rev" value="00" placeholder="00"></div>
+        <div class="fg"><label>Data de Emissão *</label><input type="date" id="orc-data"></div>
+        <div class="fg"><label>Validade (dias) *</label><input type="number" id="orc-validade" value="7" min="1"></div>
       </div>
-      <div class="section-title">Cliente / Empresa</div>
+
+      <!-- DESTINATÁRIO -->
+      <div class="section-title">Destinatário (Contratante)</div>
       <div class="fr">
         <div class="fg"><label>Empresa *</label>
-          <select id="orc-empresa"><option value="">Selecione ou digite abaixo</option></select>
+          <select id="orc-empresa"><option value="">-- Selecione --</option></select>
         </div>
-        <div class="fg"><label>Nome do Solicitante</label><input type="text" id="orc-solicitante" placeholder="Nome do responsável"></div>
+        <div class="fg"><label>Nome do Responsável *</label><input type="text" id="orc-responsavel" placeholder="Sr(a). Nome Completo"></div>
       </div>
       <div class="fr">
-        <div class="fg"><label>Telefone</label><input type="text" id="orc-tel" placeholder="(19) 99999-0000"></div>
-        <div class="fg"><label>E-mail</label><input type="text" id="orc-email" placeholder="contato@empresa.com.br"></div>
+        <div class="fg"><label>CNPJ</label><input type="text" id="orc-cnpj" placeholder="00.000.000/0001-00"></div>
+        <div class="fg"><label>Cidade / UF</label><input type="text" id="orc-cidade-dest" placeholder="Ex: Mogi Guaçu - SP"></div>
       </div>
-      <div class="section-title">Rota / Serviço</div>
+
+      <!-- OBJETIVO / ESCOPO -->
+      <div class="section-title">Objetivo / Escopo do Serviço</div>
       <div class="fr">
-        <div class="fg"><label>Origem *</label><input type="text" id="orc-origem" placeholder="Ex: Mogi Guaçu - SP"></div>
-        <div class="fg"><label>Destino *</label><input type="text" id="orc-destino" placeholder="Ex: São Paulo - SP"></div>
-      </div>
-      <div class="fr">
-        <div class="fg"><label>Tipo de Carga</label><input type="text" id="orc-carga" placeholder="Ex: Carga geral, paletizada, granel..."></div>
-        <div class="fg"><label>Tipo de Veículo</label>
-          <select id="orc-veiculo">
-            <option>Não especificado</option>
-            <option>Caminhão 3/4 (Toco)</option>
-            <option>Caminhão Toco</option>
-            <option>Caminhão Truck</option>
-            <option>Carreta Simples</option>
-            <option>Carreta Baú</option>
-            <option>Carreta Refrigerada</option>
-            <option>Bitrem</option>
-            <option>Rodotrem</option>
-            <option>Van/Sprinter</option>
-            <option>Outro</option>
-          </select>
+        <div class="fg ff"><label>Descrição do Objetivo</label>
+          <textarea id="orc-objetivo" rows="2" placeholder="Ex: Executar e gerenciar as operações logísticas da empresa no que se refere ao transporte de cargas..."></textarea>
         </div>
       </div>
-      <div class="fr">
-        <div class="fg"><label>Peso estimado (kg)</label><input type="number" id="orc-peso" placeholder="Ex: 20000"></div>
-        <div class="fg"><label>Volume / Cubagem (m³)</label><input type="text" id="orc-volume" placeholder="Ex: 40"></div>
-        <div class="fg"><label>Frequência</label>
-          <select id="orc-freq">
-            <option value="">Não definido</option>
-            <option>Diária</option>
-            <option>Semanal</option>
-            <option>Quinzenal</option>
-            <option>Mensal</option>
-            <option>Sob demanda</option>
-            <option>Avulso</option>
-          </select>
-        </div>
-      </div>
-      <!-- Itens -->
-      <div class="section-title">Itens do Orçamento</div>
+
+      <!-- TABELA DE ROTAS / SERVIÇOS -->
+      <div class="section-title">Orçamento — Rotas e Serviços</div>
       <table class="itens-table">
         <thead><tr>
-          <th style="width:38%">Descrição do Serviço</th>
-          <th style="width:12%">Qtd</th>
-          <th style="width:12%">Unidade</th>
-          <th style="width:16%">Valor Unit. (R$)</th>
-          <th style="width:16%">Total (R$)</th>
+          <th style="width:34%">Serviço / Rota (Retirada → Entrega)</th>
+          <th style="width:18%">Tipo de Veículo</th>
+          <th style="width:12%">Frequência</th>
+          <th style="width:13%">Valor Unit. (R$)</th>
+          <th style="width:7%">Qtd</th>
+          <th style="width:10%">Total (R$)</th>
           <th style="width:6%"></th>
         </tr></thead>
         <tbody id="orc-itens"></tbody>
       </table>
-      <button class="add-item-btn" onclick="addItemOrc()"><i class="ti ti-plus"></i> Adicionar item</button>
+      <button class="add-item-btn" onclick="addItemOrc()"><i class="ti ti-plus"></i> Adicionar rota/serviço</button>
       <div class="total-bar">
-        <span>Subtotal: <b id="orc-sub">R$ 0,00</b></span>
-        <span>Desconto: <b id="orc-desc-val">R$ 0,00</b></span>
-        <span style="font-size:15px;font-weight:700;color:var(--am2)">TOTAL: <b id="orc-total">R$ 0,00</b></span>
+        <span>Valor Total Mensal: <b id="orc-total" style="color:var(--am2);font-size:16px">R$ 0,00</b></span>
       </div>
-      <!-- Desconto e condições -->
+
+      <!-- CONDIÇÕES COMERCIAIS -->
       <div class="section-title">Condições Comerciais</div>
       <div class="fr">
-        <div class="fg"><label>Desconto (%)</label><input type="number" id="orc-desc" value="0" min="0" max="100" oninput="calcTotais()"></div>
         <div class="fg"><label>Forma de Pagamento</label>
-          <select id="orc-pgto">
-            <option>A combinar</option>
-            <option>À vista</option>
-            <option>30 dias</option>
-            <option>30/60 dias</option>
-            <option>30/60/90 dias</option>
-            <option>Boleto mensal</option>
-            <option>PIX</option>
-            <option>Transferência bancária</option>
+          <input type="text" id="orc-pgto" placeholder="Ex: 30 dias após emissão CT-e / NF">
+        </div>
+        <div class="fg"><label>Prazo p/ Programação de Cargas</label>
+          <input type="text" id="orc-prazo-prog" placeholder="Ex: 02 dias úteis de antecedência">
+        </div>
+      </div>
+      <div class="fr">
+        <div class="fg"><label>Índice de Reajuste</label>
+          <select id="orc-reajuste">
+            <option value="INPC">INPC</option>
+            <option value="IPCA">IPCA</option>
+            <option value="variação do diesel">Variação do Diesel</option>
+            <option value="acordo entre as partes">Acordo entre as partes</option>
           </select>
         </div>
-        <div class="fg"><label>Status do Orçamento</label>
+        <div class="fg"><label>Horas de espera inclusas</label>
+          <input type="text" id="orc-espera" placeholder="Ex: 2 horas inclusas por viagem">
+        </div>
+        <div class="fg"><label>Valor hora extra (R$)</label>
+          <input type="text" id="orc-hora-extra" placeholder="Ex: R$ 80,00/hora adicional">
+        </div>
+      </div>
+
+      <!-- STATUS E OBSERVAÇÕES -->
+      <div class="section-title">Status e Observações</div>
+      <div class="fr">
+        <div class="fg"><label>Status da Proposta</label>
           <select id="orc-status">
             <option value="Pendente">Pendente</option>
             <option value="Aprovado">Aprovado</option>
@@ -1603,22 +2111,21 @@ document.addEventListener("click",function(e){
             <option value="Cancelado">Cancelado</option>
           </select>
         </div>
-      </div>
-      <div class="fr">
-        <div class="fg ff"><label>Observações / Condições gerais</label>
-          <textarea id="orc-obs" placeholder="Ex: Frete incluso. Prazo de entrega: 1 dia útil após confirmação..."></textarea>
+        <div class="fg ff"><label>Observações adicionais</label>
+          <textarea id="orc-obs" rows="2" placeholder="Ex: Nossa equipe está disponível para adequar o escopo conforme necessidade."></textarea>
         </div>
       </div>
+
     </div>
     <div class="mf">
       <button class="btn" onclick="cm('m-orc')">Cancelar</button>
-      <button class="btn" onclick="salvarOrc();gerarPDF()"><i class="ti ti-file-download"></i> Salvar e Gerar PDF</button>
-      <button class="btn btn-p" onclick="salvarOrc()"><i class="ti ti-device-floppy"></i> Salvar Orçamento</button>
+      <button class="btn" onclick="salvarOrcEPDF()"><i class="ti ti-file-download"></i> Salvar e Gerar PDF</button>
+      <button class="btn btn-p" onclick="salvarOrc()"><i class="ti ti-device-floppy"></i> Salvar Proposta</button>
     </div>
   </div>
 </div>
 
-<!-- MODAL DETALHE ORCAMENTO -->
+<!-- MODAL DETALHE PROPOSTA -->
 <div class="overlay" id="m-orc-det">
   <div class="modal modal-orc">
     <div class="mh"><h2 id="od-num"></h2><button class="ib" onclick="cm('m-orc-det')"><i class="ti ti-x"></i></button></div>
