@@ -178,7 +178,7 @@ tbody tr:hover .ra{opacity:1;}
 .dsh{font-size:11px;color:var(--am2);margin-top:5px;}
 
 /* === ORCAMENTOS === */
-#page-orc{flex:1;overflow:hidden;padding:0;display:none;flex-direction:column;min-height:0;}
+#page-orc{flex:1;overflow:hidden;padding:0;display:none;flex-direction:column;min-height:0;width:100%;}
 .orc-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px 22px 4px;flex-shrink:0;}
 .orc-kpi{background:var(--sur);border:1px solid var(--bor);border-radius:var(--r);padding:14px;position:relative;overflow:hidden;}
 .orc-kpi::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;}
@@ -257,7 +257,7 @@ tbody tr:hover .ra{opacity:1;}
   <div class="main">
     <div class="topbar">
       <div><h1 id="pg-title">Empresas para Prospecção</h1><p id="pg-sub">Gerencie seus contatos e leads</p></div>
-      <div class="tba">
+      <div class="tba" id="topbar-actions">
         <input type="file" id="csv-input" accept=".csv" style="display:none" onchange="importarCSV(this)">
         <button class="btn" onclick="document.getElementById('csv-input').click()"><i class="ti ti-upload"></i> Importar CSV</button>
         <button class="btn" onclick="exportCSV()"><i class="ti ti-download"></i> Exportar CSV</button>
@@ -1288,11 +1288,13 @@ function getPropostasFiltradas(){
   var busca=(document.getElementById('of-busca')||{value:''}).value.toLowerCase();
   var stFil=(document.getElementById('of-st')||{value:''}).value;
   var mesFil=(document.getElementById('of-mes')||{value:''}).value;
+  var cidFil=(document.getElementById('of-cid')||{value:''}).value;
   return propostas.filter(function(o){
     var ok=true;
     if(busca) ok=ok&&(o.empNome.toLowerCase().includes(busca)||o.num.toLowerCase().includes(busca)||(o.resp||'').toLowerCase().includes(busca)||(o.cidade||'').toLowerCase().includes(busca));
     if(stFil) ok=ok&&(o.status===stFil);
     if(mesFil) ok=ok&&(o.data&&o.data.slice(0,7)===mesFil);
+    if(cidFil) ok=ok&&(o.cidade===cidFil);
     return ok;
   });
 }
@@ -1312,7 +1314,11 @@ function renderOrcPage(){
     var p=m.split('-');return '<option value="'+m+'">'+p[1]+'/'+p[0]+'</option>';
   }).join('');
 
-  pg.innerHTML=
+  // cidades únicas das propostas
+  var cidades2=[...new Set(propostas.map(function(o){return o.cidade||'';}).filter(Boolean))].sort();
+  var cidOpts2='<option value="">Todas as cidades</option>'+cidades2.map(function(c){return '<option>'+esc(c)+'</option>';}).join('');
+
+  var html_page=
     '<div class="orc-kpis">'
     +'<div class="orc-kpi k0"><div class="orc-kpi-lbl">Total de Propostas</div><div class="orc-kpi-val">'+propostas.length+'</div><div class="orc-kpi-sub">R$ '+brl(totV)+'/mês</div></div>'
     +'<div class="orc-kpi k2"><div class="orc-kpi-lbl">Aprovadas</div><div class="orc-kpi-val">'+aprov.length+'</div><div class="orc-kpi-sub">R$ '+brl(aprovV)+'/mês</div></div>'
@@ -1320,8 +1326,9 @@ function renderOrcPage(){
     +'<div class="orc-kpi k3"><div class="orc-kpi-lbl">Recusadas</div><div class="orc-kpi-val">'+rec+'</div><div class="orc-kpi-sub">Oportunidade perdida</div></div>'
     +'</div>'
     +'<div class="orc-filters">'
-    +'<input id="of-busca" placeholder="🔍 Buscar empresa, Nº, responsável..." oninput="renderOrcTabela()">'
+    +'<input id="of-busca" placeholder="🔍 Empresa, Nº, responsável, cidade..." oninput="renderOrcTabela()" style="min-width:240px">'
     +'<select id="of-st" onchange="renderOrcTabela()"><option value="">Todos os status</option><option>Pendente</option><option>Aprovado</option><option>Recusado</option><option>Faturado</option><option>Cancelado</option></select>'
+    +'<select id="of-cid" onchange="renderOrcTabela()">'+cidOpts2+'</select>'
     +'<select id="of-mes" onchange="renderOrcTabela()">'+mesOpts+'</select>'
     +'</div>'
     +'<div class="orc-topbar"><button class="btn btn-p" onclick="abrirNovaProposta()"><i class="ti ti-plus"></i> Nova Proposta</button></div>'
@@ -1329,6 +1336,7 @@ function renderOrcPage(){
     +'<thead><tr><th style="width:9%">Nº</th><th style="width:8%">Data</th><th style="width:22%">Empresa</th><th style="width:17%">Responsável</th><th style="width:13%;text-align:right">Total/mês</th><th style="width:9%">Validade</th><th style="width:10%">Status</th><th style="width:8%"></th></tr></thead>'
     +'<tbody id="orc-tbody"></tbody></table></div>';
 
+  pg.innerHTML=html_page;
   document.getElementById('nb-orc').textContent=propostas.length;
   renderOrcTabela();
 }
@@ -1563,8 +1571,24 @@ var _sp=setPage;
 setPage=function(p,el){
   var po=document.getElementById('page-orc');
   if(po) po.style.display=p==='orc'?'flex':'none';
-  if(p!=='orc') _sp(p,el);
-  else{document.querySelectorAll('.ni').forEach(function(n){n.classList.remove('active');});if(el)el.classList.add('active');renderOrcPage();}
+  // stats-row e topbar: ocultar na aba orçamentos
+  var sr=document.getElementById('stats-row');
+  var ta=document.getElementById('topbar-actions');
+  var tb=document.querySelector('.topbar');
+  if(p==='orc'){
+    if(sr) sr.style.display='none';
+    if(ta) ta.style.display='none';
+    if(tb){ document.getElementById('pg-title').textContent='Propostas Comerciais'; document.getElementById('pg-sub').textContent='Histórico, consultas e geração de PDF'; }
+    document.querySelectorAll('.ni').forEach(function(n){n.classList.remove('active');});
+    if(el) el.classList.add('active');
+    renderOrcPage();
+  } else {
+    if(sr) sr.style.display='';
+    if(ta) ta.style.display='';
+    if(tb && p==='emp'){ document.getElementById('pg-title').textContent='Empresas para Prospecção'; document.getElementById('pg-sub').textContent='Gerencie seus contatos e leads'; }
+    if(tb && p==='dash'){ document.getElementById('pg-title').textContent='Dashboard'; document.getElementById('pg-sub').textContent='Visão geral por cidade e status'; }
+    _sp(p,el);
+  }
 };
 document.getElementById('nb-orc').textContent=propostas.length;
 
