@@ -178,8 +178,8 @@ tbody tr:hover .ra{opacity:1;}
 .dsh{font-size:11px;color:var(--am2);margin-top:5px;}
 
 /* === ORCAMENTOS === */
-#page-orc{flex:1;overflow-y:auto;padding:0 22px 22px;display:none;flex-direction:column;min-height:0;}
-.orc-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px 0 4px;flex-shrink:0;}
+#page-orc{flex:1;overflow:hidden;padding:0;display:none;flex-direction:column;min-height:0;}
+.orc-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px 22px 4px;flex-shrink:0;}
 .orc-kpi{background:var(--sur);border:1px solid var(--bor);border-radius:var(--r);padding:14px;position:relative;overflow:hidden;}
 .orc-kpi::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;}
 .orc-kpi.k0::before{background:var(--bl);}
@@ -199,10 +199,10 @@ tbody tr:hover .ra{opacity:1;}
 .ops-rec{background:#fef2f2;color:#dc2626;border:1px solid #fecaca;}
 .ops-fat{background:#f5f3ff;color:#7c3aed;border:1px solid #ddd6fe;}
 .ops-can{background:#f5f4f0;color:#5a5854;border:1px solid #cccac4;}
-.modal-lg{width:820px;max-width:96vw;}
+.modal-lg{width:860px;max-width:97vw;}
 .otbl{width:100%;border-collapse:collapse;margin-top:6px;font-size:12px;}
 .otbl th{background:var(--sur2);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--tx3);padding:6px 8px;text-align:left;border-bottom:1px solid var(--bor);}
-.otbl td{padding:6px 8px;border-bottom:1px solid var(--bor);vertical-align:middle;}
+.otbl td{padding:6px 6px;border-bottom:1px solid var(--bor);vertical-align:middle;}
 .otbl tr:last-child td{border-bottom:none;}
 .otbl input,.otbl select{width:100%;padding:4px 7px;border:1px solid var(--bor2);border-radius:4px;font-size:12px;font-family:'Barlow',sans-serif;background:var(--sur);outline:none;}
 .otbl input:focus,.otbl select:focus{border-color:var(--am);}
@@ -210,6 +210,20 @@ tbody tr:hover .ra{opacity:1;}
 .add-row:hover{border-color:var(--am);color:var(--am2);}
 .stl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--tx3);margin:12px 0 5px;padding-bottom:3px;border-bottom:2px solid var(--am);display:block;}
 .total-row{display:flex;justify-content:flex-end;padding:8px 0 0;font-size:13px;gap:16px;}
+/* searchable select */
+.sel-wrap{position:relative;}
+.sel-search{width:100%;padding:8px 11px;border:1px solid var(--bor2);border-radius:var(--rs);background:var(--sur);color:var(--tx);font-size:13px;font-family:'Barlow',sans-serif;outline:none;}
+.sel-search:focus{border-color:var(--am);box-shadow:0 0 0 3px rgba(245,194,0,.12);}
+.sel-drop{display:none;position:absolute;top:100%;left:0;right:0;background:var(--sur);border:1px solid var(--bor2);border-radius:var(--rs);box-shadow:0 8px 24px rgba(0,0,0,0.15);z-index:999;max-height:220px;overflow-y:auto;}
+.sel-drop.open{display:block;}
+.sel-opt{padding:8px 12px;font-size:13px;cursor:pointer;color:var(--tx);}
+.sel-opt:hover{background:var(--am-bg);}
+.sel-opt.sel-none{color:var(--tx3);font-style:italic;}
+.orc-filters{padding:8px 22px 6px;display:flex;gap:8px;flex-wrap:wrap;flex-shrink:0;border-bottom:1px solid var(--bor);}
+.orc-filters input,.orc-filters select{padding:7px 11px;border:1px solid var(--bor2);border-radius:var(--rs);background:var(--sur);color:var(--tx);font-size:13px;outline:none;font-family:'Barlow',sans-serif;}
+.orc-filters input{min-width:200px;}
+.orc-filters input:focus,.orc-filters select:focus{border-color:var(--am);}
+.orc-topbar{padding:10px 22px;display:flex;justify-content:flex-end;flex-shrink:0;}
 </style>
 </head>
 <body>
@@ -304,7 +318,10 @@ tbody tr:hover .ra{opacity:1;}
     <div class="mb">
       <div class="fr"><div class="fg ff"><label>Nome da empresa *</label><input type="text" id="f-nome" placeholder="Ex: Distribuidora Central Ltda"></div></div>
       <div class="fr">
-        <div class="fg"><label>Cidade *</label><select id="f-cid"></select></div>
+        <div class="fg"><label>Cidade *</label>
+          <select id="f-cid" onchange="toggleCidManual(this.value)" style="margin-bottom:4px"></select>
+          <input type="text" id="f-cid-manual" placeholder="Digite a cidade" style="display:none;margin-top:4px">
+        </div>
         <div class="fg"><label>Ramo de atividade</label><input type="text" id="f-ramo" placeholder="Ex: Distribuição de alimentos"></div>
       </div>
       <div class="fr">
@@ -314,6 +331,10 @@ tbody tr:hover .ra{opacity:1;}
       <div class="fr">
         <div class="fg"><label>E-mail</label><input type="text" id="f-email" placeholder="contato@empresa.com.br"></div>
         <div class="fg"><label>Site</label><input type="text" id="f-site" placeholder="www.empresa.com.br"></div>
+      </div>
+      <div class="fr">
+        <div class="fg"><label>CNPJ</label><input type="text" id="f-cnpj" placeholder="00.000.000/0001-00"></div>
+        <div class="fg"><label>Inscrição Estadual</label><input type="text" id="f-ie" placeholder="000.000.000.000"></div>
       </div>
       <div class="fr">
         <div class="fg"><label>Potencial</label>
@@ -350,6 +371,8 @@ tbody tr:hover .ra{opacity:1;}
         <div class="di"><label>Telefone</label><span id="d-tel"></span></div>
         <div class="di"><label>E-mail</label><span id="d-email"></span></div>
         <div class="di"><label>Site</label><span id="d-site"></span></div>
+        <div class="di"><label>CNPJ</label><span id="d-cnpj"></span></div>
+        <div class="di"><label>Insc. Estadual</label><span id="d-ie"></span></div>
         <div class="di"><label>Potencial</label><span id="d-pot"></span></div>
         <div class="di"><label>Status</label><span id="d-stat"></span></div>
         <div class="di"><label>Último contato</label><span id="d-data"></span></div>
@@ -611,6 +634,7 @@ function popSelects(){
   const fc=document.getElementById("f-ci"),ff=document.getElementById("f-cid");
   const fr=document.getElementById("f-rm");
   CIDADES.forEach(c=>{fc.innerHTML+=`<option>${c}</option>`;ff.innerHTML+=`<option>${c}</option>`;});
+  ff.innerHTML+='<option value="__outra__">+ Outra cidade...</option>';
   const ramos=[...new Set(dados.map(d=>d.ramo).filter(Boolean))].sort();
   ramos.forEach(r=>fr.innerHTML+=`<option>${r}</option>`);
 }
@@ -746,9 +770,10 @@ function irP(n){pag=n;renderPag();}
 // ===== CRUD =====
 function abrirNova(){editId=null;limpF();document.getElementById("m-titulo").textContent="Nova Empresa";om("m-form");}
 function limpF(){
-  ["f-nome","f-ramo","f-resp","f-tel","f-email","f-site","f-end","f-data","f-prox","f-obs"].forEach(id=>document.getElementById(id).value="");
+  ["f-nome","f-ramo","f-resp","f-tel","f-email","f-site","f-cnpj","f-ie","f-end","f-data","f-prox","f-obs"].forEach(id=>document.getElementById(id).value="");
   document.getElementById("f-stat").value="Não contatado";
   document.getElementById("f-cid").value=CIDADES[0];
+  document.getElementById("f-cid-manual").style.display="none";
   document.getElementById("f-pot").value="";
 }
 function editEmp(id){
@@ -761,6 +786,8 @@ function editEmp(id){
   document.getElementById("f-tel").value=d.telefone||"";
   document.getElementById("f-email").value=d.email||"";
   document.getElementById("f-site").value=d.site||"";
+  document.getElementById("f-cnpj").value=d.cnpj||"";
+  document.getElementById("f-ie").value=d.ie||"";
   document.getElementById("f-pot").value=d.potencial||"";
   document.getElementById("f-stat").value=d.status;
   document.getElementById("f-data").value=d.data||"";
@@ -772,7 +799,9 @@ function editEmp(id){
 function salvar(){
   const nome=document.getElementById("f-nome").value.trim();
   if(!nome){alert("Informe o nome da empresa.");return;}
-  const obj={id:editId||uid(),nome,cidade:document.getElementById("f-cid").value,ramo:document.getElementById("f-ramo").value.trim(),responsavel:document.getElementById("f-resp").value.trim(),telefone:document.getElementById("f-tel").value.trim(),email:document.getElementById("f-email").value.trim(),site:document.getElementById("f-site").value.trim(),potencial:document.getElementById("f-pot").value,status:document.getElementById("f-stat").value,data:document.getElementById("f-data").value,prox:document.getElementById("f-prox").value,obs:document.getElementById("f-obs").value.trim(),endereco:document.getElementById("f-end").value.trim()};
+  const cidVal=document.getElementById("f-cid").value;
+  const cidFinal=cidVal==="__outra__"?document.getElementById("f-cid-manual").value.trim()||cidVal:cidVal;
+  const obj={id:editId||uid(),nome,cidade:cidFinal,ramo:document.getElementById("f-ramo").value.trim(),responsavel:document.getElementById("f-resp").value.trim(),telefone:document.getElementById("f-tel").value.trim(),email:document.getElementById("f-email").value.trim(),site:document.getElementById("f-site").value.trim(),cnpj:document.getElementById("f-cnpj").value.trim(),ie:document.getElementById("f-ie").value.trim(),potencial:document.getElementById("f-pot").value,status:document.getElementById("f-stat").value,data:document.getElementById("f-data").value,prox:document.getElementById("f-prox").value,obs:document.getElementById("f-obs").value.trim(),endereco:document.getElementById("f-end").value.trim()};
   if(editId){const i=dados.findIndex(x=>x.id===editId);dados[i]=obj;}else dados.push(obj);
   salvarLS();cm("m-form");renderTabela();
 }
@@ -789,6 +818,8 @@ function verDet(id){
   document.getElementById("d-tel").textContent=d.telefone||"—";
   document.getElementById("d-email").textContent=d.email||"—";
   document.getElementById("d-site").textContent=d.site||"—";
+  document.getElementById("d-cnpj").textContent=d.cnpj||"—";
+  document.getElementById("d-ie").textContent=d.ie||"—";
   document.getElementById("d-pot").innerHTML=d.potencial?`<span class="pot ${potCls(d.potencial)}">${d.potencial}</span>`:"—";
   document.getElementById("d-stat").innerHTML=`<span class="badge ${s.c}"><span class="dot"></span>${d.status}</span>`;
   document.getElementById("d-data").textContent=d.data?new Date(d.data+"T12:00:00").toLocaleDateString("pt-BR"):"—";
@@ -999,155 +1030,209 @@ function mudaStatus(id,novoStatus){
 }
 
 // =============================================
+// HELPERS CIDADE MANUAL
+// =============================================
+function toggleCidManual(v){
+  var m=document.getElementById('f-cid-manual');
+  m.style.display=v==='__outra__'?'block':'none';
+  if(v==='__outra__') m.focus();
+}
+
+// =============================================
 // PROPOSTAS COMERCIAIS
 // =============================================
-var propostas = JSON.parse(localStorage.getItem('af_prop_v1')||'[]');
-var propEditId = null;
-var orcDetId   = null;
-var propRows   = [];
+var propostas=JSON.parse(localStorage.getItem('af_prop_v1')||'[]');
+var propEditId=null;
+var orcDetId=null;
+var propRows=[];
 
-function saveProp(){ try{ localStorage.setItem('af_prop_v1', JSON.stringify(propostas)); }catch(e){} }
+function saveProp(){try{localStorage.setItem('af_prop_v1',JSON.stringify(propostas));}catch(e){}}
+function brl(n){return Number(n||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function parseBrl(s){return parseFloat(String(s||0).replace(/\./g,'').replace(',','.').replace(/[^0-9.]/g,''))||0;}
+function fmtD(iso){return iso?new Date(iso+'T12:00:00').toLocaleDateString('pt-BR'):'—';}
+function addD(iso,n){var d=new Date(iso+'T12:00:00');d.setDate(d.getDate()+n);return d.toLocaleDateString('pt-BR');}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function numProp(){return String(propostas.length+1).padStart(3,'0')+'/'+new Date().getFullYear();}
 
-function brl(n){ return Number(n||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}); }
-function parseBrl(s){ return parseFloat(String(s||0).replace(/\./g,'').replace(',','.').replace(/[^0-9.]/g,''))||0; }
-function fmtD(iso){ return iso?new Date(iso+'T12:00:00').toLocaleDateString('pt-BR'):'—'; }
-function addD(iso,n){ var d=new Date(iso+'T12:00:00'); d.setDate(d.getDate()+n); return d.toLocaleDateString('pt-BR'); }
-function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function numProp(){ var n=propostas.length+1; return String(n).padStart(3,'0')+'/'+new Date().getFullYear(); }
-
-var VEIC=['Caminhão 3/4','Caminhão Toco','Caminhão Truck','Carreta Simples','Carreta Baú','Carreta Refrigerada','Bitrem','Van/Sprinter','Outro'];
+var VEIC=['Caminhão 3/4','Caminhão Toco','Caminhão Truck','Carreta Simples','Carreta Baú','Carreta Refrigerada','Bitrem','Rodotrem','Van/Sprinter'];
 var FREQ=['Diária','Semanal','Quinzenal','Mensal','Sob demanda','Avulso'];
+var TIPO_ROTA=['Ida','Retorno','Ida e Volta','Serviço'];
 var STCLS={Pendente:'ops-pen',Aprovado:'ops-apr',Recusado:'ops-rec',Faturado:'ops-fat',Cancelado:'ops-can'};
 
+// ── Busca de empresa searchable ───────────────────
+var _empDropOpen=false;
+function abrirDropEmp(){
+  filtrarEmpresas(document.getElementById('op-emp-txt').value);
+}
+function filtrarEmpresas(q){
+  var drop=document.getElementById('op-emp-drop');
+  var lista=dados.slice().sort(function(a,b){return a.nome.localeCompare(b.nome);});
+  if(q) lista=lista.filter(function(d){return d.nome.toLowerCase().includes(q.toLowerCase())||((d.cidade||'').toLowerCase().includes(q.toLowerCase()));});
+  if(!lista.length){
+    drop.innerHTML='<div class="sel-opt sel-none">Nenhuma empresa encontrada</div>';
+  } else {
+    drop.innerHTML=lista.map(function(d){
+      return '<div class="sel-opt" onclick="selecionarEmpresa(\''+d.id+'\',\''+esc(d.nome)+'\')">'+esc(d.nome)+'<span style="color:var(--tx3);font-size:11px;margin-left:6px">'+esc(d.cidade||'')+'</span></div>';
+    }).join('');
+  }
+  drop.classList.add('open');
+}
+function selecionarEmpresa(id,nome){
+  document.getElementById('op-emp-id').value=id;
+  document.getElementById('op-emp-txt').value=nome;
+  document.getElementById('op-emp-drop').classList.remove('open');
+  var d=dados.find(function(x){return x.id===id;});
+  if(d){
+    document.getElementById('op-cid').value=d.cidade||'';
+    document.getElementById('op-resp').value=d.responsavel||'';
+    document.getElementById('op-cnpj').value=d.cnpj||'';
+    var telEl=document.getElementById('op-tel');
+    if(telEl) telEl.value=d.telefone||'';
+    var emailEl=document.getElementById('op-email');
+    if(emailEl) emailEl.value=d.email||'';
+  }
+}
+document.addEventListener('click',function(e){
+  if(!e.target.closest('#sw-emp')) document.getElementById('op-emp-drop').classList.remove('open');
+});
+
+// ── Abrir form ─────────────────────────────────────
 function abrirNovaProposta(){
   propEditId=null; propRows=[];
-  var sel=document.getElementById('op-emp');
-  sel.innerHTML='<option value="">-- Selecione --</option>';
-  dados.forEach(function(d){ sel.innerHTML+='<option value="'+d.id+'">'+esc(d.nome)+'</option>'; });
   document.getElementById('orc-tit').textContent='Nova Proposta Comercial';
   document.getElementById('op-num').value=numProp();
   document.getElementById('op-rev').value='00';
   document.getElementById('op-data').value=new Date().toISOString().split('T')[0];
   document.getElementById('op-val').value=7;
+  document.getElementById('op-emp-txt').value='';
+  document.getElementById('op-emp-id').value='';
+  document.getElementById('op-emp-drop').classList.remove('open');
   document.getElementById('op-resp').value='';
   document.getElementById('op-cnpj').value='';
   document.getElementById('op-cid').value='';
+  var _t=document.getElementById('op-tel'); if(_t) _t.value='';
+  var _e=document.getElementById('op-email'); if(_e) _e.value='';
   document.getElementById('op-obj').value='';
-  document.getElementById('op-pgto').value='Mediante apresentação do CT-e / NF, vencimento em 30 dias';
+  document.getElementById('op-pgto').value='Mediante apresentação do CT-e / NF, vencimento em 30 dias após emissão';
   document.getElementById('op-prog').value='02 dias úteis de antecedência';
   document.getElementById('op-reaj').value='INPC';
   document.getElementById('op-esp').value='';
   document.getElementById('op-hextra').value='';
   document.getElementById('op-status').value='Pendente';
   document.getElementById('op-obs').value='Nossa equipe está disponível para adequar o escopo conforme necessidade específica.';
-  addOrcRow(); // add first empty row
+  addOrcRow();
   om('m-orc');
 }
 
-// preench dados da empresa ao selecionar
-document.addEventListener('DOMContentLoaded', function(){
-  var s=document.getElementById('op-emp');
-  if(!s) return;
-  s.addEventListener('change', function(){
-    var d=dados.find(function(x){ return x.id===s.value; });
-    if(!d) return;
-    if(!document.getElementById('op-cid').value) document.getElementById('op-cid').value=d.cidade||'';
-    if(!document.getElementById('op-resp').value) document.getElementById('op-resp').value=d.responsavel||'';
-  });
-});
-
+// ── Linhas de rota ──────────────────────────────────
 function addOrcRow(){
-  propRows.push({rota:'',veiculo:'Caminhão 3/4',freq:'Mensal',valor:0,qtd:1});
+  propRows.push({tipo:'Ida',rota:'',veiculo:'Caminhão 3/4',veicManual:'',freq:'Mensal',valor:0,qtd:1});
   renderOrcRows();
 }
-function removeOrcRow(i){ propRows.splice(i,1); renderOrcRows(); }
+function removeOrcRow(i){propRows.splice(i,1);renderOrcRows();}
 
 function renderOrcRows(){
   var tb=document.getElementById('op-rows');
   tb.innerHTML=propRows.map(function(r,i){
-    return '<tr>'
-      +'<td><input class="pr-rota" value="'+esc(r.rota)+'" placeholder="Ex: Retirada Mogi Guaçu — Entrega São Paulo" oninput="propRows['+i+'].rota=this.value"></td>'
-      +'<td><select class="pr-vei" onchange="propRows['+i+'].veiculo=this.value">'+VEIC.map(function(v){ return '<option'+(r.veiculo===v?' selected':'')+'>'+v+'</option>'; }).join('')+'</select></td>'
-      +'<td><select class="pr-frq" onchange="propRows['+i+'].freq=this.value">'+FREQ.map(function(f){ return '<option'+(r.freq===f?' selected':'')+'>'+f+'</option>'; }).join('')+'</select></td>'
+    var veicOpts=VEIC.map(function(v){return '<option'+(r.veiculo===v?' selected':'')+'>'+v+'</option>';}).join('')+'<option value="__manual__"'+(r.veiculo==='__manual__'?' selected':'')+'>+ Outro (digitar)</option>';
+    var freqOpts=FREQ.map(function(f){return '<option'+(r.freq===f?' selected':'')+'>'+f+'</option>';}).join('');
+    var tipoOpts=TIPO_ROTA.map(function(t){return '<option'+(r.tipo===t?' selected':'')+'>'+t+'</option>';}).join('');
+    return '<tr id="orc-row-'+i+'">'
+      +'<td><select onchange="propRows['+i+'].tipo=this.value">'+tipoOpts+'</select></td>'
+      +'<td><input class="pr-rota" value="'+esc(r.rota)+'" placeholder="Origem → Destino" oninput="propRows['+i+'].rota=this.value"></td>'
+      +'<td>'
+        +'<select class="pr-vei" onchange="propRows['+i+'].veiculo=this.value;toggleVeicManual('+i+',this.value)">'+veicOpts+'</select>'
+        +'<input type="text" class="pr-vei-m" style="display:'+(r.veiculo==='__manual__'?'block':'none')+';margin-top:3px" value="'+esc(r.veicManual||'')+'" placeholder="Descreva o veículo" oninput="propRows['+i+'].veicManual=this.value">'
+      +'</td>'
+      +'<td><select class="pr-frq" onchange="propRows['+i+'].freq=this.value">'+freqOpts+'</select></td>'
       +'<td><input class="pr-val" value="'+brl(r.valor)+'" style="text-align:right" placeholder="0,00" oninput="propRows['+i+'].valor=parseBrl(this.value);calcOrcTotal()" onblur="this.value=brl(parseBrl(this.value))"></td>'
-      +'<td><input class="pr-qtd" type="number" min="1" value="'+r.qtd+'" style="width:44px" oninput="propRows['+i+'].qtd=parseInt(this.value)||1;calcOrcTotal()"></td>'
+      +'<td><input class="pr-qtd" type="number" min="1" value="'+r.qtd+'" oninput="propRows['+i+'].qtd=parseInt(this.value)||1;calcOrcTotal()"></td>'
       +'<td><button class="ib d" onclick="removeOrcRow('+i+')" title="Remover"><i class="ti ti-trash"></i></button></td>'
       +'</tr>';
   }).join('');
   calcOrcTotal();
 }
 
+function toggleVeicManual(i,v){
+  var row=document.getElementById('orc-row-'+i);
+  if(!row) return;
+  var m=row.querySelector('.pr-vei-m');
+  if(m) m.style.display=v==='__manual__'?'block':'none';
+}
+
 function lerRows(){
   var trs=document.querySelectorAll('#op-rows tr');
   for(var i=0;i<trs.length&&i<propRows.length;i++){
-    propRows[i].rota  =trs[i].querySelector('.pr-rota').value;
+    propRows[i].rota=trs[i].querySelector('.pr-rota').value;
     propRows[i].veiculo=trs[i].querySelector('.pr-vei').value;
-    propRows[i].freq  =trs[i].querySelector('.pr-frq').value;
-    propRows[i].valor =parseBrl(trs[i].querySelector('.pr-val').value);
-    propRows[i].qtd   =parseInt(trs[i].querySelector('.pr-qtd').value)||1;
+    propRows[i].veicManual=trs[i].querySelector('.pr-vei-m').value||'';
+    propRows[i].freq=trs[i].querySelector('.pr-frq').value;
+    propRows[i].valor=parseBrl(trs[i].querySelector('.pr-val').value);
+    propRows[i].qtd=parseInt(trs[i].querySelector('.pr-qtd').value)||1;
   }
 }
 
 function calcOrcTotal(){
   lerRows();
-  var t=propRows.reduce(function(a,r){ return a+(r.valor*r.qtd); },0);
+  var t=propRows.reduce(function(a,r){return a+(r.valor*r.qtd);},0);
   document.getElementById('op-total').textContent='R$ '+brl(t);
 }
 
+// ── Salvar ─────────────────────────────────────────
 function salvarProposta(gerarPdf){
   lerRows();
-  var empId=document.getElementById('op-emp').value;
-  if(!empId){ alert('Selecione a empresa.'); return; }
-  var emp=dados.find(function(x){ return x.id===empId; });
-  var total=propRows.reduce(function(a,r){ return a+(r.valor*r.qtd); },0);
+  var empId=document.getElementById('op-emp-id').value;
+  if(!empId){alert('Selecione a empresa.');return;}
+  var empNome=document.getElementById('op-emp-txt').value.trim();
+  var total=propRows.reduce(function(a,r){return a+(r.valor*r.qtd);},0);
   var obj={
-    id:     propEditId||('p'+Date.now().toString(36)),
-    num:    document.getElementById('op-num').value,
-    rev:    document.getElementById('op-rev').value,
-    data:   document.getElementById('op-data').value,
+    id:propEditId||('p'+Date.now().toString(36)),
+    num:document.getElementById('op-num').value,
+    rev:document.getElementById('op-rev').value,
+    data:document.getElementById('op-data').value,
     validade:parseInt(document.getElementById('op-val').value)||7,
-    empId:  empId,
-    empNome:emp?emp.nome:'',
-    resp:   document.getElementById('op-resp').value.trim(),
-    cnpj:   document.getElementById('op-cnpj').value.trim(),
-    cidade: document.getElementById('op-cid').value.trim(),
-    obj:    document.getElementById('op-obj').value.trim(),
-    rows:   propRows.map(function(r){ return Object.assign({},r); }),
-    total:  total,
-    pgto:   document.getElementById('op-pgto').value.trim(),
-    prog:   document.getElementById('op-prog').value.trim(),
-    reaj:   document.getElementById('op-reaj').value,
-    esp:    document.getElementById('op-esp').value.trim(),
-    hextra: document.getElementById('op-hextra').value.trim(),
-    status: document.getElementById('op-status').value,
-    obs:    document.getElementById('op-obs').value.trim()
+    empId:empId, empNome:empNome,
+    resp:document.getElementById('op-resp').value.trim(),
+    cnpj:document.getElementById('op-cnpj').value.trim(),
+    cidade:document.getElementById('op-cid').value.trim(),
+    tel:document.getElementById('op-tel').value.trim(),
+    email:document.getElementById('op-email').value.trim(),
+    obj:document.getElementById('op-obj').value.trim(),
+    rows:propRows.map(function(r){return Object.assign({},r);}),
+    total:total,
+    pgto:document.getElementById('op-pgto').value.trim(),
+    prog:document.getElementById('op-prog').value.trim(),
+    reaj:document.getElementById('op-reaj').value,
+    esp:document.getElementById('op-esp').value.trim(),
+    hextra:document.getElementById('op-hextra').value.trim(),
+    status:document.getElementById('op-status').value,
+    obs:document.getElementById('op-obs').value.trim()
   };
-  if(propEditId){
-    var idx=propostas.findIndex(function(x){ return x.id===propEditId; });
-    propostas[idx]=obj;
-  } else {
-    propostas.push(obj);
-  }
+  if(propEditId){var ix=propostas.findIndex(function(x){return x.id===propEditId;});propostas[ix]=obj;}
+  else propostas.push(obj);
   saveProp(); cm('m-orc'); renderOrcPage();
   document.getElementById('nb-orc').textContent=propostas.length;
   if(gerarPdf) pdfProposta(obj.id);
 }
 
+// ── Editar ─────────────────────────────────────────
 function editProposta(id){
-  var o=propostas.find(function(x){ return x.id===id; });
+  var o=propostas.find(function(x){return x.id===id;});
   if(!o) return;
   propEditId=id;
-  var sel=document.getElementById('op-emp');
-  sel.innerHTML='<option value="">-- Selecione --</option>';
-  dados.forEach(function(d){ sel.innerHTML+='<option value="'+d.id+'"'+(d.id===o.empId?' selected':'')+'>'+esc(d.nome)+'</option>'; });
   document.getElementById('orc-tit').textContent='Editar Proposta '+o.num;
   document.getElementById('op-num').value=o.num;
   document.getElementById('op-rev').value=o.rev||'00';
   document.getElementById('op-data').value=o.data;
   document.getElementById('op-val').value=o.validade;
+  document.getElementById('op-emp-txt').value=o.empNome;
+  document.getElementById('op-emp-id').value=o.empId;
+  document.getElementById('op-emp-drop').classList.remove('open');
   document.getElementById('op-resp').value=o.resp||'';
   document.getElementById('op-cnpj').value=o.cnpj||'';
   document.getElementById('op-cid').value=o.cidade||'';
+  var _tel=document.getElementById('op-tel'); if(_tel) _tel.value=o.tel||'';
+  var _email=document.getElementById('op-email'); if(_email) _email.value=o.email||'';
   document.getElementById('op-obj').value=o.obj||'';
   document.getElementById('op-pgto').value=o.pgto||'';
   document.getElementById('op-prog').value=o.prog||'';
@@ -1156,34 +1241,39 @@ function editProposta(id){
   document.getElementById('op-hextra').value=o.hextra||'';
   document.getElementById('op-status').value=o.status||'Pendente';
   document.getElementById('op-obs').value=o.obs||'';
-  propRows=o.rows.map(function(r){ return Object.assign({},r); });
+  propRows=o.rows.map(function(r){return Object.assign({},r);});
   renderOrcRows(); om('m-orc');
 }
-
 function excluirProposta(id){
   if(!confirm('Excluir esta proposta?')) return;
-  propostas=propostas.filter(function(x){ return x.id!==id; });
+  propostas=propostas.filter(function(x){return x.id!==id;});
   saveProp(); renderOrcPage();
 }
 
+// ── Detalhe ─────────────────────────────────────────
 function verPropostaDet(id){
-  var o=propostas.find(function(x){ return x.id===id; });
+  var o=propostas.find(function(x){return x.id===id;});
   if(!o) return;
   orcDetId=id;
   document.getElementById('od-tit').textContent='Proposta Nº '+o.num+' — '+o.empNome;
   var cls=STCLS[o.status]||'ops-pen';
-  var totalM=o.rows.reduce(function(a,r){ return a+(r.valor*r.qtd); },0);
+  var totalM=o.rows.reduce(function(a,r){return a+(r.valor*r.qtd);},0);
   document.getElementById('od-body').innerHTML=
     '<div class="dg" style="margin-bottom:12px">'
     +'<div class="di"><label>Nº / Rev</label><span>'+esc(o.num)+' / '+esc(o.rev||'00')+'</span></div>'
     +'<div class="di"><label>Data</label><span>'+fmtD(o.data)+'</span></div>'
     +'<div class="di"><label>Validade</label><span>'+addD(o.data,o.validade)+' ('+o.validade+' dias)</span></div>'
-    +'<div class="di"><label>Status</label><span><span class="badge '+cls+'">'+o.status+'</span></span></div>'
+    +'<div class="di"><label>Status</label><span><span class="ops '+cls+'">'+o.status+'</span></span></div>'
     +'<div class="di"><label>Responsável</label><span>'+esc(o.resp||'—')+'</span></div>'
+    +'<div class="di"><label>Telefone</label><span>'+esc(o.tel||'—')+'</span></div>'
+    +'<div class="di"><label>E-mail</label><span>'+esc(o.email||'—')+'</span></div>'
     +'<div class="di"><label>CNPJ</label><span>'+esc(o.cnpj||'—')+'</span></div>'
     +'</div><div class="sep"></div>'
-    +'<table class="otbl"><thead><tr><th>Rota/Serviço</th><th>Veículo</th><th>Freq.</th><th style="text-align:right">Valor</th><th style="text-align:center">Qtd</th><th style="text-align:right">Total</th></tr></thead><tbody>'
-    +o.rows.map(function(r){ return '<tr><td>'+esc(r.rota||'—')+'</td><td>'+esc(r.veiculo)+'</td><td>'+esc(r.freq)+'</td><td style="text-align:right">R$ '+brl(r.valor)+'</td><td style="text-align:center">'+r.qtd+'</td><td style="text-align:right;font-weight:600">R$ '+brl(r.valor*r.qtd)+'</td></tr>'; }).join('')
+    +'<table class="otbl"><thead><tr><th>Tipo</th><th>Rota/Serviço</th><th>Veículo</th><th>Freq.</th><th style="text-align:right">Valor</th><th style="text-align:center">Qtd</th><th style="text-align:right">Total</th></tr></thead><tbody>'
+    +o.rows.map(function(r){
+      var veicLabel=r.veiculo==='__manual__'?(r.veicManual||'Outro'):r.veiculo;
+      return '<tr><td><span style="font-size:10px;font-weight:700;color:var(--bl)">'+esc(r.tipo||'Ida')+'</span></td><td>'+esc(r.rota||'—')+'</td><td>'+esc(veicLabel)+'</td><td>'+esc(r.freq)+'</td><td style="text-align:right">R$ '+brl(r.valor)+'</td><td style="text-align:center">'+r.qtd+'</td><td style="text-align:right;font-weight:600">R$ '+brl(r.valor*r.qtd)+'</td></tr>';
+    }).join('')
     +'</tbody></table>'
     +'<div class="total-row"><span style="font-size:15px;font-weight:700;color:var(--am2)">VALOR TOTAL MENSAL: <b>R$ '+brl(totalM)+'</b></span></div>'
     +'<div class="sep"></div>'
@@ -1191,33 +1281,36 @@ function verPropostaDet(id){
     +(o.obs?'<div class="sep"></div><div class="dobs">'+esc(o.obs)+'</div>':'');
   om('m-orc-det');
 }
-function editPropostaDet(){ cm('m-orc-det'); editProposta(orcDetId); }
+function editPropostaDet(){cm('m-orc-det');editProposta(orcDetId);}
+
+// ── Render page Orçamentos ───────────────────────────
+function getPropostasFiltradas(){
+  var busca=(document.getElementById('of-busca')||{value:''}).value.toLowerCase();
+  var stFil=(document.getElementById('of-st')||{value:''}).value;
+  var mesFil=(document.getElementById('of-mes')||{value:''}).value;
+  return propostas.filter(function(o){
+    var ok=true;
+    if(busca) ok=ok&&(o.empNome.toLowerCase().includes(busca)||o.num.toLowerCase().includes(busca)||(o.resp||'').toLowerCase().includes(busca)||(o.cidade||'').toLowerCase().includes(busca));
+    if(stFil) ok=ok&&(o.status===stFil);
+    if(mesFil) ok=ok&&(o.data&&o.data.slice(0,7)===mesFil);
+    return ok;
+  });
+}
 
 function renderOrcPage(){
   var pg=document.getElementById('page-orc');
   if(!pg) return;
-  var totV=propostas.reduce(function(a,o){ return a+o.total; },0);
-  var aprov=propostas.filter(function(o){ return o.status==='Aprovado'; });
-  var aprovV=aprov.reduce(function(a,o){ return a+o.total; },0);
-  var pend=propostas.filter(function(o){ return o.status==='Pendente'; }).length;
-  var rec=propostas.filter(function(o){ return o.status==='Recusado'; }).length;
+  var totV=propostas.reduce(function(a,o){return a+o.total;},0);
+  var aprov=propostas.filter(function(o){return o.status==='Aprovado';});
+  var aprovV=aprov.reduce(function(a,o){return a+o.total;},0);
+  var pend=propostas.filter(function(o){return o.status==='Pendente';}).length;
+  var rec=propostas.filter(function(o){return o.status==='Recusado';}).length;
 
-  var rows=propostas.length?[].concat(propostas).sort(function(a,b){ return b.data.localeCompare(a.data); }).map(function(o){
-    var cls=STCLS[o.status]||'ops-pen';
-    return '<tr onclick="verPropostaDet(\''+o.id+'\')" style="cursor:pointer">'
-      +'<td style="font-weight:700;color:var(--bl)">'+esc(o.num)+'</td>'
-      +'<td>'+fmtD(o.data)+'</td>'
-      +'<td class="te" title="'+esc(o.empNome)+'">'+esc(o.empNome)+'</td>'
-      +'<td class="ts">'+esc(o.resp||'—')+'</td>'
-      +'<td style="text-align:right;font-weight:600">R$ '+brl(o.total)+'</td>'
-      +'<td><span class="ops '+cls+'">'+o.status+'</span></td>'
-      +'<td><div class="ra" onclick="event.stopPropagation()">'
-        +'<button class="ib" title="PDF" onclick="pdfProposta(\''+o.id+'\')"><i class="ti ti-file-download"></i></button>'
-        +'<button class="ib" title="Editar" onclick="editProposta(\''+o.id+'\')"><i class="ti ti-edit"></i></button>'
-        +'<button class="ib d" title="Excluir" onclick="excluirProposta(\''+o.id+'\')"><i class="ti ti-trash"></i></button>'
-      +'</div></td>'
-      +'</tr>';
-  }).join(''):'<tr><td colspan="7" class="empty"><i class="ti ti-file-invoice"></i>Nenhuma proposta cadastrada</td></tr>';
+  // gerar opções de mês a partir dos dados
+  var meses=[...new Set(propostas.map(function(o){return o.data?o.data.slice(0,7):'';}).filter(Boolean))].sort().reverse();
+  var mesOpts='<option value="">Todos os meses</option>'+meses.map(function(m){
+    var p=m.split('-');return '<option value="'+m+'">'+p[1]+'/'+p[0]+'</option>';
+  }).join('');
 
   pg.innerHTML=
     '<div class="orc-kpis">'
@@ -1226,146 +1319,151 @@ function renderOrcPage(){
     +'<div class="orc-kpi k1"><div class="orc-kpi-lbl">Pendentes</div><div class="orc-kpi-val">'+pend+'</div><div class="orc-kpi-sub">Aguardando resposta</div></div>'
     +'<div class="orc-kpi k3"><div class="orc-kpi-lbl">Recusadas</div><div class="orc-kpi-val">'+rec+'</div><div class="orc-kpi-sub">Oportunidade perdida</div></div>'
     +'</div>'
-    +'<div style="padding:0 0 8px;display:flex;justify-content:flex-end;flex-shrink:0">'
-    +'<button class="btn btn-p" onclick="abrirNovaProposta()"><i class="ti ti-plus"></i> Nova Proposta</button>'
+    +'<div class="orc-filters">'
+    +'<input id="of-busca" placeholder="🔍 Buscar empresa, Nº, responsável..." oninput="renderOrcTabela()">'
+    +'<select id="of-st" onchange="renderOrcTabela()"><option value="">Todos os status</option><option>Pendente</option><option>Aprovado</option><option>Recusado</option><option>Faturado</option><option>Cancelado</option></select>'
+    +'<select id="of-mes" onchange="renderOrcTabela()">'+mesOpts+'</select>'
     +'</div>'
-    +'<div class="tw" style="padding:0;flex:1"><table>'
-    +'<thead><tr><th style="width:9%">Nº</th><th style="width:8%">Data</th><th style="width:23%">Empresa</th><th style="width:17%">Responsável</th><th style="width:12%;text-align:right">Total/mês</th><th style="width:10%">Status</th><th style="width:8%"></th></tr></thead>'
-    +'<tbody>'+rows+'</tbody></table></div>';
+    +'<div class="orc-topbar"><button class="btn btn-p" onclick="abrirNovaProposta()"><i class="ti ti-plus"></i> Nova Proposta</button></div>'
+    +'<div class="tw" style="padding:0 22px 8px;flex:1"><table>'
+    +'<thead><tr><th style="width:9%">Nº</th><th style="width:8%">Data</th><th style="width:22%">Empresa</th><th style="width:17%">Responsável</th><th style="width:13%;text-align:right">Total/mês</th><th style="width:9%">Validade</th><th style="width:10%">Status</th><th style="width:8%"></th></tr></thead>'
+    +'<tbody id="orc-tbody"></tbody></table></div>';
 
   document.getElementById('nb-orc').textContent=propostas.length;
+  renderOrcTabela();
 }
 
-// ── PDF PROPOSTA ─────────────────────────────────────
+function renderOrcTabela(){
+  var lista=getPropostasFiltradas().sort(function(a,b){return b.data.localeCompare(a.data);});
+  var tb=document.getElementById('orc-tbody');
+  if(!tb) return;
+  if(!lista.length){
+    tb.innerHTML='<tr><td colspan="8" class="empty"><i class="ti ti-file-invoice"></i>Nenhuma proposta encontrada</td></tr>';
+    return;
+  }
+  tb.innerHTML=lista.map(function(o){
+    var cls=STCLS[o.status]||'ops-pen';
+    var venc=addD(o.data,o.validade);
+    return '<tr onclick="verPropostaDet(\''+o.id+'\')" style="cursor:pointer">'
+      +'<td style="font-weight:700;color:var(--bl)">'+esc(o.num)+'</td>'
+      +'<td>'+fmtD(o.data)+'</td>'
+      +'<td class="te" title="'+esc(o.empNome)+'">'+esc(o.empNome)+'</td>'
+      +'<td class="ts">'+esc(o.resp||'—')+'</td>'
+      +'<td style="text-align:right;font-weight:600">R$ '+brl(o.total)+'</td>'
+      +'<td style="font-size:11px;color:var(--tx3)">até '+venc+'</td>'
+      +'<td><span class="ops '+cls+'">'+o.status+'</span></td>'
+      +'<td><div class="ra" onclick="event.stopPropagation()">'
+        +'<button class="ib" title="PDF" onclick="pdfProposta(\''+o.id+'\')"><i class="ti ti-file-download"></i></button>'
+        +'<button class="ib" title="Editar" onclick="editProposta(\''+o.id+'\')"><i class="ti ti-edit"></i></button>'
+        +'<button class="ib d" title="Excluir" onclick="excluirProposta(\''+o.id+'\')"><i class="ti ti-trash"></i></button>'
+      +'</div></td>'
+      +'</tr>';
+  }).join('');
+}
+
+// ── PDF ─────────────────────────────────────────────
 function pdfProposta(id){
-  var o=propostas.find(function(x){ return x.id===id; });
-  if(!o){ alert('Proposta não encontrada.'); return; }
-  if(typeof window.jspdf==='undefined'){ alert('Biblioteca PDF ainda carregando, tente novamente em segundos.'); return; }
+  var o=propostas.find(function(x){return x.id===id;});
+  if(!o){alert('Proposta não encontrada.');return;}
+  if(typeof window.jspdf==='undefined'){alert('PDF ainda carregando, tente em 2 segundos.');return;}
   var jsPDF=window.jspdf.jsPDF;
   var doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
-  var W=210, M=18, CW=W-M*2;
+  var W=210,M=18,CW=W-M*2;
+  var CAM=[245,194,0],CCIN=[43,43,43],CTX=[26,26,24],CTX2=[90,88,84],CTX3=[154,152,148],CBOR=[229,227,222];
+  var dtEmit=fmtD(o.data);
+  var dtVenc=o.data?addD(o.data,o.validade):'—';
+
+  function sf(bold,size,color){doc.setFont('helvetica',bold?'bold':'normal');doc.setFontSize(size);doc.setTextColor(color[0],color[1],color[2]);}
+  function rf(x,yy,w,h,c){doc.setFillColor(c[0],c[1],c[2]);doc.rect(x,yy,w,h,'F');}
+  function hr(yy,c,lw){doc.setDrawColor(c[0],c[1],c[2]);doc.setLineWidth(lw||0.3);doc.line(M,yy,M+CW,yy);}
   var y=0;
 
-  function sf(bold,size,color){ doc.setFont('helvetica',bold?'bold':'normal'); doc.setFontSize(size); doc.setTextColor(color[0],color[1],color[2]); }
-  function rf(x,yy,w,h,c){ doc.setFillColor(c[0],c[1],c[2]); doc.rect(x,yy,w,h,'F'); }
-  function hr(yy,c,lw){ doc.setDrawColor(c[0],c[1],c[2]); doc.setLineWidth(lw||0.3); doc.line(M,yy,M+CW,yy); }
-
-  var CAM=[245,194,0], CCIN=[43,43,43], CTX=[26,26,24], CTX2=[90,88,84], CTX3=[154,152,148], CBOR=[229,227,222];
-  var dtEmit=fmtD(o.data);
-  var dtVenc=addD(o.data,o.validade);
-
-  // ── PÁGINA 1: CAPA ──────────────────────────────
-  rf(0,0,W,62,CCIN); rf(0,0,W,6,CAM);
-  sf(true,20,[255,255,255]); doc.text('A. FERREIRA TRANSPORTES',M,26);
-  sf(false,9,[180,180,180]); doc.text('Compromisso, Segurança e Eficiência Logística',M,33);
-  sf(true,11,CAM); doc.text('Nº '+o.num,W-M,22,{align:'right'});
+  // CAPA
+  rf(0,0,W,62,CCIN);rf(0,0,W,6,CAM);
+  sf(true,20,[255,255,255]);doc.text('A. FERREIRA TRANSPORTES',M,26);
+  sf(false,9,[180,180,180]);doc.text('Compromisso, Segurança e Eficiência Logística',M,33);
+  sf(true,11,CAM);doc.text('Nº '+o.num,W-M,22,{align:'right'});
   sf(false,8,[180,180,180]);
   doc.text('REVISÃO: '+(o.rev||'00'),W-M,29,{align:'right'});
   doc.text(dtEmit,W-M,36,{align:'right'});
-  sf(true,14,[255,255,255]); doc.text('PROPOSTA TÉCNICA COMERCIAL',M,50);
-  sf(false,9,[200,200,200]); doc.text('SERVIÇOS DE TRANSPORTE E LOGÍSTICA',M,57);
-
+  sf(true,14,[255,255,255]);doc.text('PROPOSTA TÉCNICA COMERCIAL',M,50);
+  sf(false,9,[200,200,200]);doc.text('SERVIÇOS DE TRANSPORTE E LOGÍSTICA',M,57);
   y=72;
-  function campo2(lbl,val,x,mw){
-    sf(true,7.5,CTX3); doc.text(lbl,x,y);
-    sf(false,9,CTX); doc.text(doc.splitTextToSize(String(val||'—'),mw||CW/2-5),x,y+4.5);
-  }
 
-  function sec(titulo){
-    sf(true,9,CCIN); doc.text(titulo,M,y);
-    hr(y+2,CAM,0.8); y+=8;
+  function campo(lbl,val,x,mw){
+    sf(true,7.5,CTX3);doc.text(lbl,x,y);
+    sf(false,9,CTX);doc.text(doc.splitTextToSize(String(val||'—'),mw||(CW/2-5)),x,y+4.5);
   }
+  function sec(t){sf(true,9,CCIN);doc.text(t,M,y);hr(y+2,CAM,0.8);y+=8;}
 
   sec('DADOS DO EMITENTE');
-  campo2('RAZÃO SOCIAL','A. Ferreira da Costa Transportes',M,CW/2-4);
-  campo2('CNPJ','36.370.512/0001-97',M+CW/2+2,CW/2-4); y+=12;
-  campo2('ENDEREÇO','Rua Paulo da Cunha Bueno, 682 – Jd. Guaçuano – Mogi Guaçu SP  CEP: 13.846-460',M,CW); y+=12;
-  campo2('TELEFONE','(19) 9 9659-0174',M,CW/3-4);
-  campo2('E-MAIL / PIX','contato@aferreiratransportes.com.br',M+CW/3+2,CW/3-4);
-  campo2('SITE','www.aferreiratransportes.com.br',M+2*CW/3+2,CW/3-4); y+=14;
+  campo('RAZÃO SOCIAL','A. Ferreira da Costa Transportes',M,CW/2-4);
+  campo('CNPJ','36.370.512/0001-97',M+CW/2+2,CW/2-4);y+=12;
+  campo('ENDEREÇO','Rua Paulo da Cunha Bueno, 682 – Jd. Guaçuano – Mogi Guaçu SP  CEP: 13.846-460',M,CW);y+=12;
+  campo('TELEFONE','(19) 9 9659-0174',M,CW/3-4);
+  campo('E-MAIL / PIX','contato@aferreiratransportes.com.br',M+CW/3+2,CW/3-4);
+  campo('SITE','www.aferreiratransportes.com.br',M+2*CW/3+2,CW/3-4);y+=14;
 
-  hr(y,CBOR); y+=5;
+  hr(y,CBOR);y+=5;
   sec('DADOS BANCÁRIOS');
-  campo2('BANCO','Santander',M,CW/4-3);
-  campo2('AGÊNCIA','0181',M+CW/4+2,CW/4-3);
-  campo2('CONTA CORRENTE','13.006457-0',M+CW/2+2,CW/4-3);
-  campo2('CHAVE PIX','contato@aferreiratransportes.com.br',M+3*CW/4+2,CW/4-3); y+=14;
+  campo('BANCO','Santander',M,CW/4-3);
+  campo('AGÊNCIA','0181',M+CW/4+2,CW/4-3);
+  campo('CONTA CORRENTE','13.006457-0',M+CW/2+2,CW/4-3);
+  campo('CHAVE PIX','contato@aferreiratransportes.com.br',M+3*CW/4+2,CW/4-3);y+=14;
 
-  hr(y,CBOR); y+=5;
+  hr(y,CBOR);y+=5;
   sec('SUBMETIDO PARA');
-  campo2('RESPONSÁVEL','Sr(a). '+(o.resp||'—'),M,CW/2-4);
-  campo2('EMPRESA',o.empNome||'—',M+CW/2+2,CW/2-4); y+=12;
-  if(o.cnpj){ campo2('CNPJ',o.cnpj,M,CW/2-4); }
-  if(o.cidade){ campo2('CIDADE / UF',o.cidade,M+CW/2+2,CW/2-4); }
+  campo('RESPONSÁVEL','Sr(a). '+(o.resp||'—'),M,CW/2-4);
+  campo('EMPRESA',o.empNome||'—',M+CW/2+2,CW/2-4);y+=12;
+  if(o.cnpj){campo('CNPJ',o.cnpj,M,CW/2-4);}
+  if(o.cidade){campo('CIDADE / UF',o.cidade,M+CW/2+2,CW/2-4);}
   y+=12;
 
-  var meses=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-  var dObj=new Date(o.data+'T12:00:00');
-  sf(false,9,CTX2);
-  doc.text('Mogi Guaçu, '+dObj.getDate()+' de '+meses[dObj.getMonth()]+' de '+dObj.getFullYear()+'.',M,y); y+=10;
+  var meses2=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  var dObj=new Date((o.data||new Date().toISOString().split('T')[0])+'T12:00:00');
+  sf(false,9,CTX2);doc.text('Mogi Guaçu, '+dObj.getDate()+' de '+meses2[dObj.getMonth()]+' de '+dObj.getFullYear()+'.',M,y);y+=10;
 
-  // Índice
-  hr(y,CBOR); y+=5;
+  hr(y,CBOR);y+=5;
   sec('ÍNDICE DA PROPOSTA');
-  var idx=[['01','APRESENTAÇÃO DA EMPRESA'],['02','ESTRUTURA OPERACIONAL'],['03','SERVIÇOS OFERECIDOS'],
-           ['04','OBJETIVO'],['05','ESCOPO DO SERVIÇO'],['06','PREMISSAS'],['07','ORÇAMENTO']];
-  idx.forEach(function(it){
-    rf(M,y-3.5,8,6,CAM);
-    sf(true,8,CCIN); doc.text(it[0],M+4,y,{align:'center'});
-    sf(false,9,CTX); doc.text(it[1],M+12,y);
-    y+=7;
+  [['01','APRESENTAÇÃO DA EMPRESA'],['02','ESTRUTURA OPERACIONAL'],['03','SERVIÇOS OFERECIDOS'],
+   ['04','OBJETIVO'],['05','ESCOPO DO SERVIÇO'],['06','PREMISSAS'],['07','ORÇAMENTO']].forEach(function(it){
+    rf(M,y-3.5,8,6,CAM);sf(true,8,CCIN);doc.text(it[0],M+4,y,{align:'center'});
+    sf(false,9,CTX);doc.text(it[1],M+12,y);y+=7;
   });
 
-  // ── PÁGINA 2: CONTEÚDO ──────────────────────────
-  doc.addPage(); y=15;
-  function chkPg(n){ if(y+n>280){ doc.addPage(); y=15; } }
-  function secBlk(num,tit){
-    chkPg(12);
-    rf(M,y-4,CW,8,CCIN);
-    sf(true,9,CAM); doc.text(num,M+3,y);
-    sf(true,9,[255,255,255]); doc.text(tit,M+14,y);
-    y+=11;
-  }
-  function para(txt,ind){
-    sf(false,8.5,CTX);
-    var ll=doc.splitTextToSize(txt,CW-(ind||0));
-    doc.text(ll,M+(ind||0),y); y+=ll.length*4.5+3;
-  }
-  function sub(t){ sf(true,9,CCIN); doc.text(t,M,y); y+=6; }
-  function blt(t){
-    doc.setFillColor(245,194,0); doc.circle(M+2,y-1.5,1.2,'F');
-    sf(false,8.5,CTX);
-    var ll=doc.splitTextToSize(t,CW-8); doc.text(ll,M+6,y); y+=ll.length*4.5+1;
-  }
+  // PÁG 2
+  doc.addPage();y=15;
+  function chk(n){if(y+n>280){doc.addPage();y=15;}}
+  function sB(num,tit){chk(12);rf(M,y-4,CW,8,CCIN);sf(true,9,CAM);doc.text(num,M+3,y);sf(true,9,[255,255,255]);doc.text(tit,M+14,y);y+=11;}
+  function para(txt,ind){sf(false,8.5,CTX);var ll=doc.splitTextToSize(txt,CW-(ind||0));doc.text(ll,M+(ind||0),y);y+=ll.length*4.5+3;}
+  function sub(t){sf(true,9,CCIN);doc.text(t,M,y);y+=6;}
+  function blt(t){doc.setFillColor(245,194,0);doc.circle(M+2,y-1.5,1.2,'F');sf(false,8.5,CTX);var ll=doc.splitTextToSize(t,CW-8);doc.text(ll,M+6,y);y+=ll.length*4.5+1;}
 
-  secBlk('01.','APRESENTAÇÃO DA EMPRESA');
+  sB('01.','APRESENTAÇÃO DA EMPRESA');
   sub('COMPROMISSO, SEGURANÇA E EFICIÊNCIA LOGÍSTICA');
   para('A A. Ferreira Transportes, sediada em Mogi Guaçu – SP, atua no segmento de logística e transporte rodoviário de cargas, oferecendo soluções completas e eficientes para empresas que demandam agilidade, segurança e confiabilidade em suas operações.');
   para('Nossa estrutura foi desenvolvida para atender com excelência organizações que dependem de um fluxo logístico contínuo, contribuindo diretamente para a estabilidade e desempenho de suas operações.');
   para('Valorizamos relações comerciais sólidas e duradouras, pautadas na compreensão das necessidades específicas de cada cliente, com foco na otimização da cadeia logística e na geração de resultados consistentes.');
   y+=3;
 
-  chkPg(40); secBlk('02.','ESTRUTURA OPERACIONAL');
+  chk(40);sB('02.','ESTRUTURA OPERACIONAL');
   para('A A. Ferreira Transportes dispõe de uma operação versátil e estrategicamente estruturada para atender diferentes perfis de demanda. Nossa frota abrange desde veículos leves até caminhões e carretas para transporte de cargas de maior porte.');
   para('Essa diversidade operacional assegura flexibilidade, agilidade e precisão no atendimento, adaptando-se às particularidades de cada operação logística.');
   sub('ÁREA DE ATUAÇÃO');
-  para('Atuamos em todo o território nacional, com forte presença nas regiões Sudeste e Sul, principais polos industriais e logísticos do país.'); y+=3;
+  para('Atuamos em todo o território nacional, com forte presença nas regiões Sudeste e Sul, principais polos industriais e logísticos do país.');y+=3;
 
-  chkPg(60); secBlk('03.','SERVIÇOS OFERECIDOS');
+  chk(60);sB('03.','SERVIÇOS OFERECIDOS');
   [['► Fretes Expressos e Entregas Rápidas','Realizamos fretes de pequeno porte com elevado nível de agilidade, ideais para transporte de documentos, peças, encomendas urgentes e volumes reduzidos.'],
    ['► Transporte de Cargas de Médio e Grande Porte','Atendemos operações que demandam maior capacidade logística, utilizando veículos adequados para transporte seguro de equipamentos e insumos industriais.'],
    ['► Transporte de Carga Seca','Realizamos o transporte de carga seca por meio de veículos apropriados, atendendo produtos embalados e materiais que não exigem controle de temperatura.'],
    ['► Transporte de Carga Líquida','Executamos operações de transporte de cargas líquidas, seguindo rigorosamente as normas técnicas e de segurança aplicáveis.'],
    ['► Transporte de Produtos Perigosos','Atuamos no transporte de produtos perigosos classificados, com total observância às exigências legais e normativas.']
-  ].forEach(function(sv){ chkPg(18); sf(true,9,CCIN); doc.text(sv[0],M,y); y+=5; para(sv[1],4); });
-  y+=3;
+  ].forEach(function(sv){chk(18);sf(true,9,CCIN);doc.text(sv[0],M,y);y+=5;para(sv[1],4);});y+=3;
 
-  chkPg(30); secBlk('04.','OBJETIVO');
-  sub('SERVIÇOS PROPOSTOS');
-  para(o.obj||('O objeto dos serviços ora propostos refere-se à '+o.empNome+', para EXECUTAR E GERENCIAR as operações logísticas da empresa, no que se refere ao transporte de cargas conforme descritos no detalhe do escopo abaixo, assegurando pontualidade, segurança e eficiência em toda a cadeia logística.'));
-  y+=3;
+  chk(30);sB('04.','OBJETIVO');sub('SERVIÇOS PROPOSTOS');
+  para(o.obj||('O objeto dos serviços ora propostos refere-se à '+o.empNome+', para EXECUTAR E GERENCIAR as operações logísticas da empresa, no que se refere ao transporte de cargas conforme descritos no detalhe do escopo abaixo, assegurando pontualidade, segurança e eficiência em toda a cadeia logística.'));y+=3;
 
-  chkPg(70); secBlk('05.','ESCOPO DO SERVIÇO');
+  chk(70);sB('05.','ESCOPO DO SERVIÇO');
   ['Planejamento e execução do transporte de cargas conforme rotas e prazos acordados com o contratante;',
    'Coleta e entrega de mercadorias nos locais e horários definidos em programação prévia;',
    'Comunicação contínua com o contratante sobre o status das operações em andamento;',
@@ -1374,110 +1472,100 @@ function pdfProposta(id){
    'Cumprimento de todas as normas de segurança no transporte, incluindo legislação de produtos perigosos quando aplicável;',
    'Relatório de ocorrências e devoluções, com comunicação imediata ao contratante em caso de intercorrências;',
    'Gestão do agendamento de cargas e descargas junto às plantas e centros de distribuição do contratante.'
-  ].forEach(function(e){ chkPg(10); blt(e); });
-  y+=2;
-  chkPg(12);
-  rf(M,y,CW,10,[255,251,235]); doc.setDrawColor(245,194,0); doc.rect(M,y,CW,10,'S');
-  sf(true,8,CCIN); doc.text('OBS: NOSSA EQUIPE ESTÁ DISPONÍVEL PARA ADEQUAR O ESCOPO CONFORME AS NECESSIDADES ESPECÍFICAS DE CADA OPERAÇÃO.',M+3,y+6,{maxWidth:CW-6}); y+=14;
+  ].forEach(function(e){chk(10);blt(e);});
+  y+=2;chk(12);
+  rf(M,y,CW,10,[255,251,235]);doc.setDrawColor(245,194,0);doc.rect(M,y,CW,10,'S');
+  sf(true,8,CCIN);doc.text('OBS: NOSSA EQUIPE ESTÁ DISPONÍVEL PARA ADEQUAR O ESCOPO CONFORME AS NECESSIDADES ESPECÍFICAS DE CADA OPERAÇÃO.',M+3,y+6,{maxWidth:CW-6});y+=14;
 
-  chkPg(60); secBlk('06.','PREMISSAS E LIMITAÇÕES');
+  chk(60);sB('06.','PREMISSAS E LIMITAÇÕES');
   sub('CONTRATANTE');
   ['Envio de programação de cargas com antecedência mínima de '+(o.prog||'02 dias úteis')+';',
    'Disponibilização de locais adequados para carga e descarga, dentro dos horários acordados;',
    'Envio de documentos, dados e informações solicitadas, em tempo hábil.'
-  ].forEach(function(p){ chkPg(10); blt(p); });
-  y+=3; sub('A. FERREIRA TRANSPORTES');
+  ].forEach(function(p){chk(10);blt(p);});y+=3;
+  sub('A. FERREIRA TRANSPORTES');
   ['Responsabilizar-se pela execução do transporte dentro dos prazos e condições acordadas;',
    'Manter frota e documentação regularizada conforme a legislação vigente;',
    'Comunicar imediatamente qualquer ocorrência que impacte a operação logística do contratante.'
-  ].forEach(function(p){ chkPg(10); blt(p); });
-  y+=4;
+  ].forEach(function(p){chk(10);blt(p);});y+=4;
 
-  // ── PÁGINA 3: ORÇAMENTO ──────────────────────────
-  doc.addPage(); y=15;
+  // PÁG 3: ORÇAMENTO
+  doc.addPage();y=15;
+  sB('07.','ORÇAMENTO');
+  sf(false,9,CTX2);doc.text('O investimento para realização dos serviços de transporte segue discriminado abaixo:',M,y,{maxWidth:CW});y+=10;
 
-  secBlk('07.','ORÇAMENTO');
-  sf(false,9,CTX2); doc.text('O investimento para realização dos serviços de transporte segue discriminado abaixo:',M,y,{maxWidth:CW}); y+=10;
-
-  // tabela
-  var cw2=[CW*0.38,CW*0.20,CW*0.13,CW*0.15,CW*0.14];
+  var cw3=[CW*0.07,CW*0.31,CW*0.20,CW*0.12,CW*0.15,CW*0.15];
   var cx=[M];
-  for(var ci=0;ci<cw2.length-1;ci++) cx.push(cx[cx.length-1]+cw2[ci]);
+  for(var ci=0;ci<cw3.length-1;ci++) cx.push(cx[cx.length-1]+cw3[ci]);
 
   rf(M,y,CW,8,CCIN);
   sf(true,7.5,[255,255,255]);
-  ['SERVIÇO / ROTA','TIPO DE VEÍCULO','FREQUÊNCIA','VALOR UNITÁRIO','TOTAL MENSAL'].forEach(function(h,i){ doc.text(h,cx[i]+2,y+5); });
+  ['TIPO','SERVIÇO / ROTA','VEÍCULO','FREQUÊNCIA','VALOR UNIT.','TOTAL'].forEach(function(h,i){doc.text(h,cx[i]+2,y+5);});
   y+=8;
 
   var totalM=0;
   o.rows.forEach(function(r,ri){
-    var h2=10; chkPg(h2);
+    var h2=10;chk(h2);
     var bg=ri%2===0?[255,255,255]:[247,246,243];
     rf(M,y,CW,h2,bg);
-    doc.setDrawColor(229,227,222); doc.setLineWidth(0.2); doc.line(M,y+h2,M+CW,y+h2);
-    sf(false,8,CTX);
-    doc.text(doc.splitTextToSize(r.rota||'—',cw2[0]-4),cx[0]+2,y+3.5);
-    doc.text(String(r.veiculo||'—'),cx[1]+2,y+3.5,{maxWidth:cw2[1]-4});
-    doc.text(String(r.freq||'—'),cx[2]+2,y+3.5);
-    sf(false,8,CTX); doc.text('R$ '+brl(r.valor),cx[3]+cw2[3]-2,y+3.5,{align:'right'});
-    var rt=r.valor*r.qtd; totalM+=rt;
-    sf(true,8,CTX); doc.text('R$ '+brl(rt),cx[4]+cw2[4]-2,y+3.5,{align:'right'});
+    doc.setDrawColor(229,227,222);doc.setLineWidth(0.2);doc.line(M,y+h2,M+CW,y+h2);
+    sf(true,7.5,[37,99,235]);doc.text(String(r.tipo||'Ida'),cx[0]+1,y+3.5,{maxWidth:cw3[0]-2});
+    sf(false,8,CTX);doc.text(doc.splitTextToSize(r.rota||'—',cw3[1]-4),cx[1]+2,y+3.5);
+    var vl=r.veiculo==='__manual__'?(r.veicManual||'Outro'):r.veiculo;
+    doc.text(String(vl),cx[2]+2,y+3.5,{maxWidth:cw3[2]-4});
+    doc.text(String(r.freq||'—'),cx[3]+2,y+3.5);
+    doc.text('R$ '+brl(r.valor),cx[4]+cw3[4]-2,y+3.5,{align:'right'});
+    var rt=r.valor*r.qtd;totalM+=rt;
+    sf(true,8,CTX);doc.text('R$ '+brl(rt),cx[5]+cw3[5]-2,y+3.5,{align:'right'});
     y+=h2;
   });
   y+=2;
-  rf(M,y,CW,10,CAM); sf(true,10,CCIN);
+  rf(M,y,CW,10,CAM);sf(true,10,CCIN);
   doc.text('VALOR TOTAL MENSAL',M+4,y+6.5);
-  doc.text('R$ '+brl(totalM),M+CW-4,y+6.5,{align:'right'}); y+=16;
+  doc.text('R$ '+brl(totalM),M+CW-4,y+6.5,{align:'right'});y+=16;
 
-  // Condições
-  sf(true,10,CCIN); doc.text('CONDIÇÕES COMERCIAIS',M,y); hr(y+2,CAM,0.8); y+=8;
-  rf(M,y,CW,38,[255,251,235]); doc.setDrawColor(245,194,0); doc.rect(M,y,CW,38,'S');
-  function cond(lbl,val,yy){
-    sf(true,8,CCIN); var lw=doc.getTextWidth(lbl+': '); doc.text(lbl+': ',M+4,yy);
-    sf(false,8,CTX2); doc.text(String(val||'—'),M+4+lw,yy,{maxWidth:CW-12-lw});
-  }
+  sf(true,10,CCIN);doc.text('CONDIÇÕES COMERCIAIS',M,y);hr(y+2,CAM,0.8);y+=8;
+  rf(M,y,CW,38,[255,251,235]);doc.setDrawColor(245,194,0);doc.rect(M,y,CW,38,'S');
+  function cond(lbl,val,yy){sf(true,8,CCIN);var lw=doc.getTextWidth(lbl+': ');doc.text(lbl+': ',M+4,yy);sf(false,8,CTX2);doc.text(String(val||'—'),M+4+lw,yy,{maxWidth:CW-12-lw});}
   cond('Forma de Pagamento',o.pgto,y+7);
   cond('Validade da Proposta',o.validade+' dias corridos a partir da data de emissão',y+14);
   cond('Reajuste','Os valores poderão ser reajustados conforme variação do '+o.reaj+' ou por acordo entre as partes',y+21);
   if(o.esp||o.hextra) cond('Horas Extras / Espera',(o.esp||'')+(o.hextra?' — '+o.hextra:''),y+28);
   y+=42;
 
-  if(o.obs){ chkPg(20); sf(true,9,CCIN); doc.text('OBSERVAÇÕES',M,y); hr(y+2,CAM,0.8); y+=8; para(o.obs); y+=4; }
+  if(o.obs){chk(20);sf(true,9,CCIN);doc.text('OBSERVAÇÕES',M,y);hr(y+2,CAM,0.8);y+=8;
+    sf(false,8.5,CTX);var ll=doc.splitTextToSize(o.obs,CW);doc.text(ll,M,y);y+=ll.length*4.5+6;}
 
-  // Assinatura
-  chkPg(35); y=Math.max(y,220);
-  hr(y,CBOR); y+=8;
+  chk(35);y=Math.max(y,220);
+  hr(y,CBOR);y+=8;
   rf(M,y,CW,28,CCIN);
-  sf(true,10,[255,255,255]); doc.text('Alex Ferreira',M+4,y+8);
+  sf(true,10,[255,255,255]);doc.text('Alex Ferreira',M+4,y+8);
   sf(false,8,[180,180,180]);
   doc.text('A. Ferreira Transportes',M+4,y+14);
   doc.text('(19) 9 9659-0174  |  contato@aferreiratransportes.com.br',M+4,y+19);
   doc.text('www.aferreiratransportes.com.br',M+4,y+24);
-  sf(true,9,CAM); doc.text('"Compromisso, Segurança e Eficiência Logística."',M+CW-4,y+15,{align:'right',maxWidth:82});
+  sf(true,9,CAM);doc.text('"Compromisso, Segurança e Eficiência Logística."',M+CW-4,y+15,{align:'right',maxWidth:82});
 
-  // Rodapé todas as páginas
   var np=doc.getNumberOfPages();
   for(var p=1;p<=np;p++){
     doc.setPage(p);
-    rf(0,289,W,8,CCIN); rf(0,289,W,1.5,CAM);
+    rf(0,289,W,8,CCIN);rf(0,289,W,1.5,CAM);
     sf(false,7,[140,140,140]);
     doc.text('A. Ferreira Transportes — Mogi Guaçu SP',M,294);
     doc.text('Proposta Nº '+o.num+' | Rev.'+(o.rev||'00')+' | Válida até '+dtVenc,W/2,294,{align:'center'});
     doc.text('Pág. '+p+'/'+np,W-M,294,{align:'right'});
   }
-
   doc.save('Proposta_'+o.num.replace('/','_')+'_'+(o.empNome||'cliente').replace(/[^a-zA-Z0-9]/g,'_')+'.pdf');
 }
 
-// ── setPage para orcamentos ───────────────────────
+// ── setPage ─────────────────────────────────────────
 var _sp=setPage;
 setPage=function(p,el){
   var po=document.getElementById('page-orc');
   if(po) po.style.display=p==='orc'?'flex':'none';
   if(p!=='orc') _sp(p,el);
-  else{ document.querySelectorAll('.ni').forEach(function(n){ n.classList.remove('active'); }); if(el) el.classList.add('active'); renderOrcPage(); }
+  else{document.querySelectorAll('.ni').forEach(function(n){n.classList.remove('active');});if(el)el.classList.add('active');renderOrcPage();}
 };
-
 document.getElementById('nb-orc').textContent=propostas.length;
 
 // Fecha menu ao clicar fora
@@ -1497,37 +1585,53 @@ document.addEventListener("click",function(e){
         <div class="fg"><label>Nº da Proposta</label><input id="op-num" readonly></div>
         <div class="fg"><label>Revisão</label><input id="op-rev" value="00"></div>
         <div class="fg"><label>Data *</label><input type="date" id="op-data"></div>
-        <div class="fg"><label>Validade (dias)</label><input type="number" id="op-val" value="7"></div>
+        <div class="fg"><label>Validade</label>
+          <div style="display:flex;gap:6px;align-items:center">
+            <input type="number" id="op-val" value="7" min="1" style="width:70px">
+            <span style="font-size:12px;color:var(--tx3)">dias</span>
+          </div>
+        </div>
       </div>
 
       <span class="stl">Destinatário</span>
       <div class="fr">
-        <div class="fg"><label>Empresa *</label><select id="op-emp"><option value="">-- Selecione --</option></select></div>
+        <div class="fg"><label>Empresa *</label>
+          <div class="sel-wrap" id="sw-emp">
+            <input class="sel-search" id="op-emp-txt" placeholder="Digite para buscar..." autocomplete="off" oninput="filtrarEmpresas(this.value)" onfocus="abrirDropEmp()">
+            <input type="hidden" id="op-emp-id">
+            <div class="sel-drop" id="op-emp-drop"></div>
+          </div>
+        </div>
         <div class="fg"><label>Responsável</label><input id="op-resp" placeholder="Sr(a). Nome"></div>
       </div>
       <div class="fr">
         <div class="fg"><label>CNPJ</label><input id="op-cnpj" placeholder="00.000.000/0001-00"></div>
         <div class="fg"><label>Cidade / UF</label><input id="op-cid" placeholder="Ex: Mogi Guaçu - SP"></div>
       </div>
+      <div class="fr">
+        <div class="fg"><label>Telefone</label><input id="op-tel" placeholder="(19) 99999-0000"></div>
+        <div class="fg"><label>E-mail</label><input id="op-email" placeholder="contato@empresa.com.br"></div>
+      </div>
 
       <span class="stl">Objetivo / Escopo</span>
-      <div class="fr"><div class="fg ff"><label>Descrição do Objetivo (opcional)</label>
-        <textarea id="op-obj" rows="2" placeholder="Descreva o objetivo da proposta ou deixe em branco para usar o texto padrão"></textarea>
+      <div class="fr"><div class="fg ff"><label>Descrição do Objetivo (opcional — preenche automaticamente)</label>
+        <textarea id="op-obj" rows="2" placeholder="Deixe em branco para usar o texto padrão"></textarea>
       </div></div>
 
       <span class="stl">Orçamento — Rotas e Serviços</span>
       <table class="otbl">
         <thead><tr>
-          <th style="width:36%">Serviço / Rota</th>
-          <th style="width:20%">Veículo</th>
-          <th style="width:12%">Frequência</th>
-          <th style="width:13%">Valor (R$)</th>
-          <th style="width:7%">Qtd</th>
-          <th style="width:6%"></th>
+          <th style="width:7%">Tipo</th>
+          <th style="width:30%">Rota / Descrição</th>
+          <th style="width:19%">Veículo</th>
+          <th style="width:11%">Frequência</th>
+          <th style="width:12%">Valor (R$)</th>
+          <th style="width:5%">Qtd</th>
+          <th style="width:5%"></th>
         </tr></thead>
         <tbody id="op-rows"></tbody>
       </table>
-      <button class="add-row" onclick="addOrcRow()"><i class="ti ti-plus"></i> Adicionar rota</button>
+      <button class="add-row" onclick="addOrcRow()"><i class="ti ti-plus"></i> Adicionar linha</button>
       <div class="total-row">
         <span>Valor Total Mensal: <strong id="op-total" style="font-size:16px;color:var(--am2)">R$ 0,00</strong></span>
       </div>
@@ -1538,14 +1642,14 @@ document.addEventListener("click",function(e){
           <input id="op-pgto" placeholder="Ex: 30 dias após emissão CT-e / NF"></div>
       </div>
       <div class="fr">
-        <div class="fg"><label>Prazo para Programação</label><input id="op-prog" placeholder="Ex: 02 dias úteis"></div>
+        <div class="fg"><label>Prazo para Programação de Cargas</label><input id="op-prog" placeholder="Ex: 02 dias úteis"></div>
         <div class="fg"><label>Índice de Reajuste</label>
           <select id="op-reaj"><option>INPC</option><option>IPCA</option><option>variação do diesel</option><option>acordo entre as partes</option></select>
         </div>
       </div>
       <div class="fr">
-        <div class="fg"><label>Horas espera inclusas</label><input id="op-esp" placeholder="Ex: 2h por viagem"></div>
-        <div class="fg"><label>Valor hora extra</label><input id="op-hextra" placeholder="Ex: R$ 80,00/hora"></div>
+        <div class="fg"><label>Horas de espera inclusas</label><input id="op-esp" placeholder="Ex: 2h por viagem sem custo"></div>
+        <div class="fg"><label>Valor hora extra</label><input id="op-hextra" placeholder="Ex: R$ 80,00/hora adicional"></div>
       </div>
 
       <span class="stl">Status e Observações</span>
@@ -1560,13 +1664,13 @@ document.addEventListener("click",function(e){
           </select>
         </div>
         <div class="fg ff"><label>Observações</label>
-          <textarea id="op-obs" rows="2" placeholder="Observações adicionais..."></textarea>
+          <textarea id="op-obs" rows="2"></textarea>
         </div>
       </div>
     </div>
     <div class="mf">
       <button class="btn" onclick="cm('m-orc')">Cancelar</button>
-      <button class="btn" onclick="salvarProposta(true)"><i class="ti ti-file-download"></i> Salvar e PDF</button>
+      <button class="btn" onclick="salvarProposta(true)"><i class="ti ti-file-download"></i> Salvar e Gerar PDF</button>
       <button class="btn btn-p" onclick="salvarProposta(false)"><i class="ti ti-device-floppy"></i> Salvar</button>
     </div>
   </div>
