@@ -256,8 +256,8 @@ tbody tr:hover .ra{opacity:1;}
 .cfg-save-bar{display:flex;justify-content:flex-end;gap:8px;padding:12px 0 4px;margin-top:8px;}
 
 /* === OPERAÇÕES === */
-#page-ops{flex:1;overflow-y:auto;padding:0;display:none;}
-.ops-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px 22px 4px;flex-shrink:0;}
+#page-ops{flex:1;overflow:hidden;padding:0;display:none;flex-direction:column;min-height:0;}
+.ops-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px 22px 6px;flex-shrink:0;width:100%;}
 .ops-kpi{background:var(--sur);border:1px solid var(--bor);border-radius:var(--r);padding:14px;position:relative;overflow:hidden;}
 .ops-kpi::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;}
 .ops-kpi.ok0::before{background:var(--bl);}
@@ -286,7 +286,7 @@ tbody tr:hover .ra{opacity:1;}
 .ops-tl-dot{width:10px;height:10px;border-radius:50%;background:var(--am);margin-top:4px;flex-shrink:0;}
 .ops-tl-txt{font-size:12px;color:var(--tx2);flex:1;}
 .ops-tl-dt{font-size:11px;color:var(--tx3);white-space:nowrap;}
-.ops-topbar{padding:8px 22px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;border-bottom:1px solid var(--bor);}
+.ops-topbar{padding:8px 22px 10px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;border-bottom:1px solid var(--bor);gap:10px;}
 .ops-filters{display:flex;gap:8px;flex-wrap:wrap;}
 .ops-filters input,.ops-filters select{padding:7px 11px;border:1px solid var(--bor2);border-radius:var(--rs);background:var(--sur);color:var(--tx);font-size:13px;outline:none;font-family:'Barlow',sans-serif;}
 .ops-filters input:focus,.ops-filters select:focus{border-color:var(--am);}
@@ -1883,10 +1883,8 @@ function abrirNovaOps(){
   // preencher select de propostas (aprovadas/programadas)
   var sel = document.getElementById('ops-prop');
   sel.innerHTML = '<option value="">-- Selecione --</option>';
-  propostas.forEach(function(p){
-    if(['Aprovado','Programado','Faturado'].indexOf(p.status)>=0){
-      sel.innerHTML += '<option value="'+p.id+'">'+esc(p.num)+' — '+esc(p.empNome)+'</option>';
-    }
+  propostas.slice().sort(function(a,b){return b.data.localeCompare(a.data);}).forEach(function(p){
+    sel.innerHTML += '<option value="'+p.id+'">'+esc(p.num)+' — '+esc(p.empNome)+' ('+esc(p.status)+')</option>';
   });
   // reset fields
   ['ops-emp-nome','ops-motorista','ops-tel-mot','ops-veiculo','ops-carga',
@@ -2102,6 +2100,8 @@ function renderOpsPage(){
       +'</tr>';
   }).join('') : '<tr><td colspan="9" class="empty"><i class="ti ti-truck-delivery"></i>Nenhuma operação cadastrada</td></tr>';
 
+  pg.style.display='flex';
+  pg.style.flexDirection='column';
   pg.innerHTML =
     '<div class="ops-kpis">'
     +'<div class="ops-kpi ok0"><div class="ops-kpi-lbl">Em Andamento</div><div class="ops-kpi-val">'+ativos.length+'</div><div class="ops-kpi-sub">Serviços em rota</div></div>'
@@ -2116,7 +2116,7 @@ function renderOpsPage(){
     +'</div>'
     +'<button class="btn btn-p" onclick="abrirNovaOps()"><i class="ti ti-plus"></i> Nova Operação</button>'
     +'</div>'
-    +'<div class="tw" style="padding:0 22px 8px"><table>'
+    +'<div class="tw" style="padding:0 22px 8px;flex:1;min-height:0"><table>'
     +'<thead><tr>'
     +'<th style="width:8%">Saída</th>'
     +'<th style="width:17%">Empresa</th>'
