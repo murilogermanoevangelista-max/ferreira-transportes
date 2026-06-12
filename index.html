@@ -692,11 +692,28 @@ function qfPot(p){
 
 // ===== PÁGINA =====
 function setPage(p,el){
+  // páginas de conteúdo
   document.getElementById("page-emp").style.display=p==="emp"?"flex":"none";
   document.getElementById("page-dash").style.display=p==="dash"?"block":"none";
+  var po=document.getElementById("page-orc");
+  if(po) po.style.display=p==="orc"?"flex":"none";
+  // stats-row e botões do topbar: só na prospecção e dashboard
+  var sr=document.getElementById("stats-row");
+  if(sr) sr.style.display=(p==="orc")?"none":"";
+  var ta=document.getElementById("topbar-actions");
+  if(ta) ta.style.display=(p==="orc")?"none":"";
+  // título da topbar
+  var pgTitle=document.getElementById("pg-title");
+  var pgSub=document.getElementById("pg-sub");
+  if(p==="emp"&&pgTitle){ pgTitle.textContent="Empresas para Prospecção"; pgSub.textContent="Gerencie seus contatos e leads"; }
+  if(p==="dash"&&pgTitle){ pgTitle.textContent="Dashboard"; pgSub.textContent="Visão geral por cidade e status"; }
+  if(p==="orc"&&pgTitle){ pgTitle.textContent="Propostas Comerciais"; pgSub.textContent="Histórico, consultas e geração de PDF"; }
+  // nav ativo
   document.querySelectorAll(".ni").forEach(n=>n.classList.remove("active"));
   if(el)el.classList.add("active");
-  if(p==="dash")renderDash();
+  // renders
+  if(p==="dash") renderDash();
+  if(p==="orc") renderOrcPage();
 }
 
 // ===== TABELA =====
@@ -1567,29 +1584,6 @@ function pdfProposta(id){
 }
 
 // ── setPage ─────────────────────────────────────────
-var _sp=setPage;
-setPage=function(p,el){
-  var po=document.getElementById('page-orc');
-  if(po) po.style.display=p==='orc'?'flex':'none';
-  // stats-row e topbar: ocultar na aba orçamentos
-  var sr=document.getElementById('stats-row');
-  var ta=document.getElementById('topbar-actions');
-  var tb=document.querySelector('.topbar');
-  if(p==='orc'){
-    if(sr) sr.style.display='none';
-    if(ta) ta.style.display='none';
-    if(tb){ document.getElementById('pg-title').textContent='Propostas Comerciais'; document.getElementById('pg-sub').textContent='Histórico, consultas e geração de PDF'; }
-    document.querySelectorAll('.ni').forEach(function(n){n.classList.remove('active');});
-    if(el) el.classList.add('active');
-    renderOrcPage();
-  } else {
-    if(sr) sr.style.display='';
-    if(ta) ta.style.display='';
-    if(tb && p==='emp'){ document.getElementById('pg-title').textContent='Empresas para Prospecção'; document.getElementById('pg-sub').textContent='Gerencie seus contatos e leads'; }
-    if(tb && p==='dash'){ document.getElementById('pg-title').textContent='Dashboard'; document.getElementById('pg-sub').textContent='Visão geral por cidade e status'; }
-    _sp(p,el);
-  }
-};
 document.getElementById('nb-orc').textContent=propostas.length;
 
 // Fecha menu ao clicar fora
