@@ -244,6 +244,16 @@ tbody tr:hover .ra{opacity:1;}
 .prog-rota{font-size:11px;color:var(--tx3);}
 .prog-dias{font-size:11px;font-weight:700;color:#c2410c;white-space:nowrap;}
 .prog-hoje .prog-dias{background:#c2410c;color:#fff;padding:2px 8px;border-radius:20px;}
+
+/* === MINHA EMPRESA === */
+#page-cfg{flex:1;overflow-y:auto;padding:22px;display:none;flex-direction:column;gap:16px;}
+.cfg-card{background:var(--sur);border:1px solid var(--bor);border-radius:var(--r);overflow:hidden;}
+.cfg-card-hd{background:var(--sur2);padding:12px 18px;border-bottom:1px solid var(--bor);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--tx3);display:flex;align-items:center;gap:8px;}
+.cfg-card-hd i{font-size:16px;color:var(--am2);}
+.cfg-card-body{padding:18px;}
+.cfg-preview{background:var(--sur2);border:1px solid var(--bor);border-radius:var(--rs);padding:14px 18px;font-size:12px;color:var(--tx2);line-height:1.8;margin-top:12px;}
+.cfg-preview b{color:var(--tx);font-size:13px;}
+.cfg-save-bar{display:flex;justify-content:flex-end;gap:8px;padding-top:12px;border-top:1px solid var(--bor);margin-top:16px;}
 </style>
 </head>
 <body>
@@ -258,6 +268,7 @@ tbody tr:hover .ra{opacity:1;}
       <div class="ni active" onclick="setPage('emp',this)"><i class="ti ti-building-store"></i> Prospecção <span class="nb" id="nb-t">0</span></div>
       <div class="ni" onclick="setPage('dash',this)"><i class="ti ti-chart-bar"></i> Dashboard</div>
       <div class="ni" onclick="setPage('orc',this)"><i class="ti ti-file-invoice"></i> Orçamentos <span class="nb" id="nb-orc">0</span></div>
+      <div class="ni" onclick="setPage('cfg',this)"><i class="ti ti-building"></i> Minha Empresa</div>
       <div class="ns">Filtrar por Status</div>
       <div class="ni" onclick="qfStatus('')"><i class="ti ti-list"></i> Todas</div>
       <div class="ni" onclick="qfStatus('Não contatado')"><i class="ti ti-circle-dashed"></i> Não contatado <span class="nb" id="nb-nc">0</span></div>
@@ -328,6 +339,9 @@ tbody tr:hover .ra{opacity:1;}
 
     <!-- PAGE ORCAMENTOS -->
     <div id="page-orc"></div>
+
+    <!-- PAGE CONFIG EMPRESA -->
+    <div id="page-cfg"></div>
   </div>
 </div>
 
@@ -717,23 +731,27 @@ function setPage(p,el){
   document.getElementById("page-dash").style.display=p==="dash"?"block":"none";
   var po=document.getElementById("page-orc");
   if(po) po.style.display=p==="orc"?"flex":"none";
+  var pc=document.getElementById("page-cfg");
+  if(pc) pc.style.display=p==="cfg"?"flex":"none";
   // stats-row e botões do topbar: só na prospecção e dashboard
   var sr=document.getElementById("stats-row");
-  if(sr) sr.style.display=(p==="orc")?"none":"";
+  if(sr) sr.style.display=(p==="orc"||p==="cfg")?"none":"";
   var ta=document.getElementById("topbar-actions");
-  if(ta) ta.style.display=(p==="orc")?"none":"";
+  if(ta) ta.style.display=(p==="orc"||p==="cfg")?"none":"";
   // título da topbar
   var pgTitle=document.getElementById("pg-title");
   var pgSub=document.getElementById("pg-sub");
   if(p==="emp"&&pgTitle){ pgTitle.textContent="Empresas para Prospecção"; pgSub.textContent="Gerencie seus contatos e leads"; }
   if(p==="dash"&&pgTitle){ pgTitle.textContent="Dashboard"; pgSub.textContent="Visão geral por cidade e status"; }
   if(p==="orc"&&pgTitle){ pgTitle.textContent="Propostas Comerciais"; pgSub.textContent="Histórico, consultas e geração de PDF"; }
+  if(p==="cfg"&&pgTitle){ pgTitle.textContent="Minha Empresa"; pgSub.textContent="Dados que aparecem nos PDFs das propostas"; }
   // nav ativo
   document.querySelectorAll(".ni").forEach(n=>n.classList.remove("active"));
   if(el)el.classList.add("active");
   // renders
   if(p==="dash") renderDash();
   if(p==="orc") renderOrcPage();
+  if(p==="cfg") renderCfgPage();
 }
 
 // ===== TABELA =====
@@ -1473,7 +1491,7 @@ function pdfProposta(id){
   // CAPA
   rf(0,0,W,62,CCIN);rf(0,0,W,6,CAM);
   sf(true,20,[255,255,255]);doc.text('A. FERREIRA TRANSPORTES',M,26);
-  sf(false,9,[180,180,180]);doc.text('Compromisso, Segurança e Eficiência Logística',M,33);
+  sf(false,9,[180,180,180]);doc.text(cfg.slogan.replace(/"/g,''),M,33);
   sf(true,11,CAM);doc.text('Nº '+o.num,W-M,22,{align:'right'});
   sf(false,8,[180,180,180]);
   doc.text('REVISÃO: '+(o.rev||'00'),W-M,29,{align:'right'});
@@ -1489,19 +1507,19 @@ function pdfProposta(id){
   function sec(t){sf(true,9,CCIN);doc.text(t,M,y);hr(y+2,CAM,0.8);y+=8;}
 
   sec('DADOS DO EMITENTE');
-  campo('RAZÃO SOCIAL','A. Ferreira da Costa Transportes',M,CW/2-4);
-  campo('CNPJ','36.370.512/0001-97',M+CW/2+2,CW/2-4);y+=12;
-  campo('ENDEREÇO','Rua Paulo da Cunha Bueno, 682 – Jd. Guaçuano – Mogi Guaçu SP  CEP: 13.846-460',M,CW);y+=12;
-  campo('TELEFONE','(19) 9 9659-0174',M,CW/3-4);
-  campo('E-MAIL / PIX','contato@aferreiratransportes.com.br',M+CW/3+2,CW/3-4);
-  campo('SITE','www.aferreiratransportes.com.br',M+2*CW/3+2,CW/3-4);y+=14;
+  campo('RAZÃO SOCIAL',cfg.razaoSocial,M,CW/2-4);
+  campo('CNPJ',cfg.cnpj,M+CW/2+2,CW/2-4);y+=12;
+  campo('ENDEREÇO',cfg.endereco+' – '+cfg.bairro+' – '+cfg.cidade+' '+cfg.uf+'  CEP: '+cfg.cep,M,CW);y+=12;
+  campo('TELEFONE',cfg.telefone,M,CW/3-4);
+  campo('E-MAIL / PIX',cfg.email,M+CW/3+2,CW/3-4);
+  campo('SITE',cfg.site+' | PIX: '+cfg.pix,M+2*CW/3+2,CW/3-4);y+=14;
 
   hr(y,CBOR);y+=5;
   sec('DADOS BANCÁRIOS');
-  campo('BANCO','Santander',M,CW/4-3);
-  campo('AGÊNCIA','0181',M+CW/4+2,CW/4-3);
-  campo('CONTA CORRENTE','13.006457-0',M+CW/2+2,CW/4-3);
-  campo('CHAVE PIX','contato@aferreiratransportes.com.br',M+3*CW/4+2,CW/4-3);y+=14;
+  campo('BANCO',cfg.banco,M,CW/4-3);
+  campo('AGÊNCIA',cfg.agencia,M+CW/4+2,CW/4-3);
+  campo('CONTA CORRENTE',cfg.conta,M+CW/2+2,CW/4-3);
+  campo('CHAVE PIX',cfg.pix,M+3*CW/4+2,CW/4-3);y+=14;
 
   hr(y,CBOR);y+=5;
   sec('SUBMETIDO PARA');
@@ -1631,19 +1649,19 @@ function pdfProposta(id){
   chk(35);y=Math.max(y,220);
   hr(y,CBOR);y+=8;
   rf(M,y,CW,28,CCIN);
-  sf(true,10,[255,255,255]);doc.text('Alex Ferreira',M+4,y+8);
+  sf(true,10,[255,255,255]);doc.text(cfg.responsavel,M+4,y+8);
   sf(false,8,[180,180,180]);
-  doc.text('A. Ferreira Transportes',M+4,y+14);
-  doc.text('(19) 9 9659-0174  |  contato@aferreiratransportes.com.br',M+4,y+19);
-  doc.text('www.aferreiratransportes.com.br',M+4,y+24);
-  sf(true,9,CAM);doc.text('"Compromisso, Segurança e Eficiência Logística."',M+CW-4,y+15,{align:'right',maxWidth:82});
+  doc.text(cfg.nomeFantasia,M+4,y+14);
+  doc.text(cfg.telefone+'  |  '+cfg.email,M+4,y+19);
+  doc.text(cfg.site,M+4,y+24);
+  sf(true,9,CAM);doc.text(cfg.slogan,M+CW-4,y+15,{align:'right',maxWidth:82});
 
   var np=doc.getNumberOfPages();
   for(var p=1;p<=np;p++){
     doc.setPage(p);
     rf(0,289,W,8,CCIN);rf(0,289,W,1.5,CAM);
     sf(false,7,[140,140,140]);
-    doc.text('A. Ferreira Transportes — Mogi Guaçu SP',M,294);
+    doc.text(cfg.obsRodape,M,294);
     doc.text('Proposta Nº '+o.num+' | Rev.'+(o.rev||'00')+' | Válida até '+dtVenc,W/2,294,{align:'center'});
     doc.text('Pág. '+p+'/'+np,W-M,294,{align:'right'});
   }
@@ -1652,6 +1670,113 @@ function pdfProposta(id){
 
 // ── setPage ─────────────────────────────────────────
 document.getElementById('nb-orc').textContent=propostas.length;
+
+
+// =============================================
+// MINHA EMPRESA (configurações do PDF)
+// =============================================
+var CFG_DEFAULT = {
+  razaoSocial: cfg.razaoSocial,
+  nomeFantasia: cfg.nomeFantasia,
+  cnpj: cfg.cnpj,
+  endereco: 'Rua Paulo da Cunha Bueno, 682',
+  bairro: 'Jd. Guaçuano',
+  cidade: 'Mogi Guaçu',
+  uf: 'SP',
+  cep: '13.846-460',
+  telefone: cfg.telefone,
+  email: 'contato@aferreiratransportes.com.br',
+  site: 'www.aferreiratransportes.com.br',
+  pix: 'contato@aferreiratransportes.com.br',
+  banco: cfg.banco,
+  agencia: cfg.agencia,
+  conta: cfg.conta,
+  responsavel: cfg.responsavel,
+  cargo: cfg.nomeFantasia,
+  slogan: cfg.slogan,
+  obsRodape: cfg.obsRodape
+};
+var cfg = Object.assign({}, CFG_DEFAULT, JSON.parse(localStorage.getItem('af_cfg_v1')||'{}'));
+function saveCfg(){ try{ localStorage.setItem('af_cfg_v1', JSON.stringify(cfg)); }catch(e){} }
+
+function renderCfgPage(){
+  var pg = document.getElementById('page-cfg');
+  if(!pg) return;
+  pg.innerHTML =
+    '<div class="cfg-card">'
+    +'<div class="cfg-card-hd"><i class="ti ti-building-store"></i> Dados da Empresa</div>'
+    +'<div class="cfg-card-body">'
+    +'<div class="fr"><div class="fg"><label>Razão Social</label><input id="cf-rs" value="'+esc(cfg.razaoSocial)+'"></div>'
+    +'<div class="fg"><label>Nome Fantasia</label><input id="cf-nf" value="'+esc(cfg.nomeFantasia)+'"></div></div>'
+    +'<div class="fr"><div class="fg"><label>CNPJ</label><input id="cf-cnpj" value="'+esc(cfg.cnpj)+'"></div>'
+    +'<div class="fg"><label>Telefone</label><input id="cf-tel" value="'+esc(cfg.telefone)+'"></div></div>'
+    +'<div class="fr"><div class="fg ff"><label>Endereço</label><input id="cf-end" value="'+esc(cfg.endereco)+'"></div></div>'
+    +'<div class="fr"><div class="fg"><label>Bairro</label><input id="cf-bai" value="'+esc(cfg.bairro)+'"></div>'
+    +'<div class="fg"><label>Cidade</label><input id="cf-cid" value="'+esc(cfg.cidade)+'"></div>'
+    +'<div class="fg" style="max-width:80px"><label>UF</label><input id="cf-uf" value="'+esc(cfg.uf)+'"></div>'
+    +'<div class="fg" style="max-width:130px"><label>CEP</label><input id="cf-cep" value="'+esc(cfg.cep)+'"></div></div>'
+    +'<div class="fr"><div class="fg"><label>E-mail</label><input id="cf-email" value="'+esc(cfg.email)+'"></div>'
+    +'<div class="fg"><label>Site</label><input id="cf-site" value="'+esc(cfg.site)+'"></div></div>'
+    +'</div></div>'
+
+    +'<div class="cfg-card">'
+    +'<div class="cfg-card-hd"><i class="ti ti-currency-dollar"></i> Dados Bancários</div>'
+    +'<div class="cfg-card-body">'
+    +'<div class="fr"><div class="fg"><label>Banco</label><input id="cf-banco" value="'+esc(cfg.banco)+'"></div>'
+    +'<div class="fg"><label>Agência</label><input id="cf-ag" value="'+esc(cfg.agencia)+'"></div>'
+    +'<div class="fg"><label>Conta Corrente</label><input id="cf-cc" value="'+esc(cfg.conta)+'"></div></div>'
+    +'<div class="fr"><div class="fg ff"><label>Chave PIX</label><input id="cf-pix" value="'+esc(cfg.pix)+'"></div></div>'
+    +'</div></div>'
+
+    +'<div class="cfg-card">'
+    +'<div class="cfg-card-hd"><i class="ti ti-signature"></i> Assinatura e Rodapé do PDF</div>'
+    +'<div class="cfg-card-body">'
+    +'<div class="fr"><div class="fg"><label>Nome do Responsável</label><input id="cf-resp" value="'+esc(cfg.responsavel)+'"></div>'
+    +'<div class="fg"><label>Cargo / Empresa (linha 2)</label><input id="cf-cargo" value="'+esc(cfg.cargo)+'"></div></div>'
+    +'<div class="fr"><div class="fg ff"><label>Slogan (rodapé da assinatura)</label><input id="cf-slogan" value="'+esc(cfg.slogan)+'"></div></div>'
+    +'<div class="fr"><div class="fg ff"><label>Texto do Rodapé das Páginas</label><input id="cf-rodape" value="'+esc(cfg.obsRodape)+'"></div></div>'
+    +'<div class="cfg-preview">'
+    +'<b>Prévia do rodapé do PDF:</b><br>'
+    +esc(cfg.obsRodape)+' &nbsp;|&nbsp; Proposta Nº 001/2026 | Rev.00 | Válida até 18/06/2026 &nbsp;|&nbsp; Pág. 1/3'
+    +'</div>'
+    +'</div></div>'
+
+    +'<div class="cfg-save-bar">'
+    +'<button class="btn" onclick="resetCfg()"><i class="ti ti-refresh"></i> Restaurar padrão</button>'
+    +'<button class="btn btn-p" onclick="salvarCfg()"><i class="ti ti-device-floppy"></i> Salvar Configurações</button>'
+    +'</div>';
+}
+
+function salvarCfg(){
+  cfg.razaoSocial = document.getElementById('cf-rs').value.trim();
+  cfg.nomeFantasia = document.getElementById('cf-nf').value.trim();
+  cfg.cnpj        = document.getElementById('cf-cnpj').value.trim();
+  cfg.telefone    = document.getElementById('cf-tel').value.trim();
+  cfg.endereco    = document.getElementById('cf-end').value.trim();
+  cfg.bairro      = document.getElementById('cf-bai').value.trim();
+  cfg.cidade      = document.getElementById('cf-cid').value.trim();
+  cfg.uf          = document.getElementById('cf-uf').value.trim();
+  cfg.cep         = document.getElementById('cf-cep').value.trim();
+  cfg.email       = document.getElementById('cf-email').value.trim();
+  cfg.site        = document.getElementById('cf-site').value.trim();
+  cfg.banco       = document.getElementById('cf-banco').value.trim();
+  cfg.agencia     = document.getElementById('cf-ag').value.trim();
+  cfg.conta       = document.getElementById('cf-cc').value.trim();
+  cfg.pix         = document.getElementById('cf-pix').value.trim();
+  cfg.responsavel = document.getElementById('cf-resp').value.trim();
+  cfg.cargo       = document.getElementById('cf-cargo').value.trim();
+  cfg.slogan      = document.getElementById('cf-slogan').value.trim();
+  cfg.obsRodape   = document.getElementById('cf-rodape').value.trim();
+  saveCfg();
+  alert('Configurações salvas! Os próximos PDFs usarão os novos dados.');
+}
+
+function resetCfg(){
+  if(!confirm('Restaurar todos os dados para o padrão?')) return;
+  cfg = Object.assign({}, CFG_DEFAULT);
+  saveCfg();
+  renderCfgPage();
+}
 
 // Fecha menu ao clicar fora
 document.addEventListener("click",function(e){
