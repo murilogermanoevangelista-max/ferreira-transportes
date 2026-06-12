@@ -246,7 +246,7 @@ tbody tr:hover .ra{opacity:1;}
 .prog-hoje .prog-dias{background:#c2410c;color:#fff;padding:2px 8px;border-radius:20px;}
 
 /* === MINHA EMPRESA === */
-#page-cfg{position:absolute;top:56px;left:0;right:0;bottom:0;overflow-y:auto;overflow-x:hidden;padding:22px 22px 40px;display:none;flex-direction:column;gap:16px;background:var(--bg);}
+#page-cfg{flex:1;overflow-y:auto;padding:22px;display:none;gap:16px;flex-direction:column;}
 .cfg-card{background:var(--sur);border:1px solid var(--bor);border-radius:var(--r);overflow:hidden;}
 .cfg-card-hd{background:var(--sur2);padding:12px 18px;border-bottom:1px solid var(--bor);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--tx3);display:flex;align-items:center;gap:8px;}
 .cfg-card-hd i{font-size:16px;color:var(--am2);}
@@ -341,7 +341,70 @@ tbody tr:hover .ra{opacity:1;}
     <div id="page-orc"></div>
 
     <!-- PAGE CONFIG EMPRESA -->
-    <div id="page-cfg"></div>
+    <div id="page-cfg">
+      <div class="cfg-card">
+        <div class="cfg-card-hd"><i class="ti ti-building-store"></i> Dados da Empresa</div>
+        <div class="cfg-card-body">
+          <div class="fr">
+            <div class="fg"><label>Razão Social</label><input id="cf-rs"></div>
+            <div class="fg"><label>Nome Fantasia</label><input id="cf-nf"></div>
+          </div>
+          <div class="fr">
+            <div class="fg"><label>CNPJ</label><input id="cf-cnpj"></div>
+            <div class="fg"><label>Telefone</label><input id="cf-tel"></div>
+          </div>
+          <div class="fr">
+            <div class="fg ff"><label>Endereço</label><input id="cf-end"></div>
+          </div>
+          <div class="fr">
+            <div class="fg"><label>Bairro</label><input id="cf-bai"></div>
+            <div class="fg"><label>Cidade</label><input id="cf-cid"></div>
+            <div class="fg" style="max-width:80px"><label>UF</label><input id="cf-uf"></div>
+            <div class="fg" style="max-width:130px"><label>CEP</label><input id="cf-cep"></div>
+          </div>
+          <div class="fr">
+            <div class="fg"><label>E-mail</label><input id="cf-email"></div>
+            <div class="fg"><label>Site</label><input id="cf-site"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cfg-card">
+        <div class="cfg-card-hd"><i class="ti ti-currency-dollar"></i> Dados Bancários</div>
+        <div class="cfg-card-body">
+          <div class="fr">
+            <div class="fg"><label>Banco</label><input id="cf-banco"></div>
+            <div class="fg"><label>Agência</label><input id="cf-ag"></div>
+            <div class="fg"><label>Conta Corrente</label><input id="cf-cc"></div>
+          </div>
+          <div class="fr">
+            <div class="fg ff"><label>Chave PIX</label><input id="cf-pix"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cfg-card">
+        <div class="cfg-card-hd"><i class="ti ti-signature"></i> Assinatura e Rodapé do PDF</div>
+        <div class="cfg-card-body">
+          <div class="fr">
+            <div class="fg"><label>Nome do Responsável</label><input id="cf-resp"></div>
+            <div class="fg"><label>Cargo / Empresa (linha 2)</label><input id="cf-cargo"></div>
+          </div>
+          <div class="fr">
+            <div class="fg ff"><label>Slogan (rodapé da assinatura)</label><input id="cf-slogan"></div>
+          </div>
+          <div class="fr">
+            <div class="fg ff"><label>Texto do Rodapé das Páginas</label><input id="cf-rodape"></div>
+          </div>
+          <div class="cfg-preview" id="cf-preview-rodape"></div>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;gap:8px;padding-bottom:16px">
+        <button class="btn" onclick="resetCfg()"><i class="ti ti-refresh"></i> Restaurar padrão</button>
+        <button class="btn btn-p" onclick="salvarCfg()"><i class="ti ti-device-floppy"></i> Salvar Configurações</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1702,53 +1765,28 @@ var cfg = Object.assign({}, CFG_DEFAULT, JSON.parse(localStorage.getItem('af_cfg
 function saveCfg(){ try{ localStorage.setItem('af_cfg_v1', JSON.stringify(cfg)); }catch(e){} }
 
 function renderCfgPage(){
-  var pg = document.getElementById('page-cfg');
-  if(!pg) return;
-  pg.innerHTML =
-    '<div class="cfg-card">'
-    +'<div class="cfg-card-hd"><i class="ti ti-building-store"></i> Dados da Empresa</div>'
-    +'<div class="cfg-card-body">'
-    +'<div class="fr"><div class="fg"><label>Razão Social</label><input id="cf-rs" value="'+escA(cfg.razaoSocial)+'"></div>'
-    +'<div class="fg"><label>Nome Fantasia</label><input id="cf-nf" value="'+escA(cfg.nomeFantasia)+'"></div></div>'
-    +'<div class="fr"><div class="fg"><label>CNPJ</label><input id="cf-cnpj" value="'+escA(cfg.cnpj)+'"></div>'
-    +'<div class="fg"><label>Telefone</label><input id="cf-tel" value="'+escA(cfg.telefone)+'"></div></div>'
-    +'<div class="fr"><div class="fg ff"><label>Endereço</label><input id="cf-end" value="'+escA(cfg.endereco)+'"></div></div>'
-    +'<div class="fr"><div class="fg"><label>Bairro</label><input id="cf-bai" value="'+escA(cfg.bairro)+'"></div>'
-    +'<div class="fg"><label>Cidade</label><input id="cf-cid" value="'+escA(cfg.cidade)+'"></div>'
-    +'<div class="fg" style="max-width:80px"><label>UF</label><input id="cf-uf" value="'+escA(cfg.uf)+'"></div>'
-    +'<div class="fg" style="max-width:130px"><label>CEP</label><input id="cf-cep" value="'+escA(cfg.cep)+'"></div></div>'
-    +'<div class="fr"><div class="fg"><label>E-mail</label><input id="cf-email" value="'+escA(cfg.email)+'"></div>'
-    +'<div class="fg"><label>Site</label><input id="cf-site" value="'+escA(cfg.site)+'"></div></div>'
-    +'</div></div>'
-
-    +'<div class="cfg-card">'
-    +'<div class="cfg-card-hd"><i class="ti ti-currency-dollar"></i> Dados Bancários</div>'
-    +'<div class="cfg-card-body">'
-    +'<div class="fr"><div class="fg"><label>Banco</label><input id="cf-banco" value="'+escA(cfg.banco)+'"></div>'
-    +'<div class="fg"><label>Agência</label><input id="cf-ag" value="'+escA(cfg.agencia)+'"></div>'
-    +'<div class="fg"><label>Conta Corrente</label><input id="cf-cc" value="'+escA(cfg.conta)+'"></div></div>'
-    +'<div class="fr"><div class="fg ff"><label>Chave PIX</label><input id="cf-pix" value="'+escA(cfg.pix)+'"></div></div>'
-    +'</div></div>'
-
-    +'<div class="cfg-card">'
-    +'<div class="cfg-card-hd"><i class="ti ti-signature"></i> Assinatura e Rodapé do PDF</div>'
-    +'<div class="cfg-card-body">'
-    +'<div class="fr"><div class="fg"><label>Nome do Responsável</label><input id="cf-resp" value="'+escA(cfg.responsavel)+'"></div>'
-    +'<div class="fg"><label>Cargo / Empresa (linha 2)</label><input id="cf-cargo" value="'+escA(cfg.cargo)+'"></div></div>'
-    +'<div class="fr"><div class="fg ff"><label>Slogan (rodapé da assinatura)</label><input id="cf-slogan" value="'+escA(cfg.slogan)+'"></div></div>'
-    +'<div class="fr"><div class="fg ff"><label>Texto do Rodapé das Páginas</label><input id="cf-rodape" value="'+escA(cfg.obsRodape)+'"></div></div>'
-    +'<div class="cfg-preview">'
-    +'<b>Prévia do rodapé do PDF:</b><br>'
-    +escA(cfg.obsRodape)+' &nbsp;|&nbsp; Proposta Nº 001/2026 | Rev.00 | Válida até 18/06/2026 &nbsp;|&nbsp; Pág. 1/3'
-    +'</div>'
-    +'</div></div>'
-
-    +'<div class="cfg-save-bar">'
-    +'<button class="btn" onclick="resetCfg()"><i class="ti ti-refresh"></i> Restaurar padrão</button>'
-    +'<button class="btn btn-p" onclick="salvarCfg()"><i class="ti ti-device-floppy"></i> Salvar Configurações</button>'
-    +'</div>';
+  document.getElementById('cf-rs').value    = cfg.razaoSocial||'';
+  document.getElementById('cf-nf').value    = cfg.nomeFantasia||'';
+  document.getElementById('cf-cnpj').value  = cfg.cnpj||'';
+  document.getElementById('cf-tel').value   = cfg.telefone||'';
+  document.getElementById('cf-end').value   = cfg.endereco||'';
+  document.getElementById('cf-bai').value   = cfg.bairro||'';
+  document.getElementById('cf-cid').value   = cfg.cidade||'';
+  document.getElementById('cf-uf').value    = cfg.uf||'';
+  document.getElementById('cf-cep').value   = cfg.cep||'';
+  document.getElementById('cf-email').value = cfg.email||'';
+  document.getElementById('cf-site').value  = cfg.site||'';
+  document.getElementById('cf-banco').value = cfg.banco||'';
+  document.getElementById('cf-ag').value    = cfg.agencia||'';
+  document.getElementById('cf-cc').value    = cfg.conta||'';
+  document.getElementById('cf-pix').value   = cfg.pix||'';
+  document.getElementById('cf-resp').value  = cfg.responsavel||'';
+  document.getElementById('cf-cargo').value = cfg.cargo||'';
+  document.getElementById('cf-slogan').value= cfg.slogan||'';
+  document.getElementById('cf-rodape').value= cfg.obsRodape||'';
+  var prev=document.getElementById('cf-preview-rodape');
+  if(prev) prev.innerHTML='<b>Prévia do rodapé:</b><br>'+esc(cfg.obsRodape||'')+' &nbsp;|&nbsp; Proposta Nº 001/2026 | Rev.00 | Válida até 18/06/2026 &nbsp;|&nbsp; Pág. 1/3';
 }
-
 function salvarCfg(){
   cfg.razaoSocial = document.getElementById('cf-rs').value.trim();
   cfg.nomeFantasia = document.getElementById('cf-nf').value.trim();
