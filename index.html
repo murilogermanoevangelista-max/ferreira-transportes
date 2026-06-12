@@ -192,6 +192,8 @@ tbody tr:hover .ra{opacity:1;}
 .k1 .orc-kpi-val{color:var(--am2);}
 .k2 .orc-kpi-val{color:var(--gr);}
 .k3 .orc-kpi-val{color:var(--rd);}
+.orc-kpi.kp::before{background:#c2410c;}
+.kp .orc-kpi-val{color:#c2410c;}
 .orc-kpi-sub{font-size:10px;color:var(--tx3);margin-top:3px;}
 .ops{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap;}
 .ops-pen{background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe;}
@@ -199,6 +201,7 @@ tbody tr:hover .ra{opacity:1;}
 .ops-rec{background:#fef2f2;color:#dc2626;border:1px solid #fecaca;}
 .ops-fat{background:#f5f3ff;color:#7c3aed;border:1px solid #ddd6fe;}
 .ops-can{background:#f5f4f0;color:#5a5854;border:1px solid #cccac4;}
+.ops-prog{background:#fff7ed;color:#c2410c;border:1px solid #fed7aa;}
 .modal-lg{width:860px;max-width:97vw;}
 .otbl{width:100%;border-collapse:collapse;margin-top:6px;font-size:12px;}
 .otbl th{background:var(--sur2);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--tx3);padding:6px 8px;text-align:left;border-bottom:1px solid var(--bor);}
@@ -224,6 +227,23 @@ tbody tr:hover .ra{opacity:1;}
 .orc-filters input{min-width:200px;}
 .orc-filters input:focus,.orc-filters select:focus{border-color:var(--am);}
 .orc-topbar{padding:10px 22px;display:flex;justify-content:flex-end;flex-shrink:0;}
+
+/* PAINEL PROGRAMADOS */
+.prog-painel{margin:0 22px 8px;background:var(--sur);border:1px solid #fed7aa;border-radius:var(--r);overflow:hidden;flex-shrink:0;}
+.prog-titulo{background:#fff7ed;padding:10px 14px;font-size:12px;font-weight:700;color:#c2410c;border-bottom:1px solid #fed7aa;display:flex;align-items:center;gap:6px;}
+.prog-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid #fef3c7;cursor:pointer;transition:background .15s;}
+.prog-item:last-child{border-bottom:none;}
+.prog-item:hover{background:#fff7ed;}
+.prog-hoje{background:#fff7ed;}
+.prog-urgente{background:#fffbeb;}
+.prog-normal{background:var(--sur);}
+.prog-data{font-size:11px;font-weight:700;color:#92400e;min-width:80px;text-align:center;background:#fed7aa;border-radius:6px;padding:4px 8px;}
+.prog-hoje .prog-data{background:#c2410c;color:#fff;}
+.prog-info{flex:1;display:flex;flex-direction:column;gap:2px;}
+.prog-emp{font-size:13px;font-weight:600;color:var(--tx);}
+.prog-rota{font-size:11px;color:var(--tx3);}
+.prog-dias{font-size:11px;font-weight:700;color:#c2410c;white-space:nowrap;}
+.prog-hoje .prog-dias{background:#c2410c;color:#fff;padding:2px 8px;border-radius:20px;}
 </style>
 </head>
 <body>
@@ -1074,7 +1094,7 @@ function numProp(){return String(propostas.length+1).padStart(3,'0')+'/'+new Dat
 var VEIC=['Caminhão 3/4','Caminhão Toco','Caminhão Truck','Carreta Simples','Carreta Baú','Carreta Refrigerada','Bitrem','Rodotrem','Van/Sprinter'];
 var FREQ=['Diária','Semanal','Quinzenal','Mensal','Sob demanda','Avulso'];
 var TIPO_ROTA=['Ida','Retorno','Ida e Volta','Serviço'];
-var STCLS={Pendente:'ops-pen',Aprovado:'ops-apr',Recusado:'ops-rec',Faturado:'ops-fat',Cancelado:'ops-can'};
+var STCLS={Pendente:'ops-pen',Aprovado:'ops-apr',Programado:'ops-prog',Recusado:'ops-rec',Faturado:'ops-fat',Cancelado:'ops-can'};
 
 // ── Busca de empresa searchable ───────────────────
 var _empDropOpen=false;
@@ -1113,6 +1133,11 @@ document.addEventListener('click',function(e){
   if(!e.target.closest('#sw-emp')) document.getElementById('op-emp-drop').classList.remove('open');
 });
 
+function toggleDataProg(v){
+  var el=document.getElementById('campo-data-prog');
+  if(el) el.style.display=(v==='Programado')?'block':'none';
+}
+
 // ── Abrir form ─────────────────────────────────────
 function abrirNovaProposta(){
   propEditId=null; propRows=[];
@@ -1136,6 +1161,8 @@ function abrirNovaProposta(){
   document.getElementById('op-esp').value='';
   document.getElementById('op-hextra').value='';
   document.getElementById('op-status').value='Pendente';
+  toggleDataProg('Pendente');
+  document.getElementById('op-data-prog').value='';
   document.getElementById('op-obs').value='Nossa equipe está disponível para adequar o escopo conforme necessidade específica.';
   addOrcRow();
   om('m-orc');
@@ -1143,7 +1170,7 @@ function abrirNovaProposta(){
 
 // ── Linhas de rota ──────────────────────────────────
 function addOrcRow(){
-  propRows.push({tipo:'Ida',rota:'',veiculo:'Caminhão 3/4',veicManual:'',freq:'Mensal',valor:0,qtd:1});
+  propRows.push({origem:'',destino:'',veiculo:'Caminhão 3/4',veicManual:'',freq:'Mensal',valor:0,qtd:1});
   renderOrcRows();
 }
 function removeOrcRow(i){propRows.splice(i,1);renderOrcRows();}
@@ -1153,10 +1180,9 @@ function renderOrcRows(){
   tb.innerHTML=propRows.map(function(r,i){
     var veicOpts=VEIC.map(function(v){return '<option'+(r.veiculo===v?' selected':'')+'>'+v+'</option>';}).join('')+'<option value="__manual__"'+(r.veiculo==='__manual__'?' selected':'')+'>+ Outro (digitar)</option>';
     var freqOpts=FREQ.map(function(f){return '<option'+(r.freq===f?' selected':'')+'>'+f+'</option>';}).join('');
-    var tipoOpts=TIPO_ROTA.map(function(t){return '<option'+(r.tipo===t?' selected':'')+'>'+t+'</option>';}).join('');
     return '<tr id="orc-row-'+i+'">'
-      +'<td><select onchange="propRows['+i+'].tipo=this.value">'+tipoOpts+'</select></td>'
-      +'<td><input class="pr-rota" value="'+esc(r.rota)+'" placeholder="Origem → Destino" oninput="propRows['+i+'].rota=this.value"></td>'
+      +'<td><input class="pr-ori" value="'+esc(r.origem||'')+'" placeholder="Ex: Mogi Guaçu - SP" oninput="propRows['+i+'].origem=this.value"></td>'
+      +'<td><input class="pr-des" value="'+esc(r.destino||'')+'" placeholder="Ex: São Paulo - SP" oninput="propRows['+i+'].destino=this.value"></td>'
       +'<td>'
         +'<select class="pr-vei" onchange="propRows['+i+'].veiculo=this.value;toggleVeicManual('+i+',this.value)">'+veicOpts+'</select>'
         +'<input type="text" class="pr-vei-m" style="display:'+(r.veiculo==='__manual__'?'block':'none')+';margin-top:3px" value="'+esc(r.veicManual||'')+'" placeholder="Descreva o veículo" oninput="propRows['+i+'].veicManual=this.value">'
@@ -1180,7 +1206,8 @@ function toggleVeicManual(i,v){
 function lerRows(){
   var trs=document.querySelectorAll('#op-rows tr');
   for(var i=0;i<trs.length&&i<propRows.length;i++){
-    propRows[i].rota=trs[i].querySelector('.pr-rota').value;
+    propRows[i].origem=trs[i].querySelector('.pr-ori').value;
+    propRows[i].destino=trs[i].querySelector('.pr-des').value;
     propRows[i].veiculo=trs[i].querySelector('.pr-vei').value;
     propRows[i].veicManual=trs[i].querySelector('.pr-vei-m').value||'';
     propRows[i].freq=trs[i].querySelector('.pr-frq').value;
@@ -1223,6 +1250,7 @@ function salvarProposta(gerarPdf){
     esp:document.getElementById('op-esp').value.trim(),
     hextra:document.getElementById('op-hextra').value.trim(),
     status:document.getElementById('op-status').value,
+    dataProg:(document.getElementById('op-status').value==='Programado'?(document.getElementById('op-data-prog').value||''):''),
     obs:document.getElementById('op-obs').value.trim()
   };
   if(propEditId){var ix=propostas.findIndex(function(x){return x.id===propEditId;});propostas[ix]=obj;}
@@ -1257,8 +1285,15 @@ function editProposta(id){
   document.getElementById('op-esp').value=o.esp||'';
   document.getElementById('op-hextra').value=o.hextra||'';
   document.getElementById('op-status').value=o.status||'Pendente';
+  toggleDataProg(o.status||'Pendente');
+  document.getElementById('op-data-prog').value=o.dataProg||'';
   document.getElementById('op-obs').value=o.obs||'';
-  propRows=o.rows.map(function(r){return Object.assign({},r);});
+  propRows=o.rows.map(function(r){
+    // backward compat: old proposals used 'rota' field
+    if(!r.origem && r.rota) r.origem=r.rota;
+    if(!r.destino) r.destino='';
+    return Object.assign({},r);
+  });
   renderOrcRows(); om('m-orc');
 }
 function excluirProposta(id){
@@ -1280,16 +1315,17 @@ function verPropostaDet(id){
     +'<div class="di"><label>Nº / Rev</label><span>'+esc(o.num)+' / '+esc(o.rev||'00')+'</span></div>'
     +'<div class="di"><label>Data</label><span>'+fmtD(o.data)+'</span></div>'
     +'<div class="di"><label>Validade</label><span>'+addD(o.data,o.validade)+' ('+o.validade+' dias)</span></div>'
+    +(o.status==='Programado'&&o.dataProg?'<div class="di"><label>Data Programada</label><span style="font-weight:700;color:#c2410c">'+fmtD(o.dataProg)+'</span></div>':'')
     +'<div class="di"><label>Status</label><span><span class="ops '+cls+'">'+o.status+'</span></span></div>'
     +'<div class="di"><label>Responsável</label><span>'+esc(o.resp||'—')+'</span></div>'
     +'<div class="di"><label>Telefone</label><span>'+esc(o.tel||'—')+'</span></div>'
     +'<div class="di"><label>E-mail</label><span>'+esc(o.email||'—')+'</span></div>'
     +'<div class="di"><label>CNPJ</label><span>'+esc(o.cnpj||'—')+'</span></div>'
     +'</div><div class="sep"></div>'
-    +'<table class="otbl"><thead><tr><th>Tipo</th><th>Rota/Serviço</th><th>Veículo</th><th>Freq.</th><th style="text-align:right">Valor</th><th style="text-align:center">Qtd</th><th style="text-align:right">Total</th></tr></thead><tbody>'
+    +'<table class="otbl"><thead><tr><th>Origem</th><th>Destino</th><th>Veículo</th><th>Freq.</th><th style="text-align:right">Valor</th><th style="text-align:center">Qtd</th><th style="text-align:right">Total</th></tr></thead><tbody>'
     +o.rows.map(function(r){
       var veicLabel=r.veiculo==='__manual__'?(r.veicManual||'Outro'):r.veiculo;
-      return '<tr><td><span style="font-size:10px;font-weight:700;color:var(--bl)">'+esc(r.tipo||'Ida')+'</span></td><td>'+esc(r.rota||'—')+'</td><td>'+esc(veicLabel)+'</td><td>'+esc(r.freq)+'</td><td style="text-align:right">R$ '+brl(r.valor)+'</td><td style="text-align:center">'+r.qtd+'</td><td style="text-align:right;font-weight:600">R$ '+brl(r.valor*r.qtd)+'</td></tr>';
+      return '<tr><td>'+esc(r.origem||r.rota||'—')+'</td><td>'+esc(r.destino||'—')+'</td><td>'+esc(veicLabel)+'</td><td>'+esc(r.freq)+'</td><td style="text-align:right">R$ '+brl(r.valor)+'</td><td style="text-align:center">'+r.qtd+'</td><td style="text-align:right;font-weight:600">R$ '+brl(r.valor*r.qtd)+'</td></tr>';
     }).join('')
     +'</tbody></table>'
     +'<div class="total-row"><span style="font-size:15px;font-weight:700;color:var(--am2)">VALOR TOTAL MENSAL: <b>R$ '+brl(totalM)+'</b></span></div>'
@@ -1335,16 +1371,45 @@ function renderOrcPage(){
   var cidades2=[...new Set(propostas.map(function(o){return o.cidade||'';}).filter(Boolean))].sort();
   var cidOpts2='<option value="">Todas as cidades</option>'+cidades2.map(function(c){return '<option>'+esc(c)+'</option>';}).join('');
 
+  var prog=propostas.filter(function(o){return o.status==='Programado';});
+  var hoje=new Date().toISOString().split('T')[0];
+  var progHoje=prog.filter(function(o){return o.dataProg===hoje;}).length;
+  var progProx=prog.filter(function(o){return o.dataProg>hoje;}).length;
+
+  // painel de programados (próximos 30 dias), ordenado por data
+  var progFuturos=prog.filter(function(o){return o.dataProg>=hoje;}).sort(function(a,b){return a.dataProg.localeCompare(b.dataProg);});
+  var painelProg='';
+  if(progFuturos.length){
+    painelProg='<div class="prog-painel">'
+      +'<div class="prog-titulo"><i class="ti ti-calendar-event"></i> Serviços Programados</div>'
+      +progFuturos.map(function(o){
+        var dProg=new Date(o.dataProg+'T12:00:00');
+        var dias=Math.round((dProg-new Date(hoje+'T12:00:00'))/(1000*60*60*24));
+        var urgCls=dias===0?'prog-hoje':dias<=3?'prog-urgente':'prog-normal';
+        var diasLabel=dias===0?'HOJE':dias===1?'amanhã':'em '+dias+' dias';
+        return '<div class="prog-item '+urgCls+'" onclick="verPropostaDet(''+o.id+'')">'
+          +'<div class="prog-data">'+dProg.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'}).toUpperCase()+'</div>'
+          +'<div class="prog-info">'
+            +'<span class="prog-emp">'+esc(o.empNome)+'</span>'
+            +'<span class="prog-rota">'+o.rows.map(function(r){return esc(r.origem||r.rota||'')+(r.destino?' → '+esc(r.destino):'');}).join(' | ')+'</span>'
+          +'</div>'
+          +'<div class="prog-dias">'+diasLabel+'</div>'
+        +'</div>';
+      }).join('')
+    +'</div>';
+  }
+
   var html_page=
     '<div class="orc-kpis">'
     +'<div class="orc-kpi k0"><div class="orc-kpi-lbl">Total de Propostas</div><div class="orc-kpi-val">'+propostas.length+'</div><div class="orc-kpi-sub">R$ '+brl(totV)+'/mês</div></div>'
     +'<div class="orc-kpi k2"><div class="orc-kpi-lbl">Aprovadas</div><div class="orc-kpi-val">'+aprov.length+'</div><div class="orc-kpi-sub">R$ '+brl(aprovV)+'/mês</div></div>'
     +'<div class="orc-kpi k1"><div class="orc-kpi-lbl">Pendentes</div><div class="orc-kpi-val">'+pend+'</div><div class="orc-kpi-sub">Aguardando resposta</div></div>'
-    +'<div class="orc-kpi k3"><div class="orc-kpi-lbl">Recusadas</div><div class="orc-kpi-val">'+rec+'</div><div class="orc-kpi-sub">Oportunidade perdida</div></div>'
+    +'<div class="orc-kpi kp"><div class="orc-kpi-lbl">Programados</div><div class="orc-kpi-val">'+prog.length+'</div><div class="orc-kpi-sub">'+(progHoje?'<b>'+progHoje+' hoje</b>':''+(progProx?' '+progProx+' futuros':'Nenhum agendado'))+'</div></div>'
     +'</div>'
+    +painelProg
     +'<div class="orc-filters">'
     +'<input id="of-busca" placeholder="🔍 Empresa, Nº, responsável, cidade..." oninput="renderOrcTabela()" style="min-width:240px">'
-    +'<select id="of-st" onchange="renderOrcTabela()"><option value="">Todos os status</option><option>Pendente</option><option>Aprovado</option><option>Recusado</option><option>Faturado</option><option>Cancelado</option></select>'
+    +'<select id="of-st" onchange="renderOrcTabela()"><option value="">Todos os status</option><option>Pendente</option><option>Aprovado</option><option>Programado</option><option>Recusado</option><option>Faturado</option><option>Cancelado</option></select>'
     +'<select id="of-cid" onchange="renderOrcTabela()">'+cidOpts2+'</select>'
     +'<select id="of-mes" onchange="renderOrcTabela()">'+mesOpts+'</select>'
     +'</div>'
@@ -1519,13 +1584,13 @@ function pdfProposta(id){
   sB('07.','ORÇAMENTO');
   sf(false,9,CTX2);doc.text('O investimento para realização dos serviços de transporte segue discriminado abaixo:',M,y,{maxWidth:CW});y+=10;
 
-  var cw3=[CW*0.07,CW*0.31,CW*0.20,CW*0.12,CW*0.15,CW*0.15];
+  var cw3=[CW*0.22,CW*0.20,CW*0.18,CW*0.12,CW*0.14,CW*0.14];
   var cx=[M];
   for(var ci=0;ci<cw3.length-1;ci++) cx.push(cx[cx.length-1]+cw3[ci]);
 
   rf(M,y,CW,8,CCIN);
   sf(true,7.5,[255,255,255]);
-  ['TIPO','SERVIÇO / ROTA','VEÍCULO','FREQUÊNCIA','VALOR UNIT.','TOTAL'].forEach(function(h,i){doc.text(h,cx[i]+2,y+5);});
+  ['ORIGEM','DESTINO','VEÍCULO','FREQUÊNCIA','VALOR UNIT.','TOTAL'].forEach(function(h,i){doc.text(h,cx[i]+2,y+5);});
   y+=8;
 
   var totalM=0;
@@ -1534,8 +1599,8 @@ function pdfProposta(id){
     var bg=ri%2===0?[255,255,255]:[247,246,243];
     rf(M,y,CW,h2,bg);
     doc.setDrawColor(229,227,222);doc.setLineWidth(0.2);doc.line(M,y+h2,M+CW,y+h2);
-    sf(true,7.5,[37,99,235]);doc.text(String(r.tipo||'Ida'),cx[0]+1,y+3.5,{maxWidth:cw3[0]-2});
-    sf(false,8,CTX);doc.text(doc.splitTextToSize(r.rota||'—',cw3[1]-4),cx[1]+2,y+3.5);
+    sf(false,8,CTX);doc.text(doc.splitTextToSize(r.origem||r.rota||'—',cw3[0]-4),cx[0]+2,y+3.5);
+    doc.text(doc.splitTextToSize(r.destino||'—',cw3[1]-4),cx[1]+2,y+3.5);
     var vl=r.veiculo==='__manual__'?(r.veicManual||'Outro'):r.veiculo;
     doc.text(String(vl),cx[2]+2,y+3.5,{maxWidth:cw3[2]-4});
     doc.text(String(r.freq||'—'),cx[3]+2,y+3.5);
@@ -1639,8 +1704,8 @@ document.addEventListener("click",function(e){
       <span class="stl">Orçamento — Rotas e Serviços</span>
       <table class="otbl">
         <thead><tr>
-          <th style="width:7%">Tipo</th>
-          <th style="width:30%">Rota / Descrição</th>
+          <th style="width:18%">Origem</th>
+          <th style="width:18%">Destino</th>
           <th style="width:19%">Veículo</th>
           <th style="width:11%">Frequência</th>
           <th style="width:12%">Valor (R$)</th>
@@ -1649,7 +1714,7 @@ document.addEventListener("click",function(e){
         </tr></thead>
         <tbody id="op-rows"></tbody>
       </table>
-      <button class="add-row" onclick="addOrcRow()"><i class="ti ti-plus"></i> Adicionar linha</button>
+      <button class="add-row" onclick="addOrcRow()"><i class="ti ti-plus"></i> Adicionar rota</button>
       <div class="total-row">
         <span>Valor Total Mensal: <strong id="op-total" style="font-size:16px;color:var(--am2)">R$ 0,00</strong></span>
       </div>
@@ -1673,13 +1738,19 @@ document.addEventListener("click",function(e){
       <span class="stl">Status e Observações</span>
       <div class="fr">
         <div class="fg"><label>Status</label>
-          <select id="op-status">
+          <select id="op-status" onchange="toggleDataProg(this.value)">
             <option value="Pendente">Pendente</option>
             <option value="Aprovado">Aprovado</option>
+            <option value="Programado">Programado</option>
             <option value="Recusado">Recusado</option>
             <option value="Faturado">Faturado</option>
             <option value="Cancelado">Cancelado</option>
           </select>
+        </div>
+        <div class="fg" id="campo-data-prog" style="display:none">
+          <label>Data da Programação *</label>
+          <input type="date" id="op-data-prog">
+          <span style="font-size:11px;color:var(--tx3);margin-top:3px;display:block">Data agendada para coleta/entrega</span>
         </div>
         <div class="fg ff"><label>Observações</label>
           <textarea id="op-obs" rows="2"></textarea>
