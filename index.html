@@ -1677,25 +1677,25 @@ document.getElementById('nb-orc').textContent=propostas.length;
 // MINHA EMPRESA (configurações do PDF)
 // =============================================
 var CFG_DEFAULT = {
-  razaoSocial: cfg.razaoSocial,
-  nomeFantasia: cfg.nomeFantasia,
-  cnpj: cfg.cnpj,
+  razaoSocial: 'A. Ferreira da Costa Transportes',
+  nomeFantasia: 'A. Ferreira Transportes',
+  cnpj: '36.370.512/0001-97',
   endereco: 'Rua Paulo da Cunha Bueno, 682',
   bairro: 'Jd. Guaçuano',
   cidade: 'Mogi Guaçu',
   uf: 'SP',
   cep: '13.846-460',
-  telefone: cfg.telefone,
+  telefone: '(19) 9 9659-0174',
   email: 'contato@aferreiratransportes.com.br',
   site: 'www.aferreiratransportes.com.br',
   pix: 'contato@aferreiratransportes.com.br',
-  banco: cfg.banco,
-  agencia: cfg.agencia,
-  conta: cfg.conta,
-  responsavel: cfg.responsavel,
-  cargo: cfg.nomeFantasia,
-  slogan: cfg.slogan,
-  obsRodape: cfg.obsRodape
+  banco: 'Santander',
+  agencia: '0181',
+  conta: '13.006457-0',
+  responsavel: 'Alex Ferreira',
+  cargo: 'A. Ferreira Transportes',
+  slogan: 'Compromisso, Segurança e Eficiência Logística.',
+  obsRodape: 'A. Ferreira Transportes — Mogi Guaçu SP'
 };
 var cfg = Object.assign({}, CFG_DEFAULT, JSON.parse(localStorage.getItem('af_cfg_v1')||'{}'));
 function saveCfg(){ try{ localStorage.setItem('af_cfg_v1', JSON.stringify(cfg)); }catch(e){} }
