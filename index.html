@@ -254,6 +254,42 @@ tbody tr:hover .ra{opacity:1;}
 .cfg-preview{background:var(--sur2);border:1px solid var(--bor);border-radius:var(--rs);padding:14px 18px;font-size:12px;color:var(--tx2);line-height:1.8;margin-top:12px;}
 .cfg-preview b{color:var(--tx);font-size:13px;}
 .cfg-save-bar{display:flex;justify-content:flex-end;gap:8px;padding:12px 0 4px;margin-top:8px;}
+
+/* === OPERAÇÕES === */
+#page-ops{flex:1;overflow-y:auto;padding:0;display:none;}
+.ops-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px 22px 4px;flex-shrink:0;}
+.ops-kpi{background:var(--sur);border:1px solid var(--bor);border-radius:var(--r);padding:14px;position:relative;overflow:hidden;}
+.ops-kpi::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;}
+.ops-kpi.ok0::before{background:var(--bl);}
+.ops-kpi.ok1::before{background:#f97316;}
+.ops-kpi.ok2::before{background:var(--gr);}
+.ops-kpi.ok3::before{background:var(--rd);}
+.ops-kpi-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--tx3);margin-bottom:4px;}
+.ops-kpi-val{font-size:22px;font-weight:700;}
+.ok0 .ops-kpi-val{color:var(--bl);}
+.ok1 .ops-kpi-val{color:#f97316;}
+.ok2 .ops-kpi-val{color:var(--gr);}
+.ok3 .ops-kpi-val{color:var(--rd);}
+.ops-kpi-sub{font-size:10px;color:var(--tx3);margin-top:3px;}
+/* status badges operação */
+.ost{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap;}
+.ost-age{background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe;}
+.ost-and{background:#fff7ed;color:#c2410c;border:1px solid #fed7aa;}
+.ost-con{background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;}
+.ost-atr{background:#fef2f2;color:#dc2626;border:1px solid #fecaca;}
+.ost-can{background:#f5f4f0;color:#5a5854;border:1px solid #cccac4;}
+/* modal operação */
+.modal-ops{width:860px;max-width:97vw;}
+.ops-timeline{display:flex;flex-direction:column;gap:0;}
+.ops-tl-item{display:flex;gap:12px;padding:8px 0;}
+.ops-tl-item:not(:last-child){border-bottom:1px solid var(--bor);}
+.ops-tl-dot{width:10px;height:10px;border-radius:50%;background:var(--am);margin-top:4px;flex-shrink:0;}
+.ops-tl-txt{font-size:12px;color:var(--tx2);flex:1;}
+.ops-tl-dt{font-size:11px;color:var(--tx3);white-space:nowrap;}
+.ops-topbar{padding:8px 22px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;border-bottom:1px solid var(--bor);}
+.ops-filters{display:flex;gap:8px;flex-wrap:wrap;}
+.ops-filters input,.ops-filters select{padding:7px 11px;border:1px solid var(--bor2);border-radius:var(--rs);background:var(--sur);color:var(--tx);font-size:13px;outline:none;font-family:'Barlow',sans-serif;}
+.ops-filters input:focus,.ops-filters select:focus{border-color:var(--am);}
 </style>
 </head>
 <body>
@@ -268,6 +304,7 @@ tbody tr:hover .ra{opacity:1;}
       <div class="ni active" onclick="setPage('emp',this)"><i class="ti ti-building-store"></i> Prospecção <span class="nb" id="nb-t">0</span></div>
       <div class="ni" onclick="setPage('dash',this)"><i class="ti ti-chart-bar"></i> Dashboard</div>
       <div class="ni" onclick="setPage('orc',this)"><i class="ti ti-file-invoice"></i> Orçamentos <span class="nb" id="nb-orc">0</span></div>
+      <div class="ni" onclick="setPage('ops',this)"><i class="ti ti-truck-delivery"></i> Operações <span class="nb" id="nb-ops">0</span></div>
       <div class="ni" onclick="setPage('cfg',this)"><i class="ti ti-building"></i> Minha Empresa</div>
       <div class="ns">Filtrar por Status</div>
       <div class="ni" onclick="qfStatus('')"><i class="ti ti-list"></i> Todas</div>
@@ -339,6 +376,9 @@ tbody tr:hover .ra{opacity:1;}
 
     <!-- PAGE ORCAMENTOS -->
     <div id="page-orc"></div>
+
+    <!-- PAGE OPERACOES -->
+    <div id="page-ops"></div>
 
     <!-- PAGE CONFIG EMPRESA -->
     <div id="page-cfg">
@@ -794,13 +834,15 @@ function setPage(p,el){
   document.getElementById("page-dash").style.display=p==="dash"?"block":"none";
   var po=document.getElementById("page-orc");
   if(po) po.style.display=p==="orc"?"flex":"none";
+  var po2=document.getElementById("page-ops");
+  if(po2) po2.style.display=p==="ops"?"flex":"none";
   var pc=document.getElementById("page-cfg");
   if(pc) pc.style.display=p==="cfg"?"block":"none";
   // stats-row e botões do topbar: só na prospecção e dashboard
   var sr=document.getElementById("stats-row");
-  if(sr) sr.style.display=(p==="orc"||p==="cfg")?"none":"";
+  if(sr) sr.style.display=(p==="orc"||p==="cfg"||p==="ops")?"none":"";
   var ta=document.getElementById("topbar-actions");
-  if(ta) ta.style.display=(p==="orc"||p==="cfg")?"none":"";
+  if(ta) ta.style.display=(p==="orc"||p==="cfg"||p==="ops")?"none":"";
 
   // título da topbar
   var pgTitle=document.getElementById("pg-title");
@@ -808,6 +850,7 @@ function setPage(p,el){
   if(p==="emp"&&pgTitle){ pgTitle.textContent="Empresas para Prospecção"; pgSub.textContent="Gerencie seus contatos e leads"; }
   if(p==="dash"&&pgTitle){ pgTitle.textContent="Dashboard"; pgSub.textContent="Visão geral por cidade e status"; }
   if(p==="orc"&&pgTitle){ pgTitle.textContent="Propostas Comerciais"; pgSub.textContent="Histórico, consultas e geração de PDF"; }
+  if(p==="ops"&&pgTitle){ pgTitle.textContent="Operações"; pgSub.textContent="Controle de saídas, entregas e motoristas"; }
   if(p==="cfg"&&pgTitle){ pgTitle.textContent="Minha Empresa"; pgSub.textContent="Dados que aparecem nos PDFs das propostas"; }
   // nav ativo
   document.querySelectorAll(".ni").forEach(n=>n.classList.remove("active"));
@@ -815,6 +858,7 @@ function setPage(p,el){
   // renders
   if(p==="dash") renderDash();
   if(p==="orc") renderOrcPage();
+  if(p==="ops") renderOpsPage();
   if(p==="cfg") renderCfgPage();
 }
 
@@ -1819,6 +1863,317 @@ function resetCfg(){
   renderCfgPage();
 }
 
+
+// =============================================
+// OPERAÇÕES
+// =============================================
+var operacoes = JSON.parse(localStorage.getItem('af_ops_v1')||'[]');
+var opsEditId = null;
+var opsDetId  = null;
+
+function saveOps(){ try{ localStorage.setItem('af_ops_v1', JSON.stringify(operacoes)); }catch(e){} }
+
+var OST = {
+  'Agendado':'ost-age','Em andamento':'ost-and','Concluído':'ost-con',
+  'Atrasado':'ost-atr','Cancelado':'ost-can'
+};
+
+function abrirNovaOps(){
+  opsEditId = null;
+  // preencher select de propostas (aprovadas/programadas)
+  var sel = document.getElementById('ops-prop');
+  sel.innerHTML = '<option value="">-- Selecione --</option>';
+  propostas.forEach(function(p){
+    if(['Aprovado','Programado','Faturado'].indexOf(p.status)>=0){
+      sel.innerHTML += '<option value="'+p.id+'">'+esc(p.num)+' — '+esc(p.empNome)+'</option>';
+    }
+  });
+  // reset fields
+  ['ops-emp-nome','ops-motorista','ops-tel-mot','ops-veiculo','ops-carga',
+   'ops-origem','ops-destino','ops-km','ops-valor','ops-cte','ops-mdfe',
+   'ops-nf','ops-nova-ocor','ops-obs'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.value='';
+  });
+  ['ops-saida','ops-entrega','ops-entrega-real','ops-hora-saida',
+   'ops-hora-entrega','ops-hora-real'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.value='';
+  });
+  document.getElementById('ops-status').value='Agendado';
+  document.getElementById('ops-saida').value = new Date().toISOString().split('T')[0];
+  document.getElementById('ops-tit').textContent = 'Nova Operação';
+  om('m-ops');
+}
+
+function preencherDadosProposta(pid){
+  var p = propostas.find(function(x){ return x.id===pid; });
+  if(!p) return;
+  document.getElementById('ops-emp-nome').value = p.empNome||'';
+  if(p.rows && p.rows.length){
+    document.getElementById('ops-origem').value  = p.rows[0].origem||p.rows[0].rota||'';
+    document.getElementById('ops-destino').value = p.rows[0].destino||'';
+    document.getElementById('ops-veiculo').value = p.rows[0].veiculo==='__manual__'?(p.rows[0].veicManual||''):p.rows[0].veiculo||'';
+    document.getElementById('ops-valor').value   = brl(p.rows.reduce(function(a,r){return a+(r.valor*r.qtd);},0));
+  }
+  if(p.dataProg) document.getElementById('ops-saida').value = p.dataProg;
+}
+
+function salvarOps(){
+  var propId = document.getElementById('ops-prop').value;
+  var saida  = document.getElementById('ops-saida').value;
+  var motorista = document.getElementById('ops-motorista').value.trim();
+  if(!saida){ alert('Informe a data de saída.'); return; }
+
+  var novaOcor = document.getElementById('ops-nova-ocor').value.trim();
+  var now = new Date().toISOString();
+
+  var ocorrencias = [];
+  if(opsEditId){
+    var ex = operacoes.find(function(x){ return x.id===opsEditId; });
+    if(ex) ocorrencias = ex.ocorrencias||[];
+  }
+  if(novaOcor){
+    ocorrencias = ocorrencias.concat([{dt:now, txt:novaOcor}]);
+  }
+
+  var p = propostas.find(function(x){ return x.id===propId; });
+  var obj = {
+    id:       opsEditId||('op'+Date.now().toString(36)),
+    propId:   propId,
+    propNum:  p?p.num:'',
+    empNome:  document.getElementById('ops-emp-nome').value,
+    status:   document.getElementById('ops-status').value,
+    saida:    saida,
+    horaSaida:document.getElementById('ops-hora-saida').value,
+    entrega:  document.getElementById('ops-entrega').value,
+    horaEntrega:document.getElementById('ops-hora-entrega').value,
+    entregaReal:document.getElementById('ops-entrega-real').value,
+    horaReal: document.getElementById('ops-hora-real').value,
+    motorista:motorista,
+    telMot:   document.getElementById('ops-tel-mot').value.trim(),
+    veiculo:  document.getElementById('ops-veiculo').value.trim(),
+    carga:    document.getElementById('ops-carga').value.trim(),
+    origem:   document.getElementById('ops-origem').value.trim(),
+    destino:  document.getElementById('ops-destino').value.trim(),
+    km:       document.getElementById('ops-km').value,
+    valor:    parseBrl(document.getElementById('ops-valor').value),
+    cte:      document.getElementById('ops-cte').value.trim(),
+    mdfe:     document.getElementById('ops-mdfe').value.trim(),
+    nf:       document.getElementById('ops-nf').value.trim(),
+    obs:      document.getElementById('ops-obs').value.trim(),
+    ocorrencias: ocorrencias,
+    updatedAt: now
+  };
+  if(opsEditId){ var ix=operacoes.findIndex(function(x){return x.id===opsEditId;}); operacoes[ix]=obj; }
+  else operacoes.push(obj);
+  saveOps(); cm('m-ops'); renderOpsPage();
+  document.getElementById('nb-ops').textContent = operacoes.filter(function(o){return o.status!=='Concluído'&&o.status!=='Cancelado';}).length;
+}
+
+function editOps(id){
+  var o = operacoes.find(function(x){return x.id===id;}); if(!o) return;
+  opsEditId = id;
+  var sel = document.getElementById('ops-prop');
+  sel.innerHTML = '<option value="">-- Selecione --</option>';
+  propostas.forEach(function(p){
+    sel.innerHTML += '<option value="'+p.id+'"'+(p.id===o.propId?' selected':'')+'>'+esc(p.num)+' — '+esc(p.empNome)+'</option>';
+  });
+  document.getElementById('ops-tit').textContent = 'Editar Operação — '+o.empNome;
+  document.getElementById('ops-emp-nome').value    = o.empNome||'';
+  document.getElementById('ops-status').value      = o.status||'Agendado';
+  document.getElementById('ops-saida').value       = o.saida||'';
+  document.getElementById('ops-hora-saida').value  = o.horaSaida||'';
+  document.getElementById('ops-entrega').value     = o.entrega||'';
+  document.getElementById('ops-hora-entrega').value= o.horaEntrega||'';
+  document.getElementById('ops-entrega-real').value= o.entregaReal||'';
+  document.getElementById('ops-hora-real').value   = o.horaReal||'';
+  document.getElementById('ops-motorista').value   = o.motorista||'';
+  document.getElementById('ops-tel-mot').value     = o.telMot||'';
+  document.getElementById('ops-veiculo').value     = o.veiculo||'';
+  document.getElementById('ops-carga').value       = o.carga||'';
+  document.getElementById('ops-origem').value      = o.origem||'';
+  document.getElementById('ops-destino').value     = o.destino||'';
+  document.getElementById('ops-km').value          = o.km||'';
+  document.getElementById('ops-valor').value       = brl(o.valor||0);
+  document.getElementById('ops-cte').value         = o.cte||'';
+  document.getElementById('ops-mdfe').value        = o.mdfe||'';
+  document.getElementById('ops-nf').value          = o.nf||'';
+  document.getElementById('ops-obs').value         = o.obs||'';
+  document.getElementById('ops-nova-ocor').value   = '';
+  om('m-ops');
+}
+
+function excluirOps(id){
+  if(!confirm('Excluir esta operação?')) return;
+  operacoes = operacoes.filter(function(x){return x.id!==id;});
+  saveOps(); renderOpsPage();
+}
+
+function addOcorrencia(id){
+  cm('m-ops-det');
+  var o = operacoes.find(function(x){return x.id===id;});
+  if(!o) return;
+  var txt = prompt('Descreva a ocorrência ou atualização:');
+  if(!txt||!txt.trim()) return;
+  o.ocorrencias = (o.ocorrencias||[]).concat([{dt:new Date().toISOString(), txt:txt.trim()}]);
+  o.updatedAt = new Date().toISOString();
+  saveOps(); verOpsDet(id);
+}
+
+function verOpsDet(id){
+  var o = operacoes.find(function(x){return x.id===id;}); if(!o) return;
+  opsDetId = id;
+  document.getElementById('opsd-tit').textContent = (o.empNome||'Operação')+' — '+fmtD(o.saida);
+  var cls = OST[o.status]||'ost-age';
+
+  var ocHtml = '';
+  if(o.ocorrencias && o.ocorrencias.length){
+    ocHtml = '<div class="sep"></div><div class="stl" style="margin:12px 0 6px">Histórico de Ocorrências</div>'
+      +'<div class="ops-timeline">'
+      +[].concat(o.ocorrencias).reverse().map(function(oc){
+        var d = new Date(oc.dt);
+        return '<div class="ops-tl-item">'
+          +'<div class="ops-tl-dot"></div>'
+          +'<div class="ops-tl-txt">'+esc(oc.txt)+'</div>'
+          +'<div class="ops-tl-dt">'+d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})+'</div>'
+          +'</div>';
+      }).join('')
+      +'</div>';
+  }
+
+  document.getElementById('opsd-body').innerHTML =
+    '<div class="dg" style="margin-bottom:12px">'
+    +'<div class="di"><label>Status</label><span><span class="ost '+cls+'">'+o.status+'</span></span></div>'
+    +'<div class="di"><label>Proposta</label><span>'+esc(o.propNum||'—')+'</span></div>'
+    +'<div class="di"><label>Saída</label><span>'+fmtD(o.saida)+(o.horaSaida?' às '+o.horaSaida:'')+'</span></div>'
+    +'<div class="di"><label>Prev. Entrega</label><span>'+fmtD(o.entrega)+(o.horaEntrega?' às '+o.horaEntrega:'')+'</span></div>'
+    +(o.entregaReal?'<div class="di"><label>Entrega Real</label><span style="font-weight:700;color:var(--gr)">'+fmtD(o.entregaReal)+(o.horaReal?' às '+o.horaReal:'')+'</span></div>':'')
+    +'</div><div class="sep"></div>'
+    +'<div class="dg">'
+    +'<div class="di"><label>Motorista</label><span>'+esc(o.motorista||'—')+'</span></div>'
+    +'<div class="di"><label>Telefone</label><span>'+esc(o.telMot||'—')+'</span></div>'
+    +'<div class="di"><label>Veículo / Placa</label><span>'+esc(o.veiculo||'—')+'</span></div>'
+    +'<div class="di"><label>Tipo de Carga</label><span>'+esc(o.carga||'—')+'</span></div>'
+    +'<div class="di"><label>Origem</label><span>'+esc(o.origem||'—')+'</span></div>'
+    +'<div class="di"><label>Destino</label><span>'+esc(o.destino||'—')+'</span></div>'
+    +'<div class="di"><label>Distância</label><span>'+(o.km?o.km+' km':'—')+'</span></div>'
+    +'<div class="di"><label>Valor do Frete</label><span>R$ '+brl(o.valor||0)+'</span></div>'
+    +'</div><div class="sep"></div>'
+    +'<div class="dg">'
+    +'<div class="di"><label>CT-e</label><span>'+esc(o.cte||'—')+'</span></div>'
+    +'<div class="di"><label>MDF-e</label><span>'+esc(o.mdfe||'—')+'</span></div>'
+    +'<div class="di"><label>NF</label><span>'+esc(o.nf||'—')+'</span></div>'
+    +'</div>'
+    +(o.obs?'<div class="sep"></div><div class="dobs">'+esc(o.obs)+'</div>':'')
+    +ocHtml;
+  om('m-ops-det');
+}
+function editOpsDet(){ cm('m-ops-det'); editOps(opsDetId); }
+
+function renderOpsPage(){
+  var pg = document.getElementById('page-ops'); if(!pg) return;
+  var hoje = new Date().toISOString().split('T')[0];
+  var ativos  = operacoes.filter(function(o){return o.status==='Em andamento';});
+  var agend   = operacoes.filter(function(o){return o.status==='Agendado';});
+  var atras   = operacoes.filter(function(o){
+    return o.status==='Atrasado'||(o.status==='Em andamento'&&o.entrega&&o.entrega<hoje&&!o.entregaReal);
+  });
+  var concl   = operacoes.filter(function(o){return o.status==='Concluído';});
+
+  var rows = operacoes.length ? [].concat(operacoes).sort(function(a,b){
+    return (a.saida||'').localeCompare(b.saida||'');
+  }).map(function(o){
+    var cls = OST[o.status]||'ost-age';
+    var atrasadoAuto = o.status==='Em andamento'&&o.entrega&&o.entrega<hoje&&!o.entregaReal;
+    if(atrasadoAuto) cls='ost-atr';
+    var ocCount = (o.ocorrencias||[]).length;
+    return '<tr onclick="verOpsDet(\''+o.id+'\')" style="cursor:pointer">'
+      +'<td>'+fmtD(o.saida)+(o.horaSaida?'<br><span style="font-size:10px;color:var(--tx3)">'+o.horaSaida+'</span>':'')+'</td>'
+      +'<td class="te">'+esc(o.empNome||'—')+'</td>'
+      +'<td class="ts">'+esc(o.origem||'—')+' → '+esc(o.destino||'—')+'</td>'
+      +'<td>'+esc(o.motorista||'—')+'</td>'
+      +'<td>'+esc(o.veiculo||'—')+'</td>'
+      +'<td>'+fmtD(o.entrega)+'</td>'
+      +'<td><span class="ost '+cls+'">'+(atrasadoAuto?'Atrasado':o.status)+'</span></td>'
+      +'<td style="text-align:center">'+(ocCount?'<span style="background:var(--rd);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:20px">'+ocCount+'</span>':'—')+'</td>'
+      +'<td><div class="ra" onclick="event.stopPropagation()">'
+        +'<button class="ib" title="Editar" onclick="editOps(\''+o.id+'\')"><i class="ti ti-edit"></i></button>'
+        +'<button class="ib d" title="Excluir" onclick="excluirOps(\''+o.id+'\')"><i class="ti ti-trash"></i></button>'
+      +'</div></td>'
+      +'</tr>';
+  }).join('') : '<tr><td colspan="9" class="empty"><i class="ti ti-truck-delivery"></i>Nenhuma operação cadastrada</td></tr>';
+
+  pg.innerHTML =
+    '<div class="ops-kpis">'
+    +'<div class="ops-kpi ok0"><div class="ops-kpi-lbl">Em Andamento</div><div class="ops-kpi-val">'+ativos.length+'</div><div class="ops-kpi-sub">Serviços em rota</div></div>'
+    +'<div class="ops-kpi ok1"><div class="ops-kpi-lbl">Agendados</div><div class="ops-kpi-val">'+agend.length+'</div><div class="ops-kpi-sub">Aguardando saída</div></div>'
+    +'<div class="ops-kpi ok2"><div class="ops-kpi-lbl">Concluídos</div><div class="ops-kpi-val">'+concl.length+'</div><div class="ops-kpi-sub">Total no período</div></div>'
+    +'<div class="ops-kpi ok3"><div class="ops-kpi-lbl">Atrasados</div><div class="ops-kpi-val">'+atras.length+'</div><div class="ops-kpi-sub">Requer atenção</div></div>'
+    +'</div>'
+    +'<div class="ops-topbar">'
+    +'<div class="ops-filters">'
+    +'<input id="of2-busca" placeholder="🔍 Empresa, motorista, rota..." oninput="renderOpsTabela()" style="min-width:220px">'
+    +'<select id="of2-st" onchange="renderOpsTabela()"><option value="">Todos os status</option><option>Agendado</option><option>Em andamento</option><option>Concluído</option><option>Atrasado</option><option>Cancelado</option></select>'
+    +'</div>'
+    +'<button class="btn btn-p" onclick="abrirNovaOps()"><i class="ti ti-plus"></i> Nova Operação</button>'
+    +'</div>'
+    +'<div class="tw" style="padding:0 22px 8px"><table>'
+    +'<thead><tr>'
+    +'<th style="width:8%">Saída</th>'
+    +'<th style="width:17%">Empresa</th>'
+    +'<th style="width:22%">Rota</th>'
+    +'<th style="width:12%">Motorista</th>'
+    +'<th style="width:12%">Veículo</th>'
+    +'<th style="width:8%">Entrega</th>'
+    +'<th style="width:10%">Status</th>'
+    +'<th style="width:5%;text-align:center">Ocor.</th>'
+    +'<th style="width:6%"></th>'
+    +'</tr></thead>'
+    +'<tbody id="ops-tbody"></tbody></table></div>';
+
+  document.getElementById('nb-ops').textContent = (ativos.length+agend.length+atras.length)||'';
+  renderOpsTabela();
+}
+
+function renderOpsTabela(){
+  var busca=(document.getElementById('of2-busca')||{value:''}).value.toLowerCase();
+  var stFil=(document.getElementById('of2-st')||{value:''}).value;
+  var hoje=new Date().toISOString().split('T')[0];
+  var lista=operacoes.filter(function(o){
+    var ok=true;
+    if(busca) ok=ok&&((o.empNome||'').toLowerCase().includes(busca)||(o.motorista||'').toLowerCase().includes(busca)||(o.origem||'').toLowerCase().includes(busca)||(o.destino||'').toLowerCase().includes(busca));
+    if(stFil){
+      var st=o.status==='Em andamento'&&o.entrega&&o.entrega<hoje&&!o.entregaReal?'Atrasado':o.status;
+      ok=ok&&(st===stFil);
+    }
+    return ok;
+  }).sort(function(a,b){return (a.saida||'').localeCompare(b.saida||'');});
+
+  var tb=document.getElementById('ops-tbody'); if(!tb) return;
+  if(!lista.length){ tb.innerHTML='<tr><td colspan="9" class="empty"><i class="ti ti-truck-delivery"></i>Nenhuma operação encontrada</td></tr>'; return; }
+  var hoje2=new Date().toISOString().split('T')[0];
+  tb.innerHTML=lista.map(function(o){
+    var atrasadoAuto=o.status==='Em andamento'&&o.entrega&&o.entrega<hoje2&&!o.entregaReal;
+    var cls=atrasadoAuto?'ost-atr':(OST[o.status]||'ost-age');
+    var stLabel=atrasadoAuto?'Atrasado':o.status;
+    var ocCount=(o.ocorrencias||[]).length;
+    return '<tr onclick="verOpsDet(\''+o.id+'\')" style="cursor:pointer">'
+      +'<td>'+fmtD(o.saida)+(o.horaSaida?'<br><span style="font-size:10px;color:var(--tx3)">'+o.horaSaida+'</span>':'')+'</td>'
+      +'<td class="te">'+esc(o.empNome||'—')+'</td>'
+      +'<td class="ts">'+esc(o.origem||'—')+' → '+esc(o.destino||'—')+'</td>'
+      +'<td>'+esc(o.motorista||'—')+'</td>'
+      +'<td>'+esc(o.veiculo||'—')+'</td>'
+      +'<td>'+fmtD(o.entrega)+'</td>'
+      +'<td><span class="ost '+cls+'">'+stLabel+'</span></td>'
+      +'<td style="text-align:center">'+(ocCount?'<span style="background:var(--rd);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:20px">'+ocCount+'</span>':'—')+'</td>'
+      +'<td><div class="ra" onclick="event.stopPropagation()">'
+        +'<button class="ib" onclick="editOps(\''+o.id+'\')"><i class="ti ti-edit"></i></button>'
+        +'<button class="ib d" onclick="excluirOps(\''+o.id+'\')"><i class="ti ti-trash"></i></button>'
+      +'</div></td>'
+      +'</tr>';
+  }).join('');
+}
+
+
 // Fecha menu ao clicar fora
 document.addEventListener("click",function(e){
   if(menuAberto&&!e.target.closest(".sw"))closeAllMenus();
@@ -1942,6 +2297,103 @@ document.addEventListener("click",function(e){
       <button class="btn" onclick="cm('m-orc-det')">Fechar</button>
       <button class="btn" onclick="editPropostaDet()"><i class="ti ti-edit"></i> Editar</button>
       <button class="btn btn-p" onclick="pdfProposta(orcDetId)"><i class="ti ti-file-download"></i> Gerar PDF</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- MODAL OPERAÇÃO -->
+<div class="overlay" id="m-ops">
+  <div class="modal modal-ops">
+    <div class="mh"><h2 id="ops-tit">Nova Operação</h2><button class="ib" onclick="cm('m-ops')"><i class="ti ti-x"></i></button></div>
+    <div class="mb" style="padding-bottom:8px">
+
+      <span class="stl">Vínculo com Proposta</span>
+      <div class="fr">
+        <div class="fg"><label>Proposta *</label>
+          <select id="ops-prop" onchange="preencherDadosProposta(this.value)">
+            <option value="">-- Selecione a proposta aprovada --</option>
+          </select>
+        </div>
+        <div class="fg"><label>Empresa</label><input id="ops-emp-nome" readonly style="background:var(--sur2)"></div>
+        <div class="fg"><label>Status da Operação</label>
+          <select id="ops-status">
+            <option value="Agendado">Agendado</option>
+            <option value="Em andamento">Em andamento</option>
+            <option value="Concluído">Concluído</option>
+            <option value="Atrasado">Atrasado</option>
+            <option value="Cancelado">Cancelado</option>
+          </select>
+        </div>
+      </div>
+
+      <span class="stl">Datas</span>
+      <div class="fr">
+        <div class="fg"><label>Data de Saída (coleta) *</label><input type="date" id="ops-saida"></div>
+        <div class="fg"><label>Hora de Saída</label><input type="time" id="ops-hora-saida"></div>
+        <div class="fg"><label>Previsão de Entrega *</label><input type="date" id="ops-entrega"></div>
+        <div class="fg"><label>Hora de Entrega</label><input type="time" id="ops-hora-entrega"></div>
+      </div>
+      <div class="fr">
+        <div class="fg"><label>Data Real de Entrega</label><input type="date" id="ops-entrega-real"></div>
+        <div class="fg"><label>Hora Real</label><input type="time" id="ops-hora-real"></div>
+      </div>
+
+      <span class="stl">Motorista e Veículo</span>
+      <div class="fr">
+        <div class="fg"><label>Nome do Motorista *</label><input id="ops-motorista" placeholder="Ex: João da Silva"></div>
+        <div class="fg"><label>Telefone do Motorista</label><input id="ops-tel-mot" placeholder="(19) 99999-0000"></div>
+      </div>
+      <div class="fr">
+        <div class="fg"><label>Veículo / Placa</label><input id="ops-veiculo" placeholder="Ex: Caminhão 3/4 — ABC-1234"></div>
+        <div class="fg"><label>Tipo de Carga</label><input id="ops-carga" placeholder="Ex: Mobília, carga geral..."></div>
+      </div>
+
+      <span class="stl">Rota</span>
+      <div class="fr">
+        <div class="fg"><label>Origem</label><input id="ops-origem" placeholder="Cidade, endereço de coleta"></div>
+        <div class="fg"><label>Destino</label><input id="ops-destino" placeholder="Cidade, endereço de entrega"></div>
+      </div>
+      <div class="fr">
+        <div class="fg"><label>Km estimado</label><input id="ops-km" placeholder="Ex: 320 km" type="number"></div>
+        <div class="fg"><label>Valor do Frete (R$)</label><input id="ops-valor" placeholder="0,00"></div>
+      </div>
+
+      <span class="stl">Documentos</span>
+      <div class="fr">
+        <div class="fg"><label>Nº CT-e</label><input id="ops-cte" placeholder="Ex: 000123456"></div>
+        <div class="fg"><label>Nº MDF-e</label><input id="ops-mdfe" placeholder="Ex: 000789012"></div>
+        <div class="fg"><label>Nº NF</label><input id="ops-nf" placeholder="Ex: 001234"></div>
+      </div>
+
+      <span class="stl">Ocorrências / Atualizações</span>
+      <div class="fr"><div class="fg ff">
+        <label>Nova ocorrência</label>
+        <textarea id="ops-nova-ocor" rows="2" placeholder="Descreva qualquer atualização, atraso, ocorrência ou alteração..."></textarea>
+      </div></div>
+
+      <span class="stl">Observações Gerais</span>
+      <div class="fr"><div class="fg ff">
+        <textarea id="ops-obs" rows="2" placeholder="Instruções especiais, contatos no destino, etc."></textarea>
+      </div></div>
+
+    </div>
+    <div class="mf">
+      <button class="btn" onclick="cm('m-ops')">Cancelar</button>
+      <button class="btn btn-p" onclick="salvarOps()"><i class="ti ti-device-floppy"></i> Salvar Operação</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DETALHE OPERAÇÃO -->
+<div class="overlay" id="m-ops-det">
+  <div class="modal modal-ops">
+    <div class="mh"><h2 id="opsd-tit"></h2><button class="ib" onclick="cm('m-ops-det')"><i class="ti ti-x"></i></button></div>
+    <div class="mb" id="opsd-body"></div>
+    <div class="mf">
+      <button class="btn" onclick="cm('m-ops-det')">Fechar</button>
+      <button class="btn" onclick="editOpsDet()"><i class="ti ti-edit"></i> Editar</button>
+      <button class="btn" onclick="addOcorrencia(opsDetId)"><i class="ti ti-message-plus"></i> Adicionar Ocorrência</button>
     </div>
   </div>
 </div>
