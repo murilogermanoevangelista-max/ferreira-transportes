@@ -1577,7 +1577,7 @@ function pdfProposta(id){
   campo('ENDEREÇO',cfg.endereco+' – '+cfg.bairro+' – '+cfg.cidade+' '+cfg.uf+'  CEP: '+cfg.cep,M,CW);y+=12;
   campo('TELEFONE',cfg.telefone,M,CW/3-4);
   campo('E-MAIL / PIX',cfg.email,M+CW/3+2,CW/3-4);
-  campo('SITE',cfg.site+' | PIX: '+cfg.pix,M+2*CW/3+2,CW/3-4);y+=14;
+  campo('SITE',cfg.site,M+2*CW/3+2,CW/3-4);y+=14;
 
   hr(y,CBOR);y+=5;
   sec('DADOS BANCÁRIOS');
@@ -1585,7 +1585,7 @@ function pdfProposta(id){
   campo('AGÊNCIA',cfg.agencia,M+CW/4+2,CW/4-3);
   campo('CONTA CORRENTE',cfg.conta,M+CW/2+2,CW/4-3);
   y+=12;
-  campo('CHAVE PIX (E-MAIL)',cfg.pix,M,CW-4);y+=14;
+  campo('CHAVE PIX',cfg.pix,M,CW-4);y+=14;
 
   hr(y,CBOR);y+=5;
   sec('SUBMETIDO PARA');
