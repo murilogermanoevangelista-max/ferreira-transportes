@@ -1387,14 +1387,16 @@ function renderOrcPage(){
         var dias=Math.round((dProg-new Date(hoje+'T12:00:00'))/(1000*60*60*24));
         var urgCls=dias===0?'prog-hoje':dias<=3?'prog-urgente':'prog-normal';
         var diasLabel=dias===0?'HOJE':dias===1?'amanhã':'em '+dias+' dias';
-        return '<div class="prog-item '+urgCls+'" onclick="verPropostaDet(''+o.id+'')">'
-          +'<div class="prog-data">'+dProg.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'}).toUpperCase()+'</div>'
+        var dtFmt=dProg.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'}).toUpperCase();
+        var rotasTxt=o.rows.map(function(r){return esc(r.origem||r.rota||'')+(r.destino?' → '+esc(r.destino):'');}).join(' | ');
+        return '<div class="prog-item '+urgCls+'" onclick="verPropostaDet(\'' + o.id + '\')">'  
+          +'<div class="prog-data">'+dtFmt+'</div>'
           +'<div class="prog-info">'
-            +'<span class="prog-emp">'+esc(o.empNome)+'</span>'
-            +'<span class="prog-rota">'+o.rows.map(function(r){return esc(r.origem||r.rota||'')+(r.destino?' → '+esc(r.destino):'');}).join(' | ')+'</span>'
+          +'<span class="prog-emp">'+esc(o.empNome)+'</span>'
+          +'<span class="prog-rota">'+rotasTxt+'</span>'
           +'</div>'
           +'<div class="prog-dias">'+diasLabel+'</div>'
-        +'</div>';
+          +'</div>';
       }).join('')
     +'</div>';
   }
