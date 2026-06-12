@@ -246,7 +246,7 @@ tbody tr:hover .ra{opacity:1;}
 .prog-hoje .prog-dias{background:#c2410c;color:#fff;padding:2px 8px;border-radius:20px;}
 
 /* === MINHA EMPRESA === */
-#page-cfg{flex:1;overflow-y:auto;padding:22px;display:none;gap:16px;flex-direction:column;}
+#page-cfg{flex:1;overflow-y:auto;padding:22px;display:none;}
 .cfg-card{background:var(--sur);border:1px solid var(--bor);border-radius:var(--r);overflow:hidden;}
 .cfg-card-hd{background:var(--sur2);padding:12px 18px;border-bottom:1px solid var(--bor);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--tx3);display:flex;align-items:center;gap:8px;}
 .cfg-card-hd i{font-size:16px;color:var(--am2);}
@@ -795,7 +795,7 @@ function setPage(p,el){
   var po=document.getElementById("page-orc");
   if(po) po.style.display=p==="orc"?"flex":"none";
   var pc=document.getElementById("page-cfg");
-  if(pc) pc.style.display=p==="cfg"?"flex":"none";
+  if(pc) pc.style.display=p==="cfg"?"block":"none";
   // stats-row e botões do topbar: só na prospecção e dashboard
   var sr=document.getElementById("stats-row");
   if(sr) sr.style.display=(p==="orc"||p==="cfg")?"none":"";
@@ -1584,7 +1584,8 @@ function pdfProposta(id){
   campo('BANCO',cfg.banco,M,CW/4-3);
   campo('AGÊNCIA',cfg.agencia,M+CW/4+2,CW/4-3);
   campo('CONTA CORRENTE',cfg.conta,M+CW/2+2,CW/4-3);
-  campo('CHAVE PIX',cfg.pix,M+3*CW/4+2,CW/4-3);y+=14;
+  y+=12;
+  campo('CHAVE PIX (E-MAIL)',cfg.pix,M,CW-4);y+=14;
 
   hr(y,CBOR);y+=5;
   sec('SUBMETIDO PARA');
